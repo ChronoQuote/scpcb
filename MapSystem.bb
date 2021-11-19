@@ -1304,6 +1304,7 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 				RotateEntity fr\DetailEntities[i],0,180*i,0
 				
 				EntityParent fr\DetailEntities[i],fr\Forest_Pivot
+				Exit
 			EndIf		
 		Next		
 	Next
@@ -8107,6 +8108,8 @@ Function UpdateRoomLights(cam%)
 						;This will make the lightsprites not glitch through the wall when they are rendered by the cameras
 						EntityOrder r\LightSprites2[i],0
 					EndIf
+				Else
+					Exit
 				EndIf
 			Next
 		EndIf
@@ -8579,6 +8582,8 @@ Function AddLightCones(room.Rooms)
 				PositionEntity room\LightConeSpark[i],EntityX(room\LightSpritesPivot[i],True),EntityY(room\LightSpritesPivot[i],True)+0.05,EntityZ(room\LightSpritesPivot[i],True),True
 				EntityParent room\LightConeSpark[i],room\LightSpritesPivot[i]
 			EndIf
+		Else
+			Exit
 		EndIf
 	Next
 	
@@ -8785,6 +8790,6 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#2#A#35#102#111#118#11F#126#13F#147#14F#143D#145E
-;~B#1230
+;~F#2#A#35#102#111#118#11F#126#13F#147#14F#143E#145F
+;~B#1231
 ;~C#Blitz3D
