@@ -3138,8 +3138,6 @@ Repeat
 			;EntityAlpha(Light, LightFlash)
 		EndIf
 		
-		EntityColor Light,255,255,255
-		
 		;[End block]
 		
 		If KeyHit(KEY_INV) And VomitTimer >= 0 Then
@@ -5693,7 +5691,6 @@ Function DrawGUI()
 					;[Block]
 					If Not (Wearing714 = 1) Then
 						If PlayerRoom\RoomTemplate\Name <> "room1123" Then
-							ShowEntity Light
 							LightFlash = 7
 							PlaySound_Strict(LoadTempSound("SFX\SCP\1123\Touch.ogg"))		
 							DeathMSG = "Subject D-9341 was shot dead after attempting to attack a member of Nine-Tailed Fox. Surveillance tapes show that the subject had been "
@@ -5706,7 +5703,6 @@ Function DrawGUI()
 						For e.Events = Each Events
 							If e\EventName = "room1123" Then 
 								If e\EventState = 0 Then
-									ShowEntity Light
 									LightFlash = 3
 									PlaySound_Strict(LoadTempSound("SFX\SCP\1123\Touch.ogg"))		
 								EndIf
@@ -12083,6 +12079,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#DCC#1618#2422#2B1E
-;~B#11DC#1454#1BF2
+;~F#39#DCA#1616#241E#2B1A
+;~B#11DA#1452#1BEE
 ;~C#Blitz3D
