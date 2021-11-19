@@ -3239,14 +3239,6 @@ Repeat
 		
 		DrawGUI()
 		
-		If EndingTimer < 0 Then
-			If SelectedEnding <> "" Then DrawEnding()
-		Else
-			DrawMenu()			
-		EndIf
-		
-		UpdateConsole()
-		
 		If PlayerRoom <> Null Then
 			If PlayerRoom\RoomTemplate\Name = "173" Then
 				For e.Events = Each Events
@@ -3296,6 +3288,14 @@ Repeat
 		
 		Color 255, 255, 255
 		If ShowFPS Then AASetFont ConsoleFont : AAText 20, 20, "FPS: " + FPS : AASetFont Font1
+		
+		If EndingTimer < 0 Then
+			If SelectedEnding <> "" Then DrawEnding()
+		Else
+			DrawMenu()			
+		EndIf
+		
+		UpdateConsole()
 		
 		DrawQuickLoading()
 		
