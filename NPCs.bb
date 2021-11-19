@@ -220,6 +220,7 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			;[End Block]
 		Case NPCtype372
 			;[Block]
+			n\NVName = "SCP-372"
 			n\Collider = CreatePivot()
 			EntityRadius n\Collider, 0.2
 			n\obj = LoadAnimMesh_Strict("GFX\npcs\372.b3d")
@@ -7453,5 +7454,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#0
-;~B#197#12A9#1343#13DC#1590#169B#185C#18B8
+;~B#198#12AA#1344#13DD#1591#169C#185D#18B9
 ;~C#Blitz3D
