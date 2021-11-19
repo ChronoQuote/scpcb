@@ -4170,6 +4170,9 @@ Function FillRoom(r.Rooms)
 			
 			CameraZoom (sc\Cam, 1.5)
 			
+			HideEntity sc\obj
+			HideEntity sc\CameraObj
+			HideEntity sc\ScrObj
 			HideEntity sc\ScrOverlay
 			HideEntity sc\MonitorObj
 			
@@ -8790,6 +8793,6 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#2#A#35#102#111#118#11F#126#13F#147#14F#145F
-;~B#1231
+;~F#2#A#35#102#111#118#11F#126#13F#147#14F#1462
+;~B#1234
 ;~C#Blitz3D
