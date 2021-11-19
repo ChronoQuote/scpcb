@@ -8408,9 +8408,13 @@ Function InitNewGame()
 	HeartBeatRate = 70
 	
 	AccessCode = 0
-	For i = 0 To 3
-		AccessCode = AccessCode + Rand(1,9)*(10^i)
-	Next	
+	Repeat
+		For i = 0 To 3
+			AccessCode = AccessCode + Rand(1,9)*(10^i)
+		Next
+		Local Skip% = False
+		If AccessCode <> 7816 Then Skip = True
+	Until Skip
 	
 	If SelectedMap = "" Then
 		CreateMap()
@@ -12079,6 +12083,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#162D#2436#2B34
+;~F#39#162D#243A#2B38
 ;~B#11DE#145D#1C06
 ;~C#Blitz3D
