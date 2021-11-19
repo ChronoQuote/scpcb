@@ -15,6 +15,32 @@ Function UpdateEvents()
 	UpdateRooms()
 	
 	For e.Events = Each Events
+		If FPSFactor > 0 Then
+			If e\SoundCHN<>0 Then
+				If e\SoundCHN_isStream
+					SetStreamVolume_Strict(e\SoundCHN,SFXVolume)
+				EndIf
+			EndIf
+			If e\SoundCHN2<>0 Then
+				If e\SoundCHN2_isStream
+					SetStreamVolume_Strict(e\SoundCHN2,SFXVolume)
+				EndIf
+			EndIf
+		EndIf
+		If (Not PlayerInReachableRoom()) Then
+			If PlayerRoom\RoomTemplate\Name <> "exit1" And PlayerRoom\RoomTemplate\Name <> "gatea" And PlayerRoom\RoomTemplate\Name <> "dimension1499" Then
+				If e\SoundCHN<>0 And e\SoundCHN_isStream Then
+					StopStream_Strict(e\SoundCHN)
+					e\SoundCHN = 0
+					e\SoundCHN_isStream = 0
+				EndIf
+				If e\SoundCHN2<>0 And e\SoundCHN2_isStream Then
+					StopStream_Strict(e\SoundCHN2)
+					e\SoundCHN2 = 0
+					e\SoundCHN2_isStream = 0
+				EndIf
+			EndIf
+		EndIf
 		Select e\EventName
 			Case "exit1"
 				;[Block]
@@ -10167,6 +10193,6 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#A0D
-;~B#10CE#1DCB
+;~F#A27
+;~B#10E8#1DE5
 ;~C#Blitz3D
