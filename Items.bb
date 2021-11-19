@@ -321,6 +321,7 @@ Function InitItemTemplates()
 				For it2=Each ItemTemplates
 					If (it2<>it) And (it2\tex=it\tex) Then
 						it2\tex = 0
+						Exit
 					EndIf
 				Next
 			EndIf
@@ -378,6 +379,7 @@ Function CreateItem.Items(name$, tempname$, x#, y#, z#, r%=0,g%=0,b%=0,a#=1.0,in
 				i\name = it\name
 				ShowEntity i\collider
 				ShowEntity i\model
+				Exit
 			EndIf
 		EndIf
 	Next 
@@ -759,7 +761,10 @@ Function DropItem(item.Items,playdropsound%=True)
 	
 	item\Picked = False
 	For z% = 0 To MaxItemAmount - 1
-		If Inventory(z) = item Then Inventory(z) = Null
+		If Inventory(z) = item Then
+			Inventory(z) = Null
+			Exit
+		EndIf
 	Next
 	Select item\itemtemplate\tempname
 		Case "gasmask", "supergasmask", "gasmask3"
@@ -880,5 +885,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#B#1E
+;~F#B
 ;~C#Blitz3D

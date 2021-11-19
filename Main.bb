@@ -3256,6 +3256,7 @@ Repeat
 								Msg = "Double click on the document to view it."
 								MsgTimer=70*7
 								e\EventState3 = 50
+								Exit
 							EndIf
 						EndIf
 					EndIf
@@ -4105,7 +4106,10 @@ Function MovePlayer()
 	
 	For i = 0 To MaxItemAmount-1
 		If Inventory(i)<>Null Then
-			If Inventory(i)\itemtemplate\tempname = "finevest" Then Stamina = Min(Stamina, 60)
+			If Inventory(i)\itemtemplate\tempname = "finevest" Then
+				Stamina = Min(Stamina, 60)
+				Exit
+			EndIf
 		EndIf
 	Next
 	
@@ -5117,9 +5121,13 @@ Function DrawGUI()
 			Else
 				If isMouseOn And MouseHit1 Then
 					For z% = 0 To OtherSize - 1
-						If OtherOpen\SecondInv[z] = SelectedItem Then OtherOpen\SecondInv[z] = Null
+						If OtherOpen\SecondInv[z] = SelectedItem Then
+							OtherOpen\SecondInv[z] = Null
+							Exit
+						EndIf
 					Next
 					OtherOpen\SecondInv[n] = SelectedItem
+					SelectedItem = Null
 				EndIf
 				
 			EndIf					
@@ -5171,7 +5179,10 @@ Function DrawGUI()
 					
 					SelectedItem\Picked = False
 					For z% = 0 To OtherSize - 1
-						If OtherOpen\SecondInv[z] = SelectedItem Then OtherOpen\SecondInv[z] = Null
+						If OtherOpen\SecondInv[z] = SelectedItem Then
+							OtherOpen\SecondInv[z] = Null
+							Exit
+						EndIf
 					Next
 					
 					isEmpty=True
@@ -5215,7 +5226,10 @@ Function DrawGUI()
 					
 					If PrevOtherOpen\SecondInv[MouseSlot] = Null Then
 						For z% = 0 To OtherSize - 1
-							If PrevOtherOpen\SecondInv[z] = SelectedItem Then PrevOtherOpen\SecondInv[z] = Null
+							If PrevOtherOpen\SecondInv[z] = SelectedItem Then
+								PrevOtherOpen\SecondInv[z] = Null
+								Exit
+							EndIf
 						Next
 						PrevOtherOpen\SecondInv[MouseSlot] = SelectedItem
 						SelectedItem = Null
@@ -5367,9 +5381,13 @@ Function DrawGUI()
 			Else
 				If isMouseOn And MouseHit1 Then
 					For z% = 0 To MaxItemAmount - 1
-						If Inventory(z) = SelectedItem Then Inventory(z) = Null
+						If Inventory(z) = SelectedItem Then
+							Inventory(z) = Null
+							Exit
+						EndIf
 					Next
 					Inventory(n) = SelectedItem
+					SelectedItem = Null
 				End If
 				
 			EndIf					
@@ -5413,7 +5431,10 @@ Function DrawGUI()
 				Else
 					If Inventory(MouseSlot) = Null Then
 						For z% = 0 To MaxItemAmount - 1
-							If Inventory(z) = SelectedItem Then Inventory(z) = Null
+							If Inventory(z) = SelectedItem Then
+								Inventory(z) = Null
+								Exit
+							EndIf
 						Next
 						Inventory(MouseSlot) = SelectedItem
 						SelectedItem = Null
@@ -5437,8 +5458,9 @@ Function DrawGUI()
 													
 													For ri% = 0 To MaxItemAmount - 1
 														If Inventory(ri) = SelectedItem Then
-															Inventory(ri) = Null
 															PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
+															Inventory(ri) = Null
+															Exit
 														EndIf
 													Next
 													added = SelectedItem
@@ -5481,8 +5503,9 @@ Function DrawGUI()
 													
 													For ri% = 0 To MaxItemAmount - 1
 														If Inventory(ri) = SelectedItem Then
-															Inventory(ri) = Null
 															PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
+															Inventory(ri) = Null
+															Exit
 														EndIf
 													Next
 													added = SelectedItem
@@ -10886,6 +10909,7 @@ Function UpdateINIFile$(filename$)
 	For k.INIFile = Each INIFile
 		If k\name = Lower(filename) Then
 			file = k
+			Exit
 		EndIf
 	Next
 	
@@ -10913,6 +10937,7 @@ Function GetINIString$(file$, section$, parameter$, defaultvalue$="")
 	For k.INIFile = Each INIFile
 		If k\name = Lower(file) Then
 			lfile = k
+			Exit
 		EndIf
 	Next
 	
@@ -12079,6 +12104,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#1616#241E#2B1A
-;~B#11DA#1452#1BEE
+;~F#39#162D#2435#2B33
+;~B#11DE#145D#1C05
 ;~C#Blitz3D
