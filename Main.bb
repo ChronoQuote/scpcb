@@ -8493,9 +8493,11 @@ Function InitNewGame()
 			EntityType (it\collider, HIT_ITEM)
 			EntityParent(it\collider, 0)
 			ItemAmount = ItemAmount + 1
+			Exit
 		ElseIf (r\RoomTemplate\Name = "173" And IntroEnabled) Then
 			PositionEntity (Collider, EntityX(r\obj), 1.0, EntityZ(r\obj))
 			PlayerRoom = r
+			Exit
 		EndIf
 		
 	Next
@@ -12083,6 +12085,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#162D#243A#2B38
+;~F#39#162D#243C#2B3A
 ;~B#11DE#145D#1C06
 ;~C#Blitz3D
