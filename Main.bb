@@ -5963,6 +5963,7 @@ Function DrawGUI()
 								SelectedItem\itemtemplate\img = LoadImage_Strict("GFX\items\bn.it")
 								SetBuffer ImageBuffer(SelectedItem\itemtemplate\img)
 								Color 0,0,0
+								AASetFont Font1
 								AAText 277, 469, AccessCode, True, True
 								Color 255,255,255
 								SetBuffer BackBuffer()
@@ -12104,6 +12105,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#162D#2435#2B33
-;~B#11DE#145D#1C05
+;~F#39#162D#2436#2B34
+;~B#11DE#145D#1C06
 ;~C#Blitz3D
