@@ -3583,7 +3583,7 @@ Function UpdateNPCs()
 							EndIf
 							
 							;535, 568
-							If (prevFrame < 533 And n\Frame=>533) Or (prevFrame > 568 And n\Frame<2) Then
+							If (prevFrame < 533 And n\Frame=>533) Or (prevFrame < 568 And n\Frame=>568) Then
 								PlaySound2(Step2SFX(Rand(3,5)), Camera, n\Collider, 15.0, 0.6)
 							EndIf
 							
