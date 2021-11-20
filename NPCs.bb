@@ -1659,7 +1659,7 @@ Function UpdateNPCs()
 				
 				dist  = EntityDistance(Collider, n\Collider)
 				
-				n\BlinkTimer# = 1.0
+				UpdateNPCBlinking(n)
 				
 				If n\Idle > 0.1
 					If PlayerRoom\RoomTemplate\Name$ <> "room049"
@@ -4807,7 +4807,7 @@ Function UpdateNPCs()
 					
 					prevFrame = n\Frame
 					
-					n\BlinkTimer = 1
+					UpdateNPCBlinking(n)
 					
 					Select n\State
 						Case 0 ;Lying next to the wall
@@ -5210,6 +5210,14 @@ Function MeNPCSeesPlayer%(me.NPCs,disablesoundoncrouch%=False)
 	
 End Function
 
+Function UpdateNPCBlinking%(n.NPCs)
+	If n\BlinkTimer > 0.0 Then
+		n\BlinkTimer = n\BlinkTimer - FPSFactor
+	Else
+		n\BlinkTimer = 70.0 * Rnd(10.0, 15.0)
+	EndIf
+End Function
+
 Function TeleportMTFGroup(n.NPCs)
 	Local n2.NPCs
 	
@@ -5294,15 +5302,12 @@ Function UpdateMTFUnit(n.NPCs)
 	
 	n\MaxGravity = 0.03
 	
-	n\BlinkTimer = n\BlinkTimer - FPSfactor
-	If n\BlinkTimer<=-5.0 Then 
+	UpdateNPCBlinking(n)
+	If n\BlinkTimer <= 0.0 Then 
 		;only play the "blinking" sound clip if searching/containing 173
 		If n\State = 2
-			If OtherNPCSeesMeNPC(Curr173,n)
-				PlayMTFSound(LoadTempSound("SFX\Character\MTF\173\BLINKING.ogg"),n)
-			EndIf
+			PlayMTFSound(LoadTempSound("SFX\Character\MTF\173\BLINKING.ogg"),n)
 		EndIf
-		n\BlinkTimer = 70.0*Rnd(10.0,15.0)
 	EndIf	
 	
 	n\Reload = n\Reload - FPSfactor
@@ -7375,5 +7380,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#192#12A3#133D#13D6#158A#1695#1856#18B2
+;~B#192#12A3#133D#13D6#158F#169A#185B#18B7
 ;~C#Blitz3D
