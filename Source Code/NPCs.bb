@@ -175,26 +175,6 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 				MTFSFX(5)=LoadSound_Strict("SFX\Character\MTF\Beep.ogg")
 				MTFSFX(6)=LoadSound_Strict("SFX\Character\MTF\Breath.ogg")
 			EndIf
-			If MTFrooms[6]=Null Then 
-				For r.Rooms = Each Rooms
-					Select Lower(r\RoomTemplate\Name)
-						Case "room106"
-							MTFrooms[0]=r
-						Case "roompj"
-							MTFrooms[1]=r	
-						Case "room079"
-							MTFrooms[2]=r	
-						Case "room2poffices"
-							MTFrooms[3]=r	
-						Case "914"
-							MTFrooms[4]=r	
-						Case "coffin"
-							MTFrooms[5]=r	
-						Case "start"
-							MTFrooms[6]=r
-					End Select
-				Next			
-			EndIf
 			;[End Block]
 		Case NPCtypeD
 			;[Block]
@@ -7380,5 +7360,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#192#12A3#133D#13D6#158F#169A#185B#18B7
+;~B#17E#128F#1329#13C2#157B#1686#1847#18A3
 ;~C#Blitz3D

@@ -7871,7 +7871,7 @@ End Function
 
 
 
-Include "Skybox.bb"
+Include "Source Code\Skybox.bb"
 
 Global UpdateRoomLightsTimer# = 0.0
 

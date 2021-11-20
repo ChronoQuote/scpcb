@@ -1,12 +1,3 @@
-;SCP - Containment Breach
-
-;    The game is based on the works of the SCP Foundation community (http://www.scp-wiki.net/).
-
-;    The source code is licensed under Creative Commons Attribution-ShareAlike 3.0 License.
-;    http://creativecommons.org/licenses/by-sa/3.0/
-
-;    See Credits.txt for a list of contributors
-
 Local InitErrorStr$ = ""
 ;If FileSize("bb_fmod.dll")=0 Then InitErrorStr=InitErrorStr+ "bb_fmod.dll"+Chr(13)+Chr(10)
 If FileSize("fmod.dll")=0 Then InitErrorStr=InitErrorStr+ "fmod.dll"+Chr(13)+Chr(10)
@@ -16,20 +7,20 @@ If Len(InitErrorStr)>0 Then
 	RuntimeError "The following DLLs were not found in the game directory:"+Chr(13)+Chr(10)+Chr(13)+Chr(10)+InitErrorStr
 EndIf
 
-Include "FMod.bb"
+Include "Source Code\FMod.bb"
 
-Include "StrictLoads.bb"
-Include "fullscreen_window_fix.bb"
-Include "KeyName.bb"
+Include "Source Code\StrictLoads.bb"
+Include "Source Code\fullscreen_window_fix.bb"
+Include "Source Code\KeyName.bb"
 
 Global OptionFile$ = "options.ini"
 
-Include "Blitz_Basic_Bank.bb"
-Include "Blitz_File_FileName.bb"
-Include "Blitz_File_ZipApi.bb"
-Include "Update.bb"
+Include "Source Code\Blitz_Basic_Bank.bb"
+Include "Source Code\Blitz_File_FileName.bb"
+Include "Source Code\Blitz_File_ZipApi.bb"
+Include "Source Code\Update.bb"
 
-Include "DevilParticleSystem.bb"
+Include "Source Code\DevilParticleSystem.bb"
 
 Global ErrorFile$ = "error_log_"
 Local ErrorFileInd% = 0
@@ -105,7 +96,7 @@ Global SFXVolume# = GetINIFloat(OptionFile, "audio", "sound volume")
 
 Global Bit16Mode = GetINIInt(OptionFile, "options", "16bit")
 
-Include "AAText.bb"
+Include "Source Code\AAText.bb"
 
 If LauncherEnabled Then 
 	AspectRatioRatio = 1.0
@@ -301,7 +292,7 @@ Global Injuries#, Bloodloss#, Infect#, HealTimer#
 
 Global RefinedItems%
 
-Include "Achievements.bb"
+Include "Source Code\Achievements.bb"
 
 ;player coordinates, angle, speed, movement etc ---------------------------------------------------------------------
 Global DropSpeed#, HeadDropSpeed#, CurrSpeed#
@@ -345,9 +336,9 @@ Dim DrawArrowIcon%(4)
 
 ;misc ---------------------------------------------------------------------------------------------------------------
 
-Include "Difficulty.bb"
+Include "Source Code\Difficulty.bb"
 
-Global MTFtimer#, MTFrooms.Rooms[10], MTFroomState%[10]
+Global MTFtimer#
 
 Dim RadioState#(10)
 Dim RadioState3%(10)
@@ -1543,7 +1534,7 @@ Global MouseSens# = GetINIFloat("options.ini", "options", "mouse sensitivity")
 
 Global EnableVRam% = GetINIInt("options.ini", "options", "enable vram")
 
-Include "dreamfilter.bb"
+Include "Source Code\Dreamfilter.bb"
 
 Dim LightSpriteTex(10)
 
@@ -1806,11 +1797,11 @@ DrawLoading(35, True)
 
 ;----------------------------------------------  Items  -----------------------------------------------------
 
-Include "Items.bb"
+Include "Source Code\Items.bb"
 
 ;--------------------------------------- Particles ------------------------------------------------------------
 
-Include "Particles.bb"
+Include "Source Code\Particles.bb"
 
 ;-------------------------------------  Doors --------------------------------------------------------------
 
@@ -2398,11 +2389,11 @@ End Function
 
 DrawLoading(40,True)
 
-Include "MapSystem.bb"
+Include "Source Code\MapSystem.bb"
 
 DrawLoading(80,True)
 
-Include "NPCs.bb"
+Include "Source Code\NPCs.bb"
 
 ;-------------------------------------  Events --------------------------------------------------------------
 
@@ -2659,7 +2650,7 @@ Function InitEvents()
 	
 End Function
 
-Include "UpdateEvents.bb"
+Include "Source Code\UpdateEvents.bb"
 
 Function RemoveEvent(e.Events)
 	If e\Sound<>0 Then FreeSound_Strict e\Sound
@@ -2727,7 +2718,7 @@ Global MTF_CameraCheckDetected% = False
 
 ;---------------------------------------------------------------------------------------------------
 
-Include "menu.bb"
+Include "Source Code\Menu.bb"
 MainMenuOpen = True
 
 ;---------------------------------------------------------------------------------------------------
@@ -7802,7 +7793,7 @@ End Function
 
 ;----------------------------------------------------------------------------------------------
 
-Include "LoadAllSounds.bb"
+Include "Source Code\LoadAllSounds.bb"
 Function LoadEntities()
 	CatchErrors("Uncaught (LoadEntities)")
 	DrawLoading(0)
@@ -8734,10 +8725,6 @@ Function NullGame(playbuttonsfx%=True)
 	If Curr173 <> Null Then Curr173\Idle = False
 	
 	MTFtimer = 0
-	For i = 0 To 9
-		MTFrooms[i]=Null
-		MTFroomState[i]=0
-	Next
 	
 	For s.Screens = Each Screens
 		If s\img <> 0 Then FreeImage s\img : s\img = 0
@@ -8837,9 +8824,7 @@ Function NullGame(playbuttonsfx%=True)
 	Curr173 = Null
 	Curr106 = Null
 	Curr096 = Null
-	For i = 0 To 6
-		MTFrooms[i]=Null
-	Next
+	
 	ForestNPC = 0
 	ForestNPCTex = 0
 	
@@ -8911,7 +8896,7 @@ Function NullGame(playbuttonsfx%=True)
 	CatchErrors("NullGame")
 End Function
 
-Include "save.bb"
+Include "Source Code\Save.bb"
 
 ;--------------------------------------- music & sounds ----------------------------------------------
 
@@ -11970,6 +11955,5 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39
-;~B#11C4#1443#1BDD
+;~B#11BB#143A#1BD4
 ;~C#Blitz3D
