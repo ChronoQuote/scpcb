@@ -10078,88 +10078,90 @@ Function Use294()
 			ytemp = Floor((ScaledMouseY()-y-342) / 36.5)
 			
 			If ytemp => 0 And ytemp < 5 Then
-				If xtemp => 0 And xtemp < 10 Then PlaySound_Strict ButtonSFX
-			EndIf
-			
-			strtemp = ""
-			
-			temp = False
-			
-			Select ytemp
-				Case 0
-					strtemp = (xtemp + 1) Mod 10
-				Case 1
-					Select xtemp
+				If xtemp => 0 And xtemp < 10 Then
+					PlaySound_Strict ButtonSFX
+					
+					strtemp = ""
+					
+					temp = False
+					
+					Select ytemp
 						Case 0
-							strtemp = "Q"
+							strtemp = (xtemp + 1) Mod 10
 						Case 1
-							strtemp = "W"
+							Select xtemp
+								Case 0
+									strtemp = "Q"
+								Case 1
+									strtemp = "W"
+								Case 2
+									strtemp = "E"
+								Case 3
+									strtemp = "R"
+								Case 4
+									strtemp = "T"
+								Case 5
+									strtemp = "Y"
+								Case 6
+									strtemp = "U"
+								Case 7
+									strtemp = "I"
+								Case 8
+									strtemp = "O"
+								Case 9
+									strtemp = "P"
+							End Select
 						Case 2
-							strtemp = "E"
+							Select xtemp
+								Case 0
+									strtemp = "A"
+								Case 1
+									strtemp = "S"
+								Case 2
+									strtemp = "D"
+								Case 3
+									strtemp = "F"
+								Case 4
+									strtemp = "G"
+								Case 5
+									strtemp = "H"
+								Case 6
+									strtemp = "J"
+								Case 7
+									strtemp = "K"
+								Case 8
+									strtemp = "L"
+								Case 9 ;dispense
+									temp = True
+							End Select
 						Case 3
-							strtemp = "R"
+							Select xtemp
+								Case 0
+									strtemp = "Z"
+								Case 1
+									strtemp = "X"
+								Case 2
+									strtemp = "C"
+								Case 3
+									strtemp = "V"
+								Case 4
+									strtemp = "B"
+								Case 5
+									strtemp = "N"
+								Case 6
+									strtemp = "M"
+								Case 7
+									strtemp = "-"
+								Case 8
+									strtemp = " "
+								Case 9
+									Input294 = Left(Input294, Max(Len(Input294)-1,0))
+							End Select
 						Case 4
-							strtemp = "T"
-						Case 5
-							strtemp = "Y"
-						Case 6
-							strtemp = "U"
-						Case 7
-							strtemp = "I"
-						Case 8
-							strtemp = "O"
-						Case 9
-							strtemp = "P"
-					End Select
-				Case 2
-					Select xtemp
-						Case 0
-							strtemp = "A"
-						Case 1
-							strtemp = "S"
-						Case 2
-							strtemp = "D"
-						Case 3
-							strtemp = "F"
-						Case 4
-							strtemp = "G"
-						Case 5
-							strtemp = "H"
-						Case 6
-							strtemp = "J"
-						Case 7
-							strtemp = "K"
-						Case 8
-							strtemp = "L"
-						Case 9 ;dispense
-							temp = True
-					End Select
-				Case 3
-					Select xtemp
-						Case 0
-							strtemp = "Z"
-						Case 1
-							strtemp = "X"
-						Case 2
-							strtemp = "C"
-						Case 3
-							strtemp = "V"
-						Case 4
-							strtemp = "B"
-						Case 5
-							strtemp = "N"
-						Case 6
-							strtemp = "M"
-						Case 7
-							strtemp = "-"
-						Case 8
 							strtemp = " "
-						Case 9
-							Input294 = Left(Input294, Max(Len(Input294)-1,0))
 					End Select
-				Case 4
-					strtemp = " "
-			End Select
+				EndIf
+			Endif
 			
 			Input294 = Input294 + strtemp
 			
@@ -12072,6 +12074,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#162D#243C#2B2D
+;~F#39#162D#243C#2B2F
 ;~B#11DE#145D#1C06
 ;~C#Blitz3D
