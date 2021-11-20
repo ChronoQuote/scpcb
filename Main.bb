@@ -8599,12 +8599,8 @@ Function InitLoadGame()
 			If e\EventState = 2
 				;[Block]
 				DrawLoading(91)
-				e\room\Objects[0] = CreatePlane()
-				Local planetex% = LoadTexture_Strict("GFX\map\dimension1499\grit3.jpg")
-				EntityTexture e\room\Objects[0],planetex%
-				FreeTexture planetex%
-				PositionEntity e\room\Objects[0],0,EntityY(e\room\obj),0
-				EntityType e\room\Objects[0],HIT_MAP
+				e\room\Objects[0] = LoadMesh_Strict("GFX\map\dimension1499\1499plane.b3d")
+				HideEntity e\room\Objects[0]
 				;EntityParent e\room\Objects[0],e\room\obj
 				DrawLoading(92)
 				NTF_1499Sky = sky_CreateSky("GFX\map\sky\1499sky")
