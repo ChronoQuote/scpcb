@@ -9292,7 +9292,7 @@ Function GetStepSound(entity%)
     Return 0
 End Function
 
-Function UpdateSoundOrigin2(Chn%, cam%, entity%, range# = 10, volume# = 1.0)
+Function UpdateSoundOrigin(Chn%, cam%, entity%, range# = 10, volume# = 1.0, UseSFXVolume% = True)
 	range# = Max(range,1.0)
 	
 	If volume>0 Then
@@ -9302,27 +9302,7 @@ Function UpdateSoundOrigin2(Chn%, cam%, entity%, range# = 10, volume# = 1.0)
 			
 			Local panvalue# = Sin(-DeltaYaw(cam,entity))
 			
-			ChannelVolume(Chn, volume# * (1 - dist#))
-			ChannelPan(Chn, panvalue)
-		EndIf
-	Else
-		If Chn <> 0 Then
-			ChannelVolume (Chn, 0)
-		EndIf 
-	EndIf
-End Function
-
-Function UpdateSoundOrigin(Chn%, cam%, entity%, range# = 10, volume# = 1.0)
-	range# = Max(range,1.0)
-	
-	If volume>0 Then
-		
-		Local dist# = EntityDistance(cam, entity) / range#
-		If 1 - dist# > 0 And 1 - dist# < 1 Then
-			
-			Local panvalue# = Sin(-DeltaYaw(cam,entity))
-			
-			ChannelVolume(Chn, volume# * (1 - dist#)*SFXVolume#)
+			ChannelVolume(Chn, volume# * (1 - dist#)*((Not UseSFXVolume)+(UseSFXVolume*SFXVolume)))
 			ChannelPan(Chn, panvalue)
 		EndIf
 	Else
