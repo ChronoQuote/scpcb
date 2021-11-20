@@ -4566,8 +4566,7 @@ Function FillRoom(r.Rooms)
 			r\Objects[6] = LoadMesh_Strict("GFX\map\room1062.b3d")
 			
 			ScaleEntity (r\Objects[6],RoomScale,RoomScale,RoomScale)
-			EntityType r\Objects[6], HIT_MAP
-			EntityPickMode r\Objects[6], 3
+			EntityPickMode r\Objects[6], 2
 			PositionEntity(r\Objects[6],r\x+784.0*RoomScale,-980.0*RoomScale,r\z+720.0*RoomScale,True)
 			
 			;If BumpEnabled Then 
@@ -8776,5 +8775,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#2#A#35#102#111#118#11F#126#13F#147#14F
-;~B#1234
+;~B#1233
 ;~C#Blitz3D
