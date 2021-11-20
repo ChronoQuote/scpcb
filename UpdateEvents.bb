@@ -9015,7 +9015,7 @@ Function UpdateDimension1499()
 				If QuickLoadPercent = 100 Or QuickLoadPercent = -1
 					UpdateChunks(e\room,15)
 					ShowEntity NTF_1499Sky
-					Update1499Sky()
+					UpdateSky(NTF_1499Sky)
 					ShouldPlay = 18
 					If EntityY(Collider)<800.0
 						PositionEntity Collider,EntityX(Collider),800.5,EntityZ(Collider),True
@@ -9282,7 +9282,7 @@ Function UpdateEndings()
 							DrawLoading(100,True)
 						Else
 							
-							UpdateSky()
+							UpdateSky(Sky)
 							
 							If e\EventState < 2.0 And SelectedEnding = "" Then 
 								If e\room\NPC[0]\State = 2 Then
@@ -9775,7 +9775,7 @@ Function UpdateEndings()
 							EndIf
 						Next
 						
-						UpdateSky()
+						UpdateSky(Sky)
 						
 						If e\EventState=>350 Then
 							If Contained106=False Then
