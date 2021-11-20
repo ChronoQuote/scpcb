@@ -1602,7 +1602,8 @@ End Function
 Const MaxRoomLights% = 32
 Const MaxRoomEmitters% = 8
 Const MaxRoomObjects% = 30
-
+Const MaxRoomNPCs% = 12
+Const MaxRoomLevers% = 11
 
 Const ROOM1% = 1, ROOM2% = 2, ROOM2C% = 3, ROOM3% = 4, ROOM4% = 5
 
@@ -1790,9 +1791,9 @@ Type Rooms
 	Field LightSprites%[MaxRoomLights]	
 	
 	Field Objects%[MaxRoomObjects]
-	Field Levers%[11]
+	Field Levers%[MaxRoomLevers]
 	Field RoomDoors.Doors[7]
-	Field NPC.NPCs[12]
+	Field NPC.NPCs[MaxRoomNPCs]
 	Field grid.Grids
 	
 	Field Adjacent.Rooms[4]
@@ -8775,5 +8776,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#2#A#35#102#111#118#11F#126#13F#147#14F
-;~B#1233
+;~B#1234
 ;~C#Blitz3D

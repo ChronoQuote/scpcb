@@ -240,7 +240,7 @@ Function SaveGame(file$)
 			WriteByte f, 0
 		EndIf
 		
-		For i = 0 To 11
+		For i = 0 To MaxRoomNPCs - 1
 			If r\NPC[i]=Null Then
 				WriteInt f, 0
 			Else
@@ -248,7 +248,7 @@ Function SaveGame(file$)
 			EndIf
 		Next
 		
-		For i=0 To 10
+		For i=0 To MaxRoomLevers - 1
 			If r\Levers[i]<>0 Then
 				If EntityPitch(r\Levers[i],True) > 0 Then ;p??????ll???
 					WriteByte(f,1)
@@ -746,7 +746,7 @@ Function LoadGame(file$)
 		
 		If temp2 = 1 Then PlayerRoom = r.Rooms
 		
-		For x = 0 To 11
+		For x = 0 To MaxRoomNPCs - 1
 			id = ReadInt(f)
 			If id > 0 Then
 				For n.NPCs = Each NPCs
@@ -755,7 +755,7 @@ Function LoadGame(file$)
 			EndIf
 		Next
 		
-		For x=0 To 11
+		For x=0 To MaxRoomLevers - 1
 			id = ReadByte(f)
 			If id=2 Then
 				Exit
@@ -1578,7 +1578,7 @@ Function LoadGameQuick(file$)
 			EndIf
 		Next
 		
-		For x = 0 To 11
+		For x = 0 To MaxRoomNPCs - 1
 			id = ReadInt(f)
 			If id > 0 Then
 				For n.NPCs = Each NPCs
@@ -1587,7 +1587,7 @@ Function LoadGameQuick(file$)
 			EndIf
 		Next
 		
-		For x=0 To 11
+		For x=0 To MaxRoomLevers - 1
 			id = ReadByte(f)
 			If id=2 Then
 				Exit
