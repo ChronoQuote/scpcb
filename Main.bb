@@ -1767,12 +1767,7 @@ Global room2gw_z# = 0.0
 
 Global ParticleAmount% = GetINIInt(OptionFile,"options","particle amount")
 
-Dim NavImages(5)
-For i = 0 To 3
-	NavImages(i) = LoadImage_Strict("GFX\navigator\roomborder"+i+".png")
-	MaskImage NavImages(i),255,0,255
-Next
-NavImages(4) = LoadImage_Strict("GFX\navigator\batterymeter.png")
+Global NavBattery% = LoadImage_Strict("GFX\navigator\batterymeter.png")
 
 Global NavBG = CreateImage(GraphicWidth,GraphicHeight)
 
@@ -6665,33 +6660,34 @@ Function DrawGUI()
 										If MapTemp(x2, z2)>0 And (MapFound(x2, z2) > 0 Or SelectedItem\itemtemplate\name = "S-NAV 310 Navigator" Or SelectedItem\itemtemplate\name = "S-NAV Navigator Ultimate") Then
 											Local drawx% = x + (PlayerX - 1 - x2) * 24 , drawy% = y - (PlayerZ - 1 - z2) * 24
 											
+											Color(30, 30, 30)
 											If x2+1<=MapGridSize Then
 												If MapTemp(x2+1,z2)=False
-													DrawImage NavImages(3),drawx-12,drawy-12
+													Rect(drawx-12,drawy-12,1,24)
 												EndIf
 											Else
-												DrawImage NavImages(3),drawx-12,drawy-12
+												Rect(drawx-12,drawy-12,1,24)
 											EndIf
 											If x2-1>=0 Then
 												If MapTemp(x2-1,z2)=False
-													DrawImage NavImages(1),drawx-12,drawy-12
+													Rect(drawx+12,drawy-12,1,24)
 												EndIf
 											Else
-												DrawImage NavImages(1),drawx-12,drawy-12
+												Rect(drawx+12,drawy-12,1,24)
 											EndIf
 											If z2-1>=0 Then
 												If MapTemp(x2,z2-1)=False
-													DrawImage NavImages(0),drawx-12,drawy-12
+													Rect(drawx-12, drawy-12,24,1)
 												EndIf
 											Else
-												DrawImage NavImages(0),drawx-12,drawy-12
+												Rect(drawx-12, drawy-12,24,1)
 											EndIf
 											If z2+1<=MapGridSize Then
 												If MapTemp(x2,z2+1)=False
-													DrawImage NavImages(2),drawx-12,drawy-12
+													Rect(drawx-12, drawy+12,24,1)
 												EndIf
 											Else
-												DrawImage NavImages(2),drawx-12,drawy-12
+												Rect(drawx-12, drawy+12,24,1)
 											EndIf
 										EndIf
 									EndIf
@@ -6805,11 +6801,11 @@ Function DrawGUI()
 								Rect xtemp,ytemp,80,20,False
 								
 								For i = 1 To Ceil(SelectedItem\state / 10.0)
-									DrawImage NavImages(4),xtemp+i*8-6,ytemp+4
+									DrawImage NavBattery,xtemp+i*8-6,ytemp+4
 								Next
 								
 								AASetFont Font3
-						EndIf
+							EndIf
 						EndIf
 						
 					EndIf
@@ -11975,5 +11971,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#39
-;~B#11C9#1448#1BE1
+;~B#11C4#1443#1BDD
 ;~C#Blitz3D
