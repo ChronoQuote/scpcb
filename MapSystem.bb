@@ -7143,9 +7143,7 @@ Function CreateMap()
 		y = y - height
 	Until y < 2
 	
-	
-	Local ZoneAmount=3
-	Local Room1Amount%[3], Room2Amount%[3],Room2CAmount%[3],Room3Amount%[3],Room4Amount%[3]
+	Local Room1Amount%[ZONEAMOUNT], Room2Amount%[ZONEAMOUNT],Room2CAmount%[ZONEAMOUNT],Room3Amount%[ZONEAMOUNT],Room4Amount%[ZONEAMOUNT]
 	
 	;count the amount of rooms
 	For y = 1 To MapHeight - 1
@@ -7183,7 +7181,7 @@ Function CreateMap()
 		
 		If temp > 0 Then
 			
-			For y = (MapHeight/ZoneAmount)*(2-i)+1 To ((MapHeight/ZoneAmount) * ((2-i)+1.0))-2
+			For y = (MapHeight/ZONEAMOUNT)*(2-i)+1 To ((MapHeight/ZONEAMOUNT) * ((2-i)+1.0))-2
 				
 				For x = 2 To MapWidth - 2
 					If MapTemp(x, y) = 0 Then
