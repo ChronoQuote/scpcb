@@ -6218,7 +6218,7 @@ Dim GorePics%(10)
 Global SelectedMonitor.SecurityCams
 Global CoffinCam.SecurityCams
 Type SecurityCams
-	Field obj%, MonitorObj%
+	Field obj%, MonitorObj%, Pvt%
 	
 	Field CameraObj%
 	
@@ -6329,16 +6329,15 @@ Function UpdateSecurityCams()
 							EndIf
 						EndIf
 					EndIf
-					PointEntity(sc\CameraObj, Camera)
-					Local temp# = EntityPitch(sc\CameraObj)
-					RotateEntity(sc\obj, 0, CurveAngle(EntityYaw(sc\CameraObj), EntityYaw(sc\obj), 75.0), 0)
+					If (Not sc\Pvt) Then
+						sc\Pvt = CreatePivot(sc\obj)
+						EntityParent(sc\Pvt, 0) ;Sets position and rotation of the pivot to the cam object
+					EndIf
+					PointEntity(sc\Pvt, Camera)
 					
-					If temp < 40.0 Then temp = 40
-					If temp > 70.0 Then temp = 70
-					RotateEntity(sc\CameraObj, CurveAngle(temp, EntityPitch(sc\CameraObj), 75.0), EntityYaw(sc\obj), 0)
+					RotateEntity(sc\CameraObj, CurveAngle(EntityPitch(sc\Pvt), EntityPitch(sc\CameraObj), 75.0), CurveAngle(EntityYaw(sc\Pvt), EntityYaw(sc\CameraObj), 75.0), 0.0)
 					
 					PositionEntity(sc\CameraObj, EntityX(sc\obj, True), EntityY(sc\obj, True) - 0.083, EntityZ(sc\obj, True))
-					RotateEntity(sc\CameraObj, EntityPitch(sc\CameraObj), EntityYaw(sc\obj), 0)
 				Else
 					If sc\turn > 0 Then
 						If sc\dir = 0 Then
@@ -6349,10 +6348,8 @@ Function UpdateSecurityCams()
 							If sc\CurrAngle < (-sc\turn * 1.3) Then sc\dir = 0
 						End If
 					End If
-					RotateEntity(sc\obj, 0, sc\room\angle + sc\angle + Max(Min(sc\CurrAngle, sc\turn), -sc\turn), 0)
-					
 					PositionEntity(sc\CameraObj, EntityX(sc\obj, True), EntityY(sc\obj, True) - 0.083, EntityZ(sc\obj, True))
-					RotateEntity(sc\CameraObj, EntityPitch(sc\CameraObj), EntityYaw(sc\obj), 0)
+					RotateEntity(sc\CameraObj, EntityPitch(sc\CameraObj), sc\room\angle + sc\angle + Max(Min(sc\CurrAngle, sc\turn), -sc\turn), 0.0)
 					
 					If sc\Cam<>0 Then 
 						PositionEntity(sc\Cam, EntityX(sc\CameraObj, True), EntityY(sc\CameraObj, True), EntityZ(sc\CameraObj, True))
