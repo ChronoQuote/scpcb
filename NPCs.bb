@@ -2475,7 +2475,7 @@ Function UpdateNPCs()
 						If dist < 15.0 Then
 							
 							If WrapAngle(EntityYaw(n\Collider)-DeltaYaw(n\Collider, Collider))<90 Then
-								If EntityVisible(pvt,Collider) Then n\State = 1
+								If EntityVisible(n\Collider,Collider) Then n\State = 1
 							EndIf
 							
 						EndIf
@@ -2741,6 +2741,9 @@ Function UpdateNPCs()
 				EndIf
 				
 				If n\Frame > 286.5 And n\Frame < 288.5
+					n\IsDead = True
+				EndIf
+				If AnimTime(n\obj) > 286.5 And AnimTime(n\obj) < 288.5 Then
 					n\IsDead = True
 				EndIf
 				
@@ -7453,5 +7456,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#198#12AA#1344#13DD#1591#169C#185D#18B9
+;~B#198#12AD#1347#13E0#1594#169F#1860#18BC
 ;~C#Blitz3D
