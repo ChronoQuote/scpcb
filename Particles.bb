@@ -78,7 +78,6 @@ Function RemoveParticle(p.Particles)
 	Delete p
 End Function
 
-Global InSmoke%
 Global HissSFX% = LoadSound_Strict("SFX\General\Hiss.ogg")
 Global SmokeDelay# = 0.0
 
@@ -101,7 +100,7 @@ Type Emitters
 End Type 
 
 Function UpdateEmitters()
-	InSmoke = False
+	Local InSmoke = False
 	For e.emitters = Each Emitters
 		If FPSfactor > 0 And (PlayerRoom = e\room Or e\room\dist < 8) Then
 			;If ParticleAmount = 2 Or SmokeDelay#=0.0
@@ -285,5 +284,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#2E#4A#54#66#C5#D0
+;~F#2E#4A#53#C4#CF
 ;~C#Blitz3D
