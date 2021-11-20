@@ -10041,20 +10041,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 							d.Decals = CreateDecal(7, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
 							d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
 						Case "1:1"
-							Select Rand(6)
-								Case 1
-									it2 = CreateItem("Document SCP-106", "paper", x, y, z)
-								Case 2
-									it2 = CreateItem("Document SCP-079", "paper", x, y, z)
-								Case 3
-									it2 = CreateItem("Document SCP-173", "paper", x, y, z)
-								Case 4
-									it2 = CreateItem("Document SCP-895", "paper", x, y, z)
-								Case 5
-									it2 = CreateItem("Document SCP-682", "paper", x, y, z)
-								Case 6
-									it2 = CreateItem("Document SCP-860", "paper", x, y, z)
-							End Select
+							it2 = CreateItem("Document SCP-" + GetRandDocument(), "paper", x, y, z)
 						Case "fine", "very fine"
 							it2 = CreateItem("Origami", "misc", x, y, z)
 					End Select
@@ -12085,6 +12072,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#162D#243C#2B3A
+;~F#39#162D#243C#2B2D
 ;~B#11DE#145D#1C06
 ;~C#Blitz3D

@@ -788,6 +788,34 @@ Function DropItem(item.Items,playdropsound%=True)
 	
 End Function
 
+Function GetRandDocument$()
+	Select Rand(23)
+		Case 1 Return "008"
+		Case 2 Return "012"
+		Case 3 Return "035"
+		Case 4 Return "049"
+		Case 5 Return "079"
+		Case 6 Return "096"
+		Case 7 Return "106"
+		Case 8 Return "173"
+		Case 9 Return "372"
+		Case 10 Return "500"
+		Case 11 Return "513"
+		Case 12 Return "682"
+		Case 13 Return "714"
+		Case 14 Return "860"
+		Case 15 Return "860-1"
+		Case 16 Return "895"
+		Case 17 Return "939"
+		Case 18 Return "966"
+		Case 19 Return "970"
+		Case 20 Return "1048"
+		Case 21 Return "1123"
+		Case 22 Return "1162"
+		Case 23 Return "1499"
+	End Select
+End Function
+
 ;Update any ailments inflicted by SCP-294 drinks.
 Function Update294()
 	CatchErrors("Uncaught (Update294)")

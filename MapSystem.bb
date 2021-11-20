@@ -4667,23 +4667,7 @@ Function FillRoom(r.Rooms)
 							Case (chance<0)
 								Exit
 							Case (chance<40) ;40% chance for a document
-								tempstr="Document SCP-"
-								Select Rand(1,6)
-									Case 1
-										tempstr=tempstr+"1123"
-									Case 2
-										tempstr=tempstr+"1048"
-									Case 3
-										tempstr=tempstr+"939"
-									Case 4
-										tempstr=tempstr+"682"
-									Case 5
-										tempstr=tempstr+"079"
-									Case 6
-										tempstr=tempstr+"096"
-									Case 6
-										tempstr=tempstr+"966"
-								End Select
+								tempstr="Document SCP-" + GetRandDocument()
 								tempstr2="paper"
 							Case (chance>=40) And (chance<45) ;5% chance for a key card
 								temp3%=Rand(1,2)
@@ -8793,6 +8777,6 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#2#A#35#102#111#118#11F#126#13F#147#14F#1462
+;~F#2#A#35#102#111#118#11F#126#13F#147#14F#1452
 ;~B#1234
 ;~C#Blitz3D
