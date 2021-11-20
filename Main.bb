@@ -1845,9 +1845,6 @@ Type Doors
 	
 	Field ID%
 	
-	Field Level%
-	Field LevelDest%
-	
 	Field AutoClose%
 	
 	Field LinkedDoor.Doors
@@ -1863,7 +1860,7 @@ End Type
 Dim BigDoorOBJ(2), HeavyDoorObj(2)
 Dim OBJTunnel(7)
 
-Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% = False, keycard% = False, code$="", useCollisionMesh% = False)
+Function CreateDoor.Doors(x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% = False, keycard% = False, code$="", useCollisionMesh% = False)
 	Local d.Doors, parent, i%
 	If room <> Null Then parent = room\obj
 	
@@ -1927,9 +1924,6 @@ Function CreateDoor.Doors(lvl, x#, y#, z#, angle#, room.Rooms, dopen% = False,  
 	
 	d\KeyCard = keycard
 	d\Code = code
-	
-	d\Level = lvl
-	d\LevelDest = 66
 	
 	For i% = 0 To 1
 		If code <> "" Then 
@@ -10156,7 +10150,7 @@ Function Use294()
 							strtemp = " "
 					End Select
 				EndIf
-			Endif
+			EndIf
 			
 			Input294 = Input294 + strtemp
 			
@@ -12069,6 +12063,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#162D#243C#2B2F
-;~B#11DE#145D#1C06
+;~F#39#1627#2436
+;~B#11D8#1457#1C00
 ;~C#Blitz3D
