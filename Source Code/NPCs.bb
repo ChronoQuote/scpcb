@@ -6800,10 +6800,92 @@ Function UpdateMTFUnit(n.NPCs)
 	EndIf
 End Function
 
+Function AnimateNPC(n.NPCs, start#, quit#, speed#, loop=True)
+	Local newTime#
+	
+	If speed > 0.0 Then 
+		newTime = Max(Min(n\Frame + speed * FPSfactor,quit),start)
+		
+		If loop And newTime => quit Then
+			newTime = start
+		EndIf
+	Else
+		If start < quit Then
+			temp% = start
+			start = quit
+			quit = temp
+		EndIf
+		
+		If loop Then
+			newTime = n\Frame + speed * FPSfactor
+			
+			If newTime < quit Then 
+				newTime = start
+			Else If newTime > start 
+				newTime = quit
+			EndIf
+		Else
+			newTime = Max(Min(n\Frame + speed * FPSfactor,start),quit)
+		EndIf
+	EndIf
+	SetNPCFrame(n, newTime)
+	
+End Function
+
+Function SetNPCFrame(n.NPCs, frame#)
+	If (Abs(n\Frame-frame)<0.001) Then Return
+	
+	SetAnimTime n\obj, frame
+	
+	n\Frame = frame
+End Function
+
+Function Animate2#(entity%, curr#, start%, quit%, speed#, loop=True)
+	
+	Local newTime#
+	
+	If speed > 0.0 Then 
+		newTime = Max(Min(curr + speed * FPSfactor,quit),start)
+		
+		If loop Then
+			If newTime => quit Then 
+				;SetAnimTime entity, start
+				newTime = start
+			Else
+				;SetAnimTime entity, newTime
+			EndIf
+		Else
+			;SetAnimTime entity, newTime
+		EndIf
+	Else
+		If start < quit Then
+			temp% = start
+			start = quit
+			quit = temp
+		EndIf
+		
+		If loop Then
+			newTime = curr + speed * FPSfactor
+			
+			If newTime < quit Then newTime = start
+			If newTime > start Then newTime = quit
+			
+			;SetAnimTime entity, newTime
+		Else
+			;SetAnimTime (entity, Max(Min(curr + speed * FPSfactor,start),quit))
+			newTime = Max(Min(curr + speed * FPSfactor,start),quit)
+		EndIf
+	EndIf
+	
+	SetAnimTime entity, newTime
+	Return newTime
+	
+End Function 
+
 Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False)
 	
 	;muzzle flash
-	Local p.Particles = CreateParticle(x,y,z, 1, Rnd(0.08,0.1), 0.0, 5)
+	Local p.particles = CreateParticle(x,y,z, 1, Rnd(0.08,0.1), 0.0, 5)
 	TurnEntity p\obj, 0,0,Rnd(360)
 	p\Achange = -0.15
 	
@@ -6904,7 +6986,7 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 				
 				If particles Then 
 					;dust/smoke particles
-					p.Particles = CreateParticle(PickedX(),PickedY(),PickedZ(), 0, 0.03, 0, 80)
+					p.particles = CreateParticle(PickedX(),PickedY(),PickedZ(), 0, 0.03, 0, 80)
 					p\speed = 0.001
 					p\SizeChange = 0.003
 					p\A = 0.8
@@ -6912,7 +6994,7 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					RotateEntity p\pvt, EntityPitch(pvt)-180, EntityYaw(pvt),0
 					
 					For i = 0 To Rand(2,3)
-						p.Particles = CreateParticle(PickedX(),PickedY(),PickedZ(), 0, 0.006, 0.003, 80)
+						p.particles = CreateParticle(PickedX(),PickedY(),PickedZ(), 0, 0.006, 0.003, 80)
 						p\speed = 0.02
 						p\A = 0.8
 						p\Achange = -0.01
@@ -6936,24 +7018,6 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 		
 	EndIf
 	
-End Function
-
-Function PlayMTFSound(sound%, n.NPCs)
-	If n <> Null Then
-		n\SoundChn = PlaySound2(sound, Camera, n\Collider, 8.0)	
-	EndIf
-	
-	If SelectedItem <> Null Then
-		If SelectedItem\state2 = 3 And SelectedItem\state > 0 Then 
-			Select SelectedItem\itemtemplate\tempname 
-				Case "radio","fineradio","18vradio"
-					If sound<>MTFSFX(5) Or (Not ChannelPlaying(RadioCHN(3)))
-						If RadioCHN(3)<> 0 Then StopChannel RadioCHN(3)
-						RadioCHN(3) = PlaySound_Strict (sound)
-					EndIf
-			End Select
-		EndIf
-	EndIf 
 End Function
 
 Function MoveToPocketDimension()
@@ -7007,39 +7071,6 @@ Function ForceSetNPCID(n.NPCs, newID%)
 			n2\id = FindFreeNPCID()
 		EndIf
 	Next
-End Function
-
-Function Find860Angle(n.NPCs, fr.Forest)
-	TFormPoint(EntityX(Collider),EntityY(Collider),EntityZ(Collider),0,fr\Forest_Pivot)
-	Local playerx = Floor((TFormedX()+6.0)/12.0)
-	Local playerz = Floor((TFormedZ()+6.0)/12.0)
-	
-	TFormPoint(EntityX(n\Collider),EntityY(n\Collider),EntityZ(n\Collider),0,fr\Forest_Pivot)
-	Local x# = (TFormedX()+6.0)/12.0
-	Local z# = (TFormedZ()+6.0)/12.0
-	
-	Local xt = Floor(x), zt = Floor(z)
-	
-	Local x2,z2
-	If xt<>playerx Or zt<>playerz Then ;the monster is not on the same tile as the player
-		For x2 = Max(xt-1,0) To Min(xt+1,gridsize-1)
-			For z2 = Max(zt-1,0) To Min(zt+1,gridsize-1)
-				If fr\grid[(z2*gridsize)+x2]>0 And (x2<>xt Or z2<>zt) And (x2=xt Or z2=zt) Then
-					
-					;tile (x2,z2) is closer to the player than the monsters current tile
-					If (Abs(playerx-x2)+Abs(playerz-z2))<(Abs(playerx-xt)+Abs(playerz-zt)) Then
-						;calculate the position of the tile in world coordinates
-						TFormPoint(x2*12.0,0,z2*12.0,fr\Forest_Pivot,0)
-						
-						Return point_direction(EntityX(n\Collider),EntityZ(n\Collider),TFormedX(),TFormedZ())+180
-					EndIf
-					
-				EndIf
-			Next
-		Next
-	Else
-		Return point_direction(EntityX(n\Collider),EntityZ(n\Collider),EntityX(Collider),EntityZ(Collider))+180
-	EndIf		
 End Function
 
 Function Console_SpawnNPC(c_input$, c_state$ = "")
@@ -7235,18 +7266,6 @@ Function GetNPCManipulationValue$(NPC$,bone$,section$,valuetype%=0)
 			EndIf
 	End Select
 	
-End Function
-
-Function ChangeAngleValueForCorrectBoneAssigning(value#)
-	Local numb#
-	
-	If value# <= 180.0
-		numb# = value#
-	Else
-		numb# = -360+value#
-	EndIf
-	
-	Return numb#
 End Function
 
 Function NPCSpeedChange(n.NPCs)

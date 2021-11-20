@@ -1,3 +1,256 @@
+Type Events
+	Field EventName$
+	Field room.Rooms
+	
+	Field EventState#, EventState2#, EventState3#
+	Field SoundCHN%, SoundCHN2%
+	Field Sound, Sound2
+	Field SoundCHN_isStream%, SoundCHN2_isStream%
+	
+	Field EventStr$
+	
+	Field img%
+End Type 
+
+Function CreateEvent.Events(eventname$, roomname$, id%, prob# = 0.0)
+	;roomname = the name of the room(s) you want the event to be assigned to
+	
+	;the id-variable determines which of the rooms the event is assigned to,
+	;0 will assign it to the first generated room, 1 to the second, etc
+	
+	;the prob-variable can be used to randomly assign events into some rooms
+	;0.5 means that there's a 50% chance that event is assigned to the rooms
+	;1.0 means that the event is assigned to every room
+	;the id-variable is ignored if prob <> 0.0
+	
+	Local i% = 0, temp%, e.Events, e2.Events, r.Rooms
+	
+	If prob = 0.0 Then
+		For r.Rooms = Each Rooms
+			If (roomname = "" Or roomname = r\RoomTemplate\Name) Then
+				temp = False
+				For e2.Events = Each Events
+					If e2\room = r Then temp = True : Exit
+				Next
+				
+				i=i+1
+				If i >= id And temp = False Then
+					e.Events = New Events
+					e\EventName = eventname					
+					e\room = r
+					Return e
+				End If
+			EndIf
+		Next
+	Else
+		For r.Rooms = Each Rooms
+			If (roomname = "" Or roomname = r\RoomTemplate\Name) Then
+				temp = False
+				For e2.Events = Each Events
+					If e2\room = r Then temp = True : Exit
+				Next
+				
+				If Rnd(0.0, 1.0) < prob And temp = False Then
+					e.Events = New Events
+					e\EventName = eventname					
+					e\room = r
+				End If
+			EndIf
+		Next		
+	EndIf
+	
+	Return Null
+End Function
+
+Function InitEvents()
+	Local e.Events
+	
+	CreateEvent("173", "173", 0)
+	CreateEvent("alarm", "start", 0)
+	
+	CreateEvent("pocketdimension", "pocketdimension", 0)	
+	
+	;there's a 7% chance that 106 appears in the rooms named "tunnel"
+	CreateEvent("tunnel106", "tunnel", 0, 0.07 + (0.1*SelectedDifficulty\aggressiveNPCs))
+	
+	;the chance for 173 appearing in the first lockroom is about 66%
+	;there's a 30% chance that it appears in the later lockrooms
+	If Rand(3)<3 Then CreateEvent("lockroom173", "lockroom", 0)
+	CreateEvent("lockroom173", "lockroom", 0, 0.3 + (0.5*SelectedDifficulty\aggressiveNPCs))
+	
+	CreateEvent("room2trick", "room2", 0, 0.15)	
+	
+	CreateEvent("1048a", "room2", 0, 1.0)	
+	
+	CreateEvent("room2storage", "room2storage", 0)	
+	
+	;096 spawns in the first (and last) lockroom2
+	CreateEvent("lockroom096", "lockroom2", 0)
+	
+	CreateEvent("endroom106", "endroom", Rand(0,1))
+	
+	CreateEvent("room2poffices2", "room2poffices2", 0)
+	
+	CreateEvent("room2fan", "room2_2", 0, 1.0)
+	
+	CreateEvent("room2elevator2", "room2elevator", 0)
+	CreateEvent("room2elevator", "room2elevator", Rand(1,2))
+	
+	CreateEvent("room3storage", "room3storage", 0, 0)
+	
+	CreateEvent("tunnel2smoke", "tunnel2", 0, 0.2)
+	CreateEvent("tunnel2", "tunnel2", Rand(0,2), 0)
+	CreateEvent("tunnel2", "tunnel2", 0, (0.2*SelectedDifficulty\aggressiveNPCs))
+	
+	;173 appears in half of the "room2doors" -rooms
+	CreateEvent("room2doors173", "room2doors", 0, 0.5 + (0.4*SelectedDifficulty\aggressiveNPCs))
+	
+	;the anomalous duck in room2offices2-rooms
+	CreateEvent("room2offices2", "room2offices2", 0, 0.7)
+	
+	CreateEvent("room2closets", "room2closets", 0)	
+	
+	CreateEvent("room2cafeteria", "room2cafeteria", 0)	
+	
+	CreateEvent("room3pitduck", "room3pit", 0)
+	CreateEvent("room3pit1048", "room3pit", 1)
+	
+	;the event that causes the door to open by itself in room2offices3
+	CreateEvent("room2offices3", "room2offices3", 0, 1.0)	
+	
+	CreateEvent("room2servers", "room2servers", 0)	
+	
+	CreateEvent("room3servers", "room3servers", 0)	
+	CreateEvent("room3servers", "room3servers2", 0)
+	
+	;the dead guard
+	CreateEvent("room3tunnel","room3tunnel", 0, 0.08)
+	
+	CreateEvent("room4","room4", 0)
+	
+	If Rand(5)<5 Then 
+		Select Rand(3)
+			Case 1
+				CreateEvent("682roar", "tunnel", Rand(0,2), 0)	
+			Case 2
+				CreateEvent("682roar", "room3pit", Rand(0,2), 0)		
+			Case 3
+				;CreateEvent("682roar", "room2offices", 0, 0)
+				CreateEvent("682roar", "room2z3", 0, 0)
+		End Select 
+	EndIf 
+	
+	CreateEvent("testroom173", "room2testroom2", 0, 1.0)	
+	
+	CreateEvent("room2tesla", "room2tesla", 0, 0.9)
+	
+	CreateEvent("room2nuke", "room2nuke", 0, 0)
+	
+	If Rand(5) < 5 Then 
+		CreateEvent("coffin106", "coffin", 0, 0)
+	Else
+		CreateEvent("coffin", "coffin", 0, 0)
+	EndIf 
+	
+	CreateEvent("checkpoint", "checkpoint1", 0, 1.0)
+	CreateEvent("checkpoint", "checkpoint2", 0, 1.0)
+	
+	CreateEvent("room3door", "room3", 0, 0.1)
+	CreateEvent("room3door", "room3tunnel", 0, 0.1)	
+	
+	If Rand(2)=1 Then
+		CreateEvent("106victim", "room3", Rand(1,2))
+		CreateEvent("106sinkhole", "room3_2", Rand(2,3))
+	Else
+		CreateEvent("106victim", "room3_2", Rand(1,2))
+		CreateEvent("106sinkhole", "room3", Rand(2,3))
+	EndIf
+	CreateEvent("106sinkhole", "room4", Rand(1,2))
+	
+	CreateEvent("room079", "room079", 0, 0)	
+	
+	CreateEvent("room049", "room049", 0, 0)
+	
+	CreateEvent("room012", "room012", 0, 0)
+	
+	CreateEvent("room035", "room035", 0, 0)
+	
+	CreateEvent("008", "008", 0, 0)
+	
+	CreateEvent("room106", "room106", 0, 0)	
+	
+	CreateEvent("pj", "roompj", 0, 0)
+	
+	CreateEvent("914", "914", 0, 0)
+	
+	CreateEvent("buttghost", "room2toilets", 0, 0)
+	CreateEvent("toiletguard", "room2toilets", 1, 0)
+	
+	CreateEvent("room2pipes106", "room2pipes", Rand(0, 3)) 
+	
+	CreateEvent("room2pit", "room2pit", 0, 0.4 + (0.4*SelectedDifficulty\aggressiveNPCs))
+	
+	CreateEvent("testroom", "testroom", 0)
+	
+	CreateEvent("room2tunnel", "room2tunnel", 0)
+	
+	CreateEvent("room2ccont", "room2ccont", 0)
+	
+	CreateEvent("gateaentrance", "gateaentrance", 0)
+	CreateEvent("gatea", "gatea", 0)	
+	CreateEvent("exit1", "exit1", 0)
+	
+	CreateEvent("room205", "room205", 0)
+	
+	CreateEvent("room860","room860", 0)
+	
+	CreateEvent("room966","room966", 0)
+	
+	CreateEvent("room1123", "room1123", 0, 0)
+	;CreateEvent("room2test1074","room2test1074",0)
+	;CreateEvent("room038","room038",0,0)
+	;CreateEvent("room009","room009",0,0)
+	;CreateEvent("medibay", "medibay", 0)
+	;CreateEvent("room409", "room409", 0)
+	;CreateEvent("room178", "room178", 0)
+	;CreateEvent("room020", "room020", 0)
+	CreateEvent("room2tesla", "room2tesla_lcz", 0, 0.9)
+	CreateEvent("room2tesla", "room2tesla_hcz", 0, 0.9)
+	
+	;New Events in SCP:CB Version 1.3 - ENDSHN
+	CreateEvent("room4tunnels","room4tunnels",0)
+	CreateEvent("room_gw","room2gw",0,1.0)
+	CreateEvent("dimension1499","dimension1499",0)
+	CreateEvent("room1162","room1162",0)
+	CreateEvent("room2scps2","room2scps2",0)
+	CreateEvent("room_gw","room3gw",0,1.0)
+	CreateEvent("room2sl","room2sl",0)
+	CreateEvent("medibay","medibay",0)
+	CreateEvent("room2shaft","room2shaft",0)
+	CreateEvent("room1lifts","room1lifts",0)
+	
+	CreateEvent("room2gw_b","room2gw_b",Rand(0,1))
+	
+	CreateEvent("096spawn","room4pit",0,0.6+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","room3pit",0,0.6+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","room2pipes",0,0.4+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","room2pit",0,0.5+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","room3tunnel",0,0.6+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","room4tunnels",0,0.7+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","tunnel",0,0.6+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","tunnel2",0,0.4+(0.2*SelectedDifficulty\aggressiveNPCs))
+	CreateEvent("096spawn","room3z2",0,0.7+(0.2*SelectedDifficulty\aggressiveNPCs))
+	
+	CreateEvent("room2pit","room2_4",0,0.4 + (0.4*SelectedDifficulty\aggressiveNPCs))
+	
+	CreateEvent("room2offices035","room2offices",0)
+	
+	CreateEvent("room2pit106", "room2pit", 0, 0.07 + (0.1*SelectedDifficulty\aggressiveNPCs))
+	
+	CreateEvent("room1archive", "room1archive", 0, 1.0)
+	
+End Function
+
 Function UpdateEvents()
 	CatchErrors("Uncaught (UpdateEvents)")
 	Local dist#, i%, temp%, pvt%, strtemp$, j%, k%
@@ -10054,37 +10307,72 @@ Function UpdateEndings()
 	
 End Function
 
+Function RemoveEvent(e.Events)
+	If e\Sound<>0 Then FreeSound_Strict e\Sound
+	If e\Sound2<>0 Then FreeSound_Strict e\Sound2
+	If e\img<>0 Then FreeImage e\img
+	Delete e
+End Function
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
+	Local prevEventState# = EventState#
+	
+	If EventState < 0 Then
+		EventState = 0
+		prevEventState = 0
+	EndIf
+	
+	If d\openstate = 0 And d\open = False Then
+		If Abs(EntityX(Collider)-EntityX(elevatorobj%,True))<=280.0*RoomScale+(0.015*FPSfactor) Then
+			If Abs(EntityZ(Collider)-EntityZ(elevatorobj%,True))<=280.0*RoomScale+(0.015*FPSfactor) Then
+				If Abs(EntityY(Collider)-EntityY(elevatorobj%,True))<=280.0*RoomScale+(0.015*FPSfactor) Then
+					d\locked = True
+					If EventState = 0 Then
+						TeleportEntity(Curr096\Collider,EntityX(d\frameobj),EntityY(d\frameobj)+1.0,EntityZ(d\frameobj),Curr096\CollRadius)
+						PointEntity Curr096\Collider,elevatorobj
+						RotateEntity Curr096\Collider,0,EntityYaw(Curr096\Collider),0
+						MoveEntity Curr096\Collider,0,0,-0.5
+						ResetEntity Curr096\Collider
+						Curr096\State = 6
+						SetNPCFrame(Curr096,0)
+						e\Sound = LoadSound_Strict("SFX\SCP\096\ElevatorSlam.ogg")
+						EventState = EventState + FPSfactor * 1.4
+					EndIf
+				EndIf
+			EndIf
+		EndIf
+	EndIf
+	
+	If EventState > 0 Then
+		If prevEventState = 0 Then
+			e\SoundCHN = PlaySound_Strict(e\Sound)
+		EndIf
+		
+		If EventState > 70*1.9 And EventState < 70*2+FPSfactor
+			CameraShake = 7
+		ElseIf EventState > 70*4.2 And EventState < 70*4.25+FPSfactor
+			CameraShake = 1
+		ElseIf EventState > 70*5.9 And EventState < 70*5.95+FPSfactor
+			CameraShake = 1
+		ElseIf EventState > 70*7.25 And EventState < 70*7.3+FPSfactor
+			CameraShake = 1
+			d\fastopen = True
+			d\open = True
+			Curr096\State = 4
+			Curr096\LastSeen = 1
+		ElseIf EventState > 70*8.1 And EventState < 70*8.15+FPSfactor
+			CameraShake = 1
+		EndIf
+		
+		If EventState <= 70*8.1 Then
+			d\openstate = Min(d\openstate,20)
+		EndIf
+		EventState = EventState + FPSfactor * 1.4
+	EndIf
+	Return EventState
+	
+End Function
 
 ;~IDEal Editor Parameters:
-;~B#10FF#1D7C
+;~B#11FC#1E79
 ;~C#Blitz3D

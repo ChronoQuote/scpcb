@@ -254,23 +254,6 @@ Function LoadWorld(file$, rt.RoomTemplates)
 	
 End Function
 
-;RMESH STUFF;;;;
-
-Function StripFilename$(file$)
-	Local mi$=""
-	Local lastSlash%=0
-	If Len(file)>0
-		For i%=1 To Len(file)
-			mi=Mid(file$,i,1)
-			If mi="\" Or mi="/" Then
-				lastSlash=i
-			EndIf
-		Next
-	EndIf
-	
-	Return Left(file,lastSlash)
-End Function
-
 Function GetTextureFromCache%(name$)
 	For tc.Materials=Each Materials
 		If tc\name = name Then Return tc\Diff
@@ -752,65 +735,6 @@ Function LoadRMesh(file$,rt.RoomTemplates)
 	
 End Function
 
-
-;-----------;;;;
-
-Function StripPath$(file$) 
-	Local name$=""
-	If Len(file$)>0 
-		For i=Len(file$) To 1 Step -1 
-			
-			mi$=Mid$(file$,i,1) 
-			If mi$="\" Or mi$="/" Then Return name$
-			
-			name$=mi$+name$ 
-		Next 
-		
-	EndIf 
-	
-	Return name$ 
-End Function
-
-Function Piece$(s$,entry,char$=" ")
-	While Instr(s,char+char)
-		s=Replace(s,char+char,char)
-	Wend
-	For n=1 To entry-1
-		p=Instr(s,char)
-		s=Right(s,Len(s)-p)
-	Next
-	p=Instr(s,char)
-	If p<1
-		a$=s
-	Else
-		a=Left(s,p-1)
-	EndIf
-	Return a
-End Function
-
-Function KeyValue$(entity,key$,defaultvalue$="")
-	properties$=EntityName(entity)
-	properties$=Replace(properties$,Chr(13),"")
-	key$=Lower(key)
-	Repeat
-		p=Instr(properties,Chr(10))
-		If p Then test$=(Left(properties,p-1)) Else test=properties
-		testkey$=Piece(test,1,"=")
-		testkey=Trim(testkey)
-		testkey=Replace(testkey,Chr(34),"")
-		testkey=Lower(testkey)
-		If testkey=key Then
-			value$=Piece(test,2,"=")
-			value$=Trim(value$)
-			value$=Replace(value$,Chr(34),"")
-			Return value
-		EndIf
-		If Not p Then Return defaultvalue$
-		properties=Right(properties,Len(properties)-p)
-	Forever 
-End Function
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -839,38 +763,6 @@ Type Forest
 	
 	Field ID%
 End Type
-
-Function move_forward%(dir%,pathx%,pathy%,retval%=0)
-	;move 1 unit along the grid in the designated direction
-	If dir = 1 Then
-		If retval=0 Then
-			Return pathx
-		Else
-			Return pathy+1
-		EndIf
-	EndIf
-	If retval=0 Then
-		Return pathx-1+dir
-	Else
-		Return pathy
-	EndIf
-End Function
-
-Function chance%(chanc%)
-	;perform a chance given a probability
-	Return (Rand(0,100)<=chanc)
-End Function
-
-Function turn_if_deviating%(max_deviation_distance_%,pathx%,center_%,dir%,retval%=0)
-	;check if deviating and return the answer. if deviating, turn around
-	Local current_deviation% = center_ - pathx
-	Local deviated% = False
-	If (dir = 0 And current_deviation >= max_deviation_distance_) Or (dir = 2 And current_deviation <= -max_deviation_distance_) Then
-		dir = (dir + 2) Mod 4
-		deviated = True
-	EndIf
-	If retval=0 Then Return dir Else Return deviated
-End Function
 
 Function GenForestGrid(fr.Forest)
 	CatchErrors("Uncaught (GenForestGrid)")
@@ -7770,10 +7662,6 @@ Function SetRoom(room_name$,room_type%,pos%,min_pos%,max_pos%) ;place a room wit
 	EndIf
 End Function
 
-Function GetZone(y%)
-	Return Min(Floor((Float(MapGridSize-y)/MapGridSize*ZONEAMOUNT)),ZONEAMOUNT-1)
-End Function
-
 ;-------------------------------------------------------------------------------------------------------
 
 
@@ -8452,59 +8340,6 @@ Function AddLightCones(room.Rooms)
 	
 End Function
 
-Function CalculateRoomTemplateExtents(r.RoomTemplates)
-	If r\DisableOverlapCheck Then Return
-	
-	GetMeshExtents(GetChild(r\obj,2))
-	r\MinX = Mesh_MinX
-	r\MinY = Mesh_MinY
-	r\MinZ = Mesh_MinZ
-	r\MaxX = Mesh_MaxX
-	r\MaxY = Mesh_MaxY
-	r\MaxZ = Mesh_MaxZ
-	
-	DebugLog("roomtemplateextents: "+r\MinX+", "+r\MinY	+", "+r\MinZ	+", "+r\MaxX	+", "+r\MaxY+", "+r\MaxZ)
-End Function
-
-Function CalculateRoomExtents(r.Rooms)
-	If r\RoomTemplate\DisableOverlapCheck Then Return
-	
-	;shrink the extents slightly - we don't care if the overlap is smaller than the thickness of the walls
-	Local shrinkAmount# = 0.05
-	
-	;convert from the rooms local space to world space
-	TFormVector(r\RoomTemplate\MinX, r\RoomTemplate\MinY, r\RoomTemplate\MinZ, r\obj, 0)
-	r\MinX = TFormedX() + shrinkAmount + r\x
-	r\MinY = TFormedY() + shrinkAmount
-	r\MinZ = TFormedZ() + shrinkAmount + r\z
-	
-	;convert from the rooms local space to world space
-	TFormVector(r\RoomTemplate\MaxX, r\RoomTemplate\MaxY, r\RoomTemplate\MaxZ, r\obj, 0)
-	r\MaxX = TFormedX() - shrinkAmount + r\x
-	r\MaxY = TFormedY() - shrinkAmount
-	r\MaxZ = TFormedZ() - shrinkAmount + r\z
-	
-	If (r\MinX > r\MaxX) Then
-		Local tempX# = r\MaxX
-		r\MaxX = r\MinX
-		r\MinX = tempX
-	EndIf
-	If (r\MinZ > r\MaxZ) Then
-		Local tempZ# = r\MaxZ
-		r\MaxZ = r\MinZ
-		r\MinZ = tempZ
-	EndIf
-	
-	DebugLog("roomextents: "+r\MinX+", "+r\MinY	+", "+r\MinZ	+", "+r\MaxX	+", "+r\MaxY+", "+r\MaxZ)
-End Function
-
-Function CheckRoomOverlap(r1.Rooms, r2.Rooms)
-	If (r1\MaxX	<= r2\MinX Or r1\MaxY <= r2\MinY Or r1\MaxZ <= r2\MinZ) Then Return False
-	If (r1\MinX	>= r2\MaxX Or r1\MinY >= r2\MaxY Or r1\MinZ >= r2\MaxZ) Then Return False
-	
-	Return True
-End Function
-
 Function PreventRoomOverlap(r.Rooms)
 	If r\RoomTemplate\DisableOverlapCheck Then Return
 	
@@ -8653,6 +8488,6 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#2#A#35#102#111#118#11F#126#13F#147#14F
-;~B#122F
+;~F#2#A#35#100#107#10E#115#12E#136#13E
+;~B#11C3
 ;~C#Blitz3D
