@@ -1,6 +1,6 @@
 
 
-Dim ParticleTextures%(10)
+Dim ParticleTextures%(9)
 
 Type Particles
 	Field obj%, pvt%
