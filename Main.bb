@@ -7015,15 +7015,12 @@ Function DrawGUI()
 				Default
 					;[Block]
 					;check if the item is an inventory-type object
-					If SelectedItem\invSlots>0 Then
-						DoubleClick = 0
-						MouseHit1 = 0
-						MouseDown1 = 0
-						LastMouseHit1 = 0
-						OtherOpen = SelectedItem
-						SelectedItem = Null
-					EndIf
-					
+					DoubleClick = 0
+					MouseHit1 = 0
+					MouseDown1 = 0
+					LastMouseHit1 = 0
+					If SelectedItem\invSlots>0 Then OtherOpen = SelectedItem
+					SelectedItem = Null
 					;[End Block]
 			End Select
 			
@@ -11978,5 +11975,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#39
-;~B#11C9#1448#1BE4
+;~B#11C9#1448#1BE1
 ;~C#Blitz3D
