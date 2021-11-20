@@ -321,7 +321,6 @@ Function InitItemTemplates()
 				For it2=Each ItemTemplates
 					If (it2<>it) And (it2\tex=it\tex) Then
 						it2\tex = 0
-						Exit
 					EndIf
 				Next
 			EndIf
@@ -883,5 +882,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#B
+;~F#B#1E
 ;~C#Blitz3D
