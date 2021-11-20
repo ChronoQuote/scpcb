@@ -8,11 +8,10 @@ Const NPCtype966% = 18, NPCtype1048a = 19, NPCtype1499% = 20, NPCtype008% = 21, 
 ;[End Block]
 
 Type NPCs
-	Field obj%, obj2%, obj3%, obj4%, Collider%
+	Field obj%, obj2%, obj3%, Collider%
 	Field NPCtype%, ID%
 	Field DropSpeed#, Gravity%
 	Field State#, State2#, State3#, PrevState%
-	Field MakingNoise%
 	
 	Field Frame#
 	
@@ -42,7 +41,6 @@ Type NPCs
 	Field GravityMult# = 1.0
 	Field MaxGravity# = 0.2
 	
-	Field MTFVariant%
 	Field MTFLeader.NPCs
 	Field IsDead%
 	Field BlinkTimer# = 1.0
@@ -56,8 +54,6 @@ Type NPCs
 	Field BoneRoll#
 	Field NPCNameInSection$
 	Field InFacility% = True
-	Field CanUseElevator% = False
-	Field CurrElevator.ElevatorObj
 	Field HP%
 	Field PathX#,PathZ#
 	Field Model$
@@ -276,8 +272,6 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			n\Sound = LoadSound_Strict("SFX\Horror\Horror12.ogg")
 			
 			If HorrorSFX(13)=0 Then HorrorSFX(13)=LoadSound_Strict("SFX\Horror\Horror13.ogg")
-			
-			n\CanUseElevator = True
 			;[End Block]
 		Case NPCtypeZombie
 			;[Block]
@@ -634,10 +628,6 @@ Function RemoveNPC(n.NPCs)
 		FreeEntity n\obj3
 		n\obj3 = 0
 	EndIf
-	If n\obj4 <> 0 Then 
-		FreeEntity n\obj4
-		n\obj4 = 0
-	EndIf
 	
 	If (Not n\SoundChn_IsStream)
 		If (n\SoundChn <> 0 And ChannelPlaying(n\SoundChn)) Then
@@ -671,7 +661,7 @@ End Function
 
 Function UpdateNPCs()
 	CatchErrors("Uncaught (UpdateNPCs)")
-	Local n.NPCs, n2.NPCs, d.Doors, de.Decals, r.Rooms, eo.ElevatorObj, eo2.ElevatorObj
+	Local n.NPCs, n2.NPCs, d.Doors, de.Decals, r.Rooms
 	Local i%, dist#, dist2#, angle#, x#, y#, z#, prevFrame#, PlayerSeeAble%, RN$
 	
 	Local target
@@ -7341,77 +7331,6 @@ Function CheckForNPCInFacility(n.NPCs)
 	Return True
 End Function
 
-Function FindNextElevator(n.NPCs)
-	Local eo.ElevatorObj, eo2.ElevatorObj
-	
-	For eo = Each ElevatorObj
-		If eo\InFacility = n\InFacility
-			If Abs(EntityY(eo\obj,True)-EntityY(n\Collider))<10.0
-				For eo2 = Each ElevatorObj
-					If eo2 <> eo
-						If eo2\InFacility = n\InFacility
-							If Abs(EntityY(eo2\obj,True)-EntityY(n\Collider))<10.0
-								If EntityDistance(eo2\obj,n\Collider)<EntityDistance(eo\obj,n\Collider)
-									n\PathStatus = FindPath(n, EntityX(eo2\obj,True),EntityY(eo2\obj,True),EntityZ(eo2\obj,True))
-									n\CurrElevator = eo2
-									DebugLog "eo2 found for "+n\NPCtype
-									Exit
-								EndIf
-							EndIf
-						EndIf
-					EndIf
-				Next
-				If n\CurrElevator = Null
-					n\PathStatus = FindPath(n, EntityX(eo\obj,True),EntityY(eo\obj,True),EntityZ(eo\obj,True))
-					n\CurrElevator = eo
-					DebugLog "eo found for "+n\NPCtype
-				EndIf
-				If n\PathStatus <> 1
-					n\CurrElevator = Null
-					DebugLog "Unable to find elevator path: Resetting CurrElevator"
-				EndIf
-				Exit
-			EndIf
-		EndIf
-	Next
-	
-End Function
-
-Function GoToElevator(n.NPCs)
-	Local dist#,inside%
-	
-	If n\PathStatus <> 1
-		PointEntity n\obj,n\CurrElevator\obj
-		RotateEntity n\Collider,0,CurveAngle(EntityYaw(n\obj),EntityYaw(n\Collider),20.0),0
-		
-		inside% = False
-		If Abs(EntityX(n\Collider)-EntityX(n\CurrElevator\obj,True))<280.0*RoomScale
-			If Abs(EntityZ(n\Collider)-EntityZ(n\CurrElevator\obj,True))<280.0*RoomScale Then
-				If Abs(EntityY(n\Collider)-EntityY(n\CurrElevator\obj,True))<280.0*RoomScale Then
-					inside% = True
-				EndIf
-			EndIf
-		EndIf
-		
-		dist# = EntityDistance(n\Collider,n\CurrElevator\door\frameobj)
-		If n\CurrElevator\door\open
-			If (dist# > 0.4 And dist# < 0.7) And inside%
-				UseDoor(n\CurrElevator\door,False)
-				DebugLog n\NPCtype+" used elevator"
-			EndIf
-		Else
-			If dist# < 0.7
-				n\CurrSpeed = 0.0
-				If n\CurrElevator\door\NPCCalledElevator=False
-					n\CurrElevator\door\NPCCalledElevator = True
-					DebugLog n\NPCtype+" called elevator"
-				EndIf
-			EndIf
-		EndIf
-	EndIf
-	
-End Function
-
 Function FinishWalking(n.NPCs,startframe#,endframe#,speed#)
 	Local centerframe#
 	
@@ -7456,5 +7375,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#198#12AD#1347#13E0#1594#169F#1860#18BC
+;~B#192#12A3#133D#13D6#158A#1695#1856#18B2
 ;~C#Blitz3D

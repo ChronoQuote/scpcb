@@ -125,14 +125,10 @@ Function SaveGame(file$)
 	Next
 	WriteInt f, RefinedItems
 	
-	WriteInt f, MapWidth
-	WriteInt f, MapHeight
-	For lvl = 0 To 0
-		For x = 0 To MapWidth
-			For y = 0 To MapHeight
-				WriteInt f, MapTemp(x, y)
-				WriteByte f, MapFound(x, y)
-			Next
+	For x = 0 To MapGridSize
+		For y = 0 To MapGridSize
+			WriteInt f, MapTemp(x, y)
+			WriteByte f, MapFound(x, y)
 		Next
 	Next
 	
@@ -587,10 +583,8 @@ Function LoadGame(file$)
 	Next
 	RefinedItems = ReadInt(f)
 	
-	MapWidth = ReadInt(f)
-	MapHeight = ReadInt(f)
-	For x = 0 To MapWidth 
-		For y = 0 To MapHeight
+	For x = 0 To MapGridSize 
+		For y = 0 To MapGridSize
 			MapTemp( x, y) = ReadInt(f)
 			MapFound(x, y) = ReadByte(f)
 		Next
@@ -839,7 +833,7 @@ Function LoadGame(file$)
 	
 	Local spacing# = 8.0
 	Local zone%,shouldSpawnDoor%
-	For y = MapHeight To 0 Step -1
+	For y = MapGridSize To 0 Step -1
 		
 		If y<I_Zone\Transition[1]-(SelectedMap="") Then
 			zone=3
@@ -849,7 +843,7 @@ Function LoadGame(file$)
 			zone=1
 		EndIf
 		
-		For x = MapWidth To 0 Step -1
+		For x = MapGridSize To 0 Step -1
 			If MapTemp(x,y) > 0 Then
 				If zone = 2 Then temp=2 Else temp=0
                 
@@ -878,7 +872,7 @@ Function LoadGame(file$)
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor
-							If (x+1)<(MapWidth+1)
+							If (x+1)<(MapGridSize+1)
 								If MapTemp(x + 1, y) > 0 Then
 									do.Doors = CreateDoor(Float(x) * spacing + spacing / 2.0, 0, Float(y) * spacing, 90, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[0] = do
@@ -908,7 +902,7 @@ Function LoadGame(file$)
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor
-							If (y+1)<(MapHeight+1)
+							If (y+1)<(MapGridSize+1)
 								If MapTemp(x, y + 1) > 0 Then
 									do.Doors = CreateDoor(Float(x) * spacing, 0, Float(y) * spacing + spacing / 2.0, 0, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[3] = do
@@ -1422,12 +1416,8 @@ Function LoadGameQuick(file$)
 	Next
 	RefinedItems = ReadInt(f)
 	
-	MapWidth = ReadInt(f)
-	MapHeight = ReadInt(f)
-	DebugLog MapWidth
-	DebugLog MapHeight
-	For x = 0 To MapWidth
-		For y = 0 To MapHeight
+	For x = 0 To MapGridSize
+		For y = 0 To MapGridSize
 			MapTemp(x, y) = ReadInt(f)
 			MapFound(x, y) = ReadByte(f)
 		Next
@@ -2130,12 +2120,12 @@ Function LoadMap(file$)
 	f% = ReadFile(file)
 	DebugLog file
 	
-	Dim MapTemp%(MapWidth+1, MapHeight+1)
-	Dim MapFound%(MapWidth+1, MapHeight+1)
+	Dim MapTemp%(MapGridSize+1, MapGridSize+1)
+	Dim MapFound%(MapGridSize+1, MapGridSize+1)
 	CoffinDistance = 100
 	
-	For x = 0 To MapWidth+1
-		For y = 0 To MapHeight+1
+	For x = 0 To MapGridSize+1
+		For y = 0 To MapGridSize+1
 			MapTemp(x,y)=False
 			MapFound(x,y)=False
 		Next
@@ -2171,7 +2161,7 @@ Function LoadMap(file$)
 			For rt.RoomTemplates=Each RoomTemplates
 				If Lower(rt\Name) = name Then
 					
-					r.Rooms = CreateRoom(0, rt\Shape, (MapWidth-x) * 8.0, 0, y * 8.0, name)
+					r.Rooms = CreateRoom(0, rt\Shape, (MapGridSize-x) * 8.0, 0, y * 8.0, name)
 					DebugLog "createroom"
 					
 					r\angle = angle
@@ -2182,7 +2172,7 @@ Function LoadMap(file$)
 					
 					TurnEntity(r\obj, 0, r\angle, 0)
 					
-					MapTemp(MapWidth-x,y)=True
+					MapTemp(MapGridSize-x,y)=True
 					
 					Exit
 				EndIf
@@ -2347,7 +2337,7 @@ Function LoadMap(file$)
 			For rt.RoomTemplates=Each RoomTemplates
 				If Lower(rt\Name) = name Then
 					
-					r.Rooms = CreateRoom(0, rt\Shape, (MapWidth-x) * 8.0, 0, y * 8.0, name)
+					r.Rooms = CreateRoom(0, rt\Shape, (MapGridSize-x) * 8.0, 0, y * 8.0, name)
 					DebugLog "createroom"
 					
 					r\angle = angle
@@ -2358,7 +2348,7 @@ Function LoadMap(file$)
 					
 					TurnEntity(r\obj, 0, r\angle, 0)
 					
-					MapTemp(MapWidth-x,y)=True
+					MapTemp(MapGridSize-x,y)=True
 					
 					Exit
 				EndIf
@@ -2390,7 +2380,7 @@ Function LoadMap(file$)
 	Local spacing# = 8.0
 	Local shouldSpawnDoor% = False
 	Local d.Doors
-	For y = MapHeight To 0 Step -1
+	For y = MapGridSize To 0 Step -1
 		
 		If y<I_Zone\Transition[1] Then
 			zone=3
@@ -2400,7 +2390,7 @@ Function LoadMap(file$)
 			zone=1
 		EndIf
 		
-		For x = MapWidth To 0 Step -1
+		For x = MapGridSize To 0 Step -1
 			If MapTemp(x,y) > 0 Then
 				If zone = 2 Then temp=2 Else temp=0
                 
@@ -2429,7 +2419,7 @@ Function LoadMap(file$)
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor
-							If (x+1)<(MapWidth+1)
+							If (x+1)<(MapGridSize+1)
 								If MapTemp(x + 1, y) > 0 Then
 									d.Doors = CreateDoor(Float(x) * spacing + spacing / 2.0, 0, Float(y) * spacing, 90, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[0] = d
@@ -2459,7 +2449,7 @@ Function LoadMap(file$)
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor
-							If (y+1)<(MapHeight+1)
+							If (y+1)<(MapGridSize+1)
 								If MapTemp(x, y + 1) > 0 Then
 									d.Doors = CreateDoor(Float(x) * spacing, 0, Float(y) * spacing + spacing / 2.0, 0, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[3] = d
@@ -2476,11 +2466,11 @@ Function LoadMap(file$)
 		Next
 	Next
 	
-	;r = CreateRoom(0, ROOM1, 8, 0, (MapHeight-1) * 8, "173")
-	;r = CreateRoom(0, ROOM1, (MapWidth-1) * 8, 0, (MapHeight-1) * 8, "pocketdimension")
+	;r = CreateRoom(0, ROOM1, 8, 0, (MapGridSize-1) * 8, "173")
+	;r = CreateRoom(0, ROOM1, (MapGridSize-1) * 8, 0, (MapGridSize-1) * 8, "pocketdimension")
 	;r = CreateRoom(0, ROOM1, 0, 0, 8, "gatea")
-	If IntroEnabled Then r = CreateRoom(0, ROOM1, 8, 0, (MapHeight+2) * 8, "173")
-	r = CreateRoom(0, ROOM1, (MapWidth+2) * 8, 0, (MapHeight+2) * 8, "pocketdimension")
+	If IntroEnabled Then r = CreateRoom(0, ROOM1, 8, 0, (MapGridSize+2) * 8, "173")
+	r = CreateRoom(0, ROOM1, (MapGridSize+2) * 8, 0, (MapGridSize+2) * 8, "pocketdimension")
 	r = CreateRoom(0, ROOM1, 0, 500, -16, "gatea")
 	r = CreateRoom(0, ROOM1, -16, 800, 0, "dimension1499")
 	
@@ -2518,8 +2508,8 @@ Function LoadMap(file$)
 		Next
 	Next
 	
-	For x = 0 To MapWidth+1
-		For y = 0 To MapHeight+1
+	For x = 0 To MapGridSize+1
+		For y = 0 To MapGridSize+1
 			If MapTemp(x,y)>0 Then
 				DebugLog "MapTemp("+x+","+y+") = True"
 			Else

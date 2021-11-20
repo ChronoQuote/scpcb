@@ -17,7 +17,7 @@ Type ItemTemplates
 	
 	Field found%
 	
-	Field obj%, objpath$, parentobjpath$
+	Field obj%, objpath$
 	Field invimg%,invimg2%,invimgpath$
 	Field imgpath$, img%
 	
@@ -34,7 +34,7 @@ Function CreateItemTemplate.ItemTemplates(name$, tempname$, objpath$, invimgpath
 	
 	;if another item shares the same object, copy it
 	For it2.itemtemplates = Each ItemTemplates
-		If it2\objpath = objpath And it2\obj <> 0 Then it\obj = CopyEntity(it2\obj) : it\parentobjpath=it2\objpath : Exit
+		If it2\objpath = objpath And it2\obj <> 0 Then it\obj = CopyEntity(it2\obj) : Exit
 	Next
 	
 	If it\obj = 0 Then; it\obj = LoadMesh(objpath)
@@ -45,7 +45,6 @@ Function CreateItemTemplate.ItemTemplates(name$, tempname$, objpath$, invimgpath
 			it\obj = LoadMesh_Strict(objpath)
 			it\isAnim=False
 		EndIf
-		it\objpath = objpath
 	EndIf
 	it\objpath = objpath
 	
@@ -910,5 +909,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#B#1E
 ;~C#Blitz3D

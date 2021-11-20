@@ -826,8 +826,6 @@ Const max_deviation_distance% = 3
 Const return_chance% = 27
 Const center = 5 ;(gridsize-1) / 2
 
-Include "Drawportals.bb"
-
 Type Forest
 	Field TileMesh%[6]
 	Field DetailMesh%[6]
@@ -1749,9 +1747,9 @@ LoadRoomTemplates("Data\rooms.ini")
 
 Global RoomScale# = 8.0 / 2048.0
 Const ZONEAMOUNT = 3
-Global MapWidth% = GetINIInt("options.ini", "options", "map size"), MapHeight% = GetINIInt("options.ini", "options", "map size")
-Dim MapTemp%(MapWidth+1, MapHeight+1)
-Dim MapFound%(MapWidth+1, MapHeight+1)
+Const MapGridSize% = 18
+Dim MapTemp%(MapGridSize+1, MapGridSize+1)
+Dim MapFound%(MapGridSize+1, MapGridSize+1)
 
 Global RoomAmbience%[20]
 
@@ -1778,7 +1776,7 @@ Type Rooms
 	
 	Field SoundCHN%
 	
-	Field dp.DrawPortal, fr.Forest
+	Field fr.Forest
 	
 	Field SoundEmitter%[MaxRoomEmitters]
 	Field SoundEmitterObj%[MaxRoomEmitters]
@@ -1799,7 +1797,6 @@ Type Rooms
 	Field Adjacent.Rooms[4]
 	Field AdjDoor.Doors[4]
 	
-	Field NonFreeAble%[10]
 	Field Textures%[10]
 	
 	Field MaxLights% = 0
@@ -1808,8 +1805,6 @@ Type Rooms
 	Field LightSprites2%[MaxRoomLights]
 	Field LightHidden%[MaxRoomLights]
 	Field LightFlicker%[MaxRoomLights]
-	Field AlarmRotor%[1]
-	Field AlarmRotorLight%[1]
 	Field TriggerboxAmount
 	Field Triggerbox[128]
 	Field TriggerboxName$[128]
@@ -4718,49 +4713,6 @@ Function FillRoom(r.Rooms)
 			sc\turn = 45
 			TurnEntity(sc\CameraObj, 20, 0, 0)
 			;[End Block]
-		Case "room2test1074"
-			;[Block]
-			r\RoomDoors[0] = CreateDoor(r\x,r\y,r\z,0,r,False,False,False,"")
-			r\RoomDoors[0]\locked = True
-			r\RoomDoors[1] = CreateDoor(r\x + 336.0 * RoomScale,r\y,r\z + 671.0 * RoomScale,90,r,True,False,3)
-			r\RoomDoors[1]\AutoClose = False
-			r\RoomDoors[2] = CreateDoor(r\x + 336.0 * RoomScale,r\y,r\z - 800.0 * RoomScale,90,r,True,False,3)
-			r\RoomDoors[2]\AutoClose = False
-			r\RoomDoors[3] = CreateDoor(r\x + 672.0 * RoomScale,r\y,r\z,0,r,False,False)
-			
-			r\Textures[0] = LoadTexture("GFX\map\1074tex0.jpg") ;blank texture (ripped from official article), seen when you put on 714
-			r\Textures[1] = LoadTexture("GFX\map\1074tex1.jpg") ;texture depicting subject D-9341 (the player)
-			TextureBlend r\Textures[0], 5 ;texture
-			TextureBlend r\Textures[1], 5 ;blends
-			
-			it = CreateItem("Document SCP-1074","paper",r\x + 300.0 * RoomScale,r\y+20.0*RoomScale,r\z + 671.0*RoomScale)
-			EntityParent(it\collider, r\obj)
-			
-			r\Objects[0] = CreatePivot() ;painting pivot: the player will be attracted when it sees this.
-			PositionEntity r\Objects[0],r\x + 835.0 * RoomScale,r\y + 165.0 * RoomScale,r\z + 540.0 * RoomScale, True
-			EntityParent r\Objects[0],r\obj
-			r\Objects[1] = CreatePivot() ;floor pivot: the player will walk to this point when it sees the painting pivot.
-			PositionEntity r\Objects[1],r\x + 835.0 * RoomScale,r\y + 10.0 * RoomScale,r\z + 300.0 * RoomScale, True
-			EntityParent r\Objects[1],r\obj
-			;Local sf,b,t,msh
-			msh% = GetChild(r\obj,2) ;the second child is the rendered mesh
-			r\NonFreeAble[0] = GetSurface(msh,1) ;a failsafe if the correct surface isn't found
-			For tempint = 1 To CountSurfaces(msh)
-				sf% = GetSurface(msh,tempint)
-				b% = GetSurfaceBrush( sf )
-				t% = GetBrushTexture(b, 1)
-				texname$ = StripPath(TextureName(t))
-				DebugLog "texname: "+texname
-				If Lower(texname) = "1074tex1.jpg" Then
-					r\NonFreeAble[0] = sf ;the surface holding 1074's texture
-					FreeTexture t
-					FreeBrush b
-					Exit
-				EndIf
-				If texname<>"" Then FreeTexture t
-				FreeBrush b
-			Next
-			;[End Block]
 		Case "room1123"
 			;[Block]
 			it = CreateItem("Document SCP-1123", "paper", r\x + 511.0 * RoomScale, r\y + 125.0 * RoomScale, r\z - 936.0 * RoomScale)
@@ -5980,10 +5932,6 @@ Function RemoveWaypoint(w.WayPoints)
 	Delete w
 End Function
 
-
-Dim MapF(MapWidth+1, MapHeight+1), MapG(MapWidth+1, MapHeight+1), MapH(MapWidth+1, MapHeight+1)
-Dim MapState(MapWidth+1, MapHeight+1)
-Dim MapParent(MapWidth+1, MapHeight+1, 2)
 Function FindPath(n.NPCs, x#, y#, z#)
 	
 	DebugLog "findpath: "+n\NPCtype
@@ -6259,7 +6207,7 @@ Function UpdateScreens()
 	
 End Function
 
-Dim MapName$(MapWidth, MapHeight)
+Dim MapName$(MapGridSize, MapGridSize)
 Dim MapRoomID%(ROOM4 + 1)
 Dim MapRoom$(ROOM4 + 1, 0)
 
@@ -6272,7 +6220,7 @@ Global CoffinCam.SecurityCams
 Type SecurityCams
 	Field obj%, MonitorObj%
 	
-	Field BaseObj%, CameraObj%
+	Field CameraObj%
 	
 	Field ScrObj%, ScrWidth#, ScrHeight#
 	Field Screen%, Cam%, ScrTexture%, ScrOverlay%
@@ -6296,9 +6244,6 @@ Type SecurityCams
 End Type
 
 Global ScreenTexs%[2]
-
-Global CurrRoom2slRenderCam%
-Global Room2slCam%
 
 Function CreateSecurityCam.SecurityCams(x#, y#, z#, r.Rooms, screen% = False)
 	Local sc.SecurityCams = New SecurityCams
@@ -7067,31 +7012,31 @@ Function CreateMap()
 	
 	SeedRnd GenerateSeedNumber(RandomSeed)
 	
-	Dim MapName$(MapWidth, MapHeight)
+	Dim MapName$(MapGridSize, MapGridSize)
 	
 	Dim MapRoomID%(ROOM4 + 1)
 	
-	x = Floor(MapWidth / 2)
-	y = MapHeight - 2;Rand(3, 5)
+	x = Floor(MapGridSize / 2)
+	y = MapGridSize - 2;Rand(3, 5)
 	
-	For i = y To MapHeight - 1
+	For i = y To MapGridSize - 1
 		MapTemp(x, i) = True
 	Next
 	
 	Repeat
 		width = Rand(10, 15)
 		
-		If x > MapWidth*0.6 Then
+		If x > MapGridSize*0.6 Then
 			width = -width
-		ElseIf x > MapWidth*0.4
+		ElseIf x > MapGridSize*0.4
 			x = x-width/2
 		EndIf
 		
 		;make sure the hallway doesn't go outside the array
-		If x+width > MapWidth-3 Then
-			;x = -width+MapWidth-4
+		If x+width > MapGridSize-3 Then
+			;x = -width+MapGridSize-4
 			
-			width=MapWidth-3-x
+			width=MapGridSize-3-x
 		ElseIf x+width < 2
 			
 			;x = 3-width
@@ -7101,7 +7046,7 @@ Function CreateMap()
 		x = Min(x, x + width)
 		width = Abs(width)
 		For i = x To x + width
-			MapTemp(Min(i,MapWidth), y) = True
+			MapTemp(Min(i,MapGridSize), y) = True
 		Next
 		
 		height = Rand(3, 4)
@@ -7113,7 +7058,7 @@ Function CreateMap()
 		
 		For i = 1 To yhallways
 			
-			x2 = Max(Min(Rand(x, x + width-1),MapWidth-2),2)
+			x2 = Max(Min(Rand(x, x + width-1),MapGridSize-2),2)
 			While MapTemp(x2, y - 1) Or MapTemp(x2 - 1, y - 1) Or MapTemp(x2 + 1, y - 1)
 				x2=x2+1
 			Wend
@@ -7146,10 +7091,10 @@ Function CreateMap()
 	Local Room1Amount%[ZONEAMOUNT], Room2Amount%[ZONEAMOUNT],Room2CAmount%[ZONEAMOUNT],Room3Amount%[ZONEAMOUNT],Room4Amount%[ZONEAMOUNT]
 	
 	;count the amount of rooms
-	For y = 1 To MapHeight - 1
+	For y = 1 To MapGridSize - 1
 		zone% = GetZone(y)
 		
-		For x = 1 To MapWidth - 1
+		For x = 1 To MapGridSize - 1
 			If MapTemp(x, y) > 0 Then
 				temp = Min(MapTemp(x + 1, y),1) + Min(MapTemp(x - 1, y),1)
 				temp = temp + Min(MapTemp(x, y + 1),1) + Min(MapTemp(x, y - 1),1)			
@@ -7181,9 +7126,9 @@ Function CreateMap()
 		
 		If temp > 0 Then
 			
-			For y = (MapHeight/ZONEAMOUNT)*(2-i)+1 To ((MapHeight/ZONEAMOUNT) * ((2-i)+1.0))-2
+			For y = (MapGridSize/ZONEAMOUNT)*(2-i)+1 To ((MapGridSize/ZONEAMOUNT) * ((2-i)+1.0))-2
 				
-				For x = 2 To MapWidth - 2
+				For x = 2 To MapGridSize - 2
 					If MapTemp(x, y) = 0 Then
 						
 						If (Min(MapTemp(x + 1, y),1) + Min(MapTemp(x - 1, y),1) + Min(MapTemp(x, y + 1),1) + Min(MapTemp(x, y - 1),1)) = 1 Then
@@ -7247,13 +7192,13 @@ Function CreateMap()
 		Select i
 			Case 2
 				zone=2
-				temp2=MapHeight/3;-1
+				temp2=MapGridSize/3;-1
 			Case 1
-				zone=MapHeight/3+1
-				temp2=MapHeight*(2.0/3.0)-1
+				zone=MapGridSize/3+1
+				temp2=MapGridSize*(2.0/3.0)-1
 			Case 0
-				zone=MapHeight*(2.0/3.0)+1
-				temp2=MapHeight-2
+				zone=MapGridSize*(2.0/3.0)+1
+				temp2=MapGridSize-2
 		End Select
 		
 		If Room4Amount[i]<1 Then ;we want at least 1 ROOM4
@@ -7261,7 +7206,7 @@ Function CreateMap()
 			temp=0
 			
 			For y = zone To temp2
-				For x = 2 To MapWidth - 2
+				For x = 2 To MapGridSize - 2
 					If MapTemp(x,y)=3 Then
 						Select 0 ;see if adding a ROOM1 is possible
 							Case (MapTemp(x+1,y) Or MapTemp(x+1,y+1) Or MapTemp(x+1,y-1) Or MapTemp(x+2,y))
@@ -7301,7 +7246,7 @@ Function CreateMap()
 			temp2=temp2-1
 			
 			For y = zone To temp2
-				For x = 3 To MapWidth - 3
+				For x = 3 To MapGridSize - 3
 					If MapTemp(x,y)=1 Then
 						Select True ;see if adding some rooms is possible
 							Case MapTemp(x-1,y)>0
@@ -7384,7 +7329,7 @@ Function CreateMap()
 		
 	Next
 	
-	Local MaxRooms% = 55*MapWidth/20
+	Local MaxRooms% = 55*MapGridSize/20
 	MaxRooms=Max(MaxRooms,Room1Amount[0]+Room1Amount[1]+Room1Amount[2]+1)
 	MaxRooms=Max(MaxRooms,Room2Amount[0]+Room2Amount[1]+Room2Amount[2]+1)
 	MaxRooms=Max(MaxRooms,Room2CAmount[0]+Room2CAmount[1]+Room2CAmount[2]+1)
@@ -7485,21 +7430,21 @@ Function CreateMap()
 	
 	temp = 0
 	Local r.Rooms, spacing# = 8.0
-	For y = MapHeight - 1 To 1 Step - 1
+	For y = MapGridSize - 1 To 1 Step - 1
 		
 		;zone% = GetZone(y)
 		
-		If y < MapHeight/3+1 Then
+		If y < MapGridSize/3+1 Then
 			zone=3
-		ElseIf y < MapHeight*(2.0/3.0);-1
+		ElseIf y < MapGridSize*(2.0/3.0);-1
 			zone=2
 		Else
 			zone=1
 		EndIf
 		
-		For x = 1 To MapWidth - 2
+		For x = 1 To MapGridSize - 2
 			If MapTemp(x, y) = 255 Then
-				If y>MapHeight/2 Then ;zone = 2
+				If y>MapGridSize/2 Then ;zone = 2
 					r = CreateRoom(zone, ROOM2, x * 8, 0, y * 8, "checkpoint1")
 				Else ;If zone = 3
 					r = CreateRoom(zone, ROOM2, x * 8, 0, y * 8, "checkpoint2")
@@ -7598,14 +7543,14 @@ Function CreateMap()
 		Next
 	Next		
 	
-	r = CreateRoom(0, ROOM1, (MapWidth-1) * 8, 500, 8, "gatea")
+	r = CreateRoom(0, ROOM1, (MapGridSize-1) * 8, 500, 8, "gatea")
 	MapRoomID(ROOM1)=MapRoomID(ROOM1)+1
 	
-	r = CreateRoom(0, ROOM1, (MapWidth-1) * 8, 0, (MapHeight-1) * 8, "pocketdimension")
+	r = CreateRoom(0, ROOM1, (MapGridSize-1) * 8, 0, (MapGridSize-1) * 8, "pocketdimension")
 	MapRoomID(ROOM1)=MapRoomID(ROOM1)+1	
 	
 	If IntroEnabled
-		r = CreateRoom(0, ROOM1, 8, 0, (MapHeight-1) * 8, "173")
+		r = CreateRoom(0, ROOM1, 8, 0, (MapGridSize-1) * 8, "173")
 		MapRoomID(ROOM1)=MapRoomID(ROOM1)+1
 	EndIf
 	
@@ -7619,8 +7564,8 @@ Function CreateMap()
 	If 0 Then 
 		Repeat
 			Cls
-			For x = 0 To MapWidth - 1
-				For y = 0 To MapHeight - 1
+			For x = 0 To MapGridSize - 1
+				For y = 0 To MapGridSize - 1
 					If MapTemp(x, y) = 0 Then
 						
 						zone=GetZone(y)
@@ -7644,8 +7589,8 @@ Function CreateMap()
 				Next
 			Next	
 			
-			For x = 0 To MapWidth - 1
-				For y = 0 To MapHeight - 1
+			For x = 0 To MapGridSize - 1
+				For y = 0 To MapGridSize - 1
 					
 					If MouseX()>x*32 And MouseX()<x*32+32 Then
 						If MouseY()>y*32 And MouseY()<y*32+32 Then
@@ -7668,15 +7613,15 @@ Function CreateMap()
 	EndIf
 	
 	
-	For y = 0 To MapHeight
-		For x = 0 To MapWidth
+	For y = 0 To MapGridSize
+		For x = 0 To MapGridSize
 			MapTemp(x, y) = Min(MapTemp(x, y),1)
 		Next
 	Next
 	
 	Local d.Doors
 	Local shouldSpawnDoor%
-	For y = MapHeight To 0 Step -1
+	For y = MapGridSize To 0 Step -1
 		
 		If y<I_Zone\Transition[1]-1 Then
 			zone=3
@@ -7686,7 +7631,7 @@ Function CreateMap()
 			zone=1
 		EndIf
 		
-		For x = MapWidth To 0 Step -1
+		For x = MapGridSize To 0 Step -1
 			If MapTemp(x,y) > 0 Then
 				If zone = 2 Then temp=2 Else temp=0
                 
@@ -7715,7 +7660,7 @@ Function CreateMap()
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor
-							If (x+1)<(MapWidth+1)
+							If (x+1)<(MapGridSize+1)
 								If MapTemp(x + 1, y) > 0 Then
 									d.Doors = CreateDoor(Float(x) * spacing + spacing / 2.0, 0, Float(y) * spacing, 90, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[0] = d
@@ -7745,7 +7690,7 @@ Function CreateMap()
 								shouldSpawnDoor = True
 						End Select
 						If shouldSpawnDoor
-							If (y+1)<(MapHeight+1)
+							If (y+1)<(MapGridSize+1)
 								If MapTemp(x, y + 1) > 0 Then
 									d.Doors = CreateDoor(Float(x) * spacing, 0, Float(y) * spacing + spacing / 2.0, 0, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[3] = d
@@ -7829,7 +7774,7 @@ Function SetRoom(room_name$,room_type%,pos%,min_pos%,max_pos%) ;place a room wit
 End Function
 
 Function GetZone(y%)
-	Return Min(Floor((Float(MapWidth-y)/MapWidth*ZONEAMOUNT)),ZONEAMOUNT-1)
+	Return Min(Floor((Float(MapGridSize-y)/MapGridSize*ZONEAMOUNT)),ZONEAMOUNT-1)
 End Function
 
 ;-------------------------------------------------------------------------------------------------------
@@ -8478,70 +8423,6 @@ End Type
 ;END CHUNKS
 ;#########################################################################
 
-Type ElevatorObj
-	Field obj%
-	Field InFacility%
-	Field door.Doors
-End Type
-
-Function AssignElevatorObj.ElevatorObj(obj%,door.Doors,in_facility%)
-	Local eo.ElevatorObj = New ElevatorObj
-	
-	eo\obj% = obj%
-	eo\door = door
-	eo\InFacility% = in_facility%
-	
-	Return eo
-End Function
-
-Function DeleteElevatorObjects()
-	
-	Delete Each ElevatorObj
-	
-End Function
-
-Function ValidRoom2slCamRoom(r.Rooms)
-	If (r = Null) Then
-		Return False
-	EndIf
-	
-	Local RN$ = r\RoomTemplate\Name$
-	
-	If RN$ = "room2closets" Then Return True
-	If RN$ = "room1archive" Then Return True
-	If RN$ = "room3z3" Then Return True
-	If RN$ = "room1lifts" Then Return True
-	If RN$ = "checkpoint1" Then Return True
-	If RN$ = "room2nuke" Then Return True
-	If RN$ = "008" Then Return True
-	If RN$ = "room1162" Then Return True
-	If RN$ = "room966" Then Return True
-	If RN$ = "room2ccont" Then Return True
-	
-	Return False
-	
-End Function
-
-Function FindAndDeleteFakeMonitor(r.Rooms,x#,y#,z#,Amount%)
-	Local i%
-	
-	For i = 0 To Amount%
-		If r\Objects[i]<>0
-			If EntityX(r\Objects[i],True) = x#
-				If EntityY(r\Objects[i],True) = y#
-					If EntityZ(r\Objects[i],True) = z#
-						FreeEntity r\Objects[i]
-						r\Objects[i]=0
-						DebugLog "Deleted Fake Monitor: "+i
-						Exit
-					EndIf
-				EndIf
-			EndIf
-		EndIf
-	Next
-	
-End Function
-
 Function AddLightCones(room.Rooms)
 	Local i
 	
@@ -8776,5 +8657,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#2#A#35#102#111#118#11F#126#13F#147#14F
-;~B#1234
+;~B#122F
 ;~C#Blitz3D

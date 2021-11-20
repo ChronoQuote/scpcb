@@ -1765,11 +1765,6 @@ Global room2gw_brokendoor% = False
 Global room2gw_x# = 0.0
 Global room2gw_z# = 0.0
 
-Global Menu_TestIMG
-Global menuroomscale# = 8.0 / 2048.0
-
-Global CurrMenu_TestIMG$ = ""
-
 Global ParticleAmount% = GetINIInt(OptionFile,"options","particle amount")
 
 Dim NavImages(5)
@@ -2054,16 +2049,6 @@ Function UpdateDoors()
 				If d\obj2 <> 0 Then ShowEntity d\obj2
 				If d\buttons[0] <> 0 Then ShowEntity d\buttons[0]
 				If d\buttons[1] <> 0 Then ShowEntity d\buttons[1]
-			EndIf
-			
-			If PlayerRoom\RoomTemplate\Name$ = "room2sl"
-				If ValidRoom2slCamRoom(d\room)
-					If d\obj <> 0 Then ShowEntity d\obj
-					If d\frameobj <> 0 Then ShowEntity d\frameobj
-					If d\obj2 <> 0 Then ShowEntity d\obj2
-					If d\buttons[0] <> 0 Then ShowEntity d\buttons[0]
-					If d\buttons[1] <> 0 Then ShowEntity d\buttons[1]
-				EndIf
 			EndIf
 		Next
 		
@@ -5694,19 +5679,6 @@ Function DrawGUI()
 					SelectedItem = Null
 					MsgTimer = 70 * 5
 					;[End Block]
-				Case "ring"
-					;[Block]
-					If Wearing714=2 Then
-						Msg = "You removed the ring."
-						Wearing714 = False
-					Else
-						;Achievements(Achv714)=True
-						Msg = "You put on the ring."
-						Wearing714 = 2
-					EndIf
-					MsgTimer = 70 * 5
-					SelectedItem = Null
-					;[End Block]
 				Case "1123"
 					;[Block]
 					If Not (Wearing714 = 1) Then
@@ -6686,14 +6658,14 @@ Function DrawGUI()
 							
 							x = x - 12 + (((EntityX(Collider)-4.0)+8.0) Mod 8.0)*3
 							y = y + 12 - (((EntityZ(Collider)-4.0)+8.0) Mod 8.0)*3
-							For x2 = Max(0, PlayerX - 6) To Min(MapWidth, PlayerX + 6)
-								For z2 = Max(0, PlayerZ - 6) To Min(MapHeight, PlayerZ + 6)
+							For x2 = Max(0, PlayerX - 6) To Min(MapGridSize, PlayerX + 6)
+								For z2 = Max(0, PlayerZ - 6) To Min(MapGridSize, PlayerZ + 6)
 									
 									If CoffinDistance > 16.0 Or Rnd(16.0)<CoffinDistance Then 
 										If MapTemp(x2, z2)>0 And (MapFound(x2, z2) > 0 Or SelectedItem\itemtemplate\name = "S-NAV 310 Navigator" Or SelectedItem\itemtemplate\name = "S-NAV Navigator Ultimate") Then
 											Local drawx% = x + (PlayerX - 1 - x2) * 24 , drawy% = y - (PlayerZ - 1 - z2) * 24
 											
-											If x2+1<=MapWidth Then
+											If x2+1<=MapGridSize Then
 												If MapTemp(x2+1,z2)=False
 													DrawImage NavImages(3),drawx-12,drawy-12
 												EndIf
@@ -6714,7 +6686,7 @@ Function DrawGUI()
 											Else
 												DrawImage NavImages(0),drawx-12,drawy-12
 											EndIf
-											If z2+1<=MapHeight Then
+											If z2+1<=MapGridSize Then
 												If MapTemp(x2,z2+1)=False
 													DrawImage NavImages(2),drawx-12,drawy-12
 												EndIf
@@ -8708,12 +8680,10 @@ Function NullGame(playbuttonsfx%=True)
 	
 	HideDistance# = 15.0
 	
-	For lvl = 0 To 0
-		For x = 0 To MapWidth+1
-			For y = 0 To MapHeight+1
-				MapTemp(x, y) = 0
-				MapFound(x, y) = 0
-			Next
+	For x = 0 To MapGridSize+1
+		For y = 0 To MapGridSize+1
+			MapTemp(x, y) = 0
+			MapFound(x, y) = 0
 		Next
 	Next
 	
@@ -8920,8 +8890,6 @@ Function NullGame(playbuttonsfx%=True)
 	NTF_1499Z# = 0.0
 	Wearing1499% = False
 	DeleteChunks()
-	
-	DeleteElevatorObjects()
 	
 	DeleteDevilEmitters()
 	
@@ -11752,36 +11720,6 @@ Function CatchErrors(location$)
 	EndIf
 End Function
 
-Function Create3DIcon(width%,height%,modelpath$,modelX#=0,modelY#=0,modelZ#=0,modelPitch#=0,modelYaw#=0,modelRoll#=0,modelscaleX#=1,modelscaleY#=1,modelscaleZ#=1,withfog%=False)
-	Local img% = CreateImage(width,height)
-	Local cam% = CreateCamera()
-	Local model%
-	
-	CameraRange cam,0.01,16
-	CameraViewport cam,0,0,width,height
-	If withfog
-		CameraFogMode cam,1
-		CameraFogRange cam,CameraFogNear,CameraFogFar
-	EndIf
-	
-	If Right(Lower(modelpath$),6)=".rmesh"
-		model = LoadRMesh(modelpath$,Null)
-	Else
-		model = LoadMesh(modelpath$)
-	EndIf
-	ScaleEntity model,modelscaleX,modelscaleY,modelscaleZ
-	PositionEntity model,modelX#,modelY#,modelZ#
-	RotateEntity model,modelPitch#,modelYaw#,modelRoll#
-	
-	;Cls
-	RenderWorld
-	CopyRect 0,0,width,height,0,0,BackBuffer(),ImageBuffer(img)
-	
-	FreeEntity model
-	FreeEntity cam
-	Return img%
-End Function
-
 Function PlayAnnouncement(file$) ;This function streams the announcement currently playing
 	
 	If IntercomStreamCHN <> 0 Then
@@ -12063,6 +12001,6 @@ Function RotateEntity90DegreeAngles(entity%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#39#1627#2436
-;~B#11D8#1457#1C00
+;~F#39
+;~B#11C9#1448#1BE4
 ;~C#Blitz3D
