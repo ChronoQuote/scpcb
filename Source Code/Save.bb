@@ -129,7 +129,7 @@ Function SaveGame(file$)
 	
 	For x = 0 To MapGridSize
 		For y = 0 To MapGridSize
-			WriteInt f, MapTemp(x, y)
+			WriteByte f, MapTemp(x, y)
 			WriteByte f, MapFound(x, y)
 		Next
 	Next
@@ -581,7 +581,7 @@ Function LoadGame(file$)
 	
 	For x = 0 To MapGridSize 
 		For y = 0 To MapGridSize
-			MapTemp( x, y) = ReadInt(f)
+			MapTemp( x, y) = ReadByte(f)
 			MapFound(x, y) = ReadByte(f)
 		Next
 	Next
@@ -1405,7 +1405,7 @@ Function LoadGameQuick(file$)
 	
 	For x = 0 To MapGridSize
 		For y = 0 To MapGridSize
-			MapTemp(x, y) = ReadInt(f)
+			MapTemp(x, y) = ReadByte(f)
 			MapFound(x, y) = ReadByte(f)
 		Next
 	Next
