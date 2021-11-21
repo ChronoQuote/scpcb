@@ -1006,8 +1006,8 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 	tempf3=MeshWidth(fr\TileMesh[ROOM1])
 	tempf1=tile_size/tempf3
 	
-	For tx%=1 To gridsize-1
-		For ty%=1 To gridsize-1
+	For tx%=0 To gridsize-1
+		For ty%=1 To gridsize-2
 			If fr\grid[(ty*gridsize)+tx]=1 Then 
 				
 				tile_type = 0
@@ -1080,7 +1080,13 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 					Local it.Items = Null
 					If (ty Mod 3)=2 And itemPlaced[Floor(ty/3)]=False Then
 						itemPlaced[Floor(ty/3)]=True
-						it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 0,0.5,0)
+						If tile_type=ROOM1 Then
+							it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 1,0.5,0)
+						ElseIf tile_type=ROOM2C
+							it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 4,0.5,-1)
+						Else
+							it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 0,0.5,0)
+						EndIf
 						EntityType(it\collider, HIT_ITEM)
 						EntityParent(it\collider, tile_entity)
 					EndIf
@@ -1302,7 +1308,13 @@ Function PlaceForest_MapCreator(fr.Forest,x#,y#,z#,r.Rooms)
 					Local it.Items = Null
 					If (ty Mod 3)=2 And itemPlaced[Floor(ty/3)]=False Then
 						itemPlaced[Floor(ty/3)]=True
-						it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 0,0.5,0)
+						If tile_type=ROOM1 Then
+							it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 1,0.5,0)
+						ElseIf tile_type=ROOM2C
+							it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 4,0.5,-1)
+						Else
+							it.Items = CreateItem("Log #"+Int(Floor(ty/3)+1), "paper", 0,0.5,0)
+						EndIf
 						EntityType(it\collider, HIT_ITEM)
 						EntityParent(it\collider, tile_entity)
 					EndIf
