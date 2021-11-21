@@ -285,7 +285,7 @@ Global NVTimer#
 Global SuperMan%, SuperManTimer#
 
 Global Injuries#, Bloodloss#, Infect#, HealTimer#
-
+Global TakeOffTimer%
 Global RefinedItems%
 
 Include "Source Code\Achievements.bb"

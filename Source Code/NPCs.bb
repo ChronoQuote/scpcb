@@ -1712,18 +1712,18 @@ Function UpdateNPCs()
 									
 									If dist < 0.5 Then
 										If WearingHazmat>0 Then
-											BlurTimer = BlurTimer+FPSfactor*2.5
-											If BlurTimer>250 And BlurTimer-FPSfactor*2.5 <= 250 And n\PrevState<>3 Then
+											TakeOffTimer = TakeOffTimer+FPSfactor*2.5
+											If TakeOffTimer>250 And TakeOffTimer-FPSfactor*2.5 <= 250 And n\PrevState<>3 Then
 												If n\SoundChn2 <> 0 Then StopChannel(n\SoundChn2)
 												n\SoundChn2 = PlaySound_Strict(LoadTempSound("SFX\SCP\049\TakeOffHazmat.ogg"))
 												n\PrevState=3
-											ElseIf BlurTimer => 500
+											ElseIf TakeOffTimer => 500
 												For i = 0 To MaxItemAmount-1
 													If Inventory(i)<>Null Then
 														If Instr(Inventory(i)\itemtemplate\tempname,"hazmatsuit") And WearingHazmat<3 Then
 															If Inventory(i)\state2 < 3 Then
 																Inventory(i)\state2 = Inventory(i)\state2 + 1
-																BlurTimer = 260.0
+																TakeOffTimer = 260.0
 																CameraShake = 2.0
 															Else
 																RemoveItem(Inventory(i))
@@ -1735,17 +1735,17 @@ Function UpdateNPCs()
 												Next
 											EndIf
 										ElseIf Wearing714 Then
-											BlurTimer = BlurTimer+FPSfactor*2.5
-											If BlurTimer>250 And BlurTimer-FPSfactor*2.5 <= 250 And n\PrevState<>3 Then
+											TakeOffTimer = TakeOffTimer+FPSfactor*2.5
+											If TakeOffTimer>250 And TakeOffTimer-FPSfactor*2.5 <= 250 And n\PrevState<>3 Then
 												If n\SoundChn2 <> 0 Then StopChannel(n\SoundChn2)
 												n\SoundChn2 = PlaySound_Strict(LoadTempSound("SFX\SCP\049\714Equipped.ogg"))
 												n\PrevState=3
-											ElseIf BlurTimer => 500
+											ElseIf TakeOffTimer => 500
 												Wearing714=False
 											EndIf
 										Else
 											CurrCameraZoom = 20.0
-											BlurTimer = 500.0
+											TakeOffTimer = 500.0
 											
 											If (Not GodMode) Then
 												If PlayerRoom\RoomTemplate\Name$ = "room049"
@@ -1765,6 +1765,8 @@ Function UpdateNPCs()
 											EndIf										
 										EndIf
 									Else
+										If TakeOffTimer <> 0 Then TakeOffTimer = 0
+										
 										n\CurrSpeed = CurveValue(n\Speed, n\CurrSpeed, 20.0)
 										MoveEntity n\Collider, 0, 0, n\CurrSpeed * FPSfactor	
 										
@@ -7379,5 +7381,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#17E#128F#1329#13C2#157B#1686#1847#18A3
+;~B#17E#1291#132B#13C4#157D#1688#1849#18A5
 ;~C#Blitz3D

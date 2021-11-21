@@ -41,6 +41,8 @@ Function SaveGame(file$)
 	WriteFloat f, BlinkEffect
 	WriteFloat f, BlinkEffectTimer
 	
+	WriteFloat f, TakeOffTimer
+	
 	WriteInt f, DeathTimer
 	WriteInt f, BlurTimer
 	WriteFloat f, HealTimer
@@ -499,6 +501,8 @@ Function LoadGame(file$)
 	BlinkTimer = ReadFloat(f)
 	BlinkEffect = ReadFloat(f)	
 	BlinkEffectTimer = ReadFloat(f)
+	
+	TakeOffTimer = ReadFloat(f)
 	
 	DeathTimer = ReadInt(f)	
 	BlurTimer = ReadInt(f)	
@@ -1321,6 +1325,8 @@ Function LoadGameQuick(file$)
 	BlinkTimer = ReadFloat(f)
 	BlinkEffect = ReadFloat(f)	
 	BlinkEffectTimer = ReadFloat(f)	
+	
+	TakeOffTimer = ReadFloat(f)
 	
 	DeathTimer = ReadInt(f)	
 	BlurTimer = ReadInt(f)	
