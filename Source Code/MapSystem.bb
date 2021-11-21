@@ -902,15 +902,6 @@ Function GenForestGrid(fr.Forest)
 		EndIf
 	Wend
 	
-	;change branches from -1s to 1s
-	For i=1 To gridsize-2
-		For j=0 To gridsize-1
-			If fr\grid[(i*gridsize)+j]=-1 Then
-				fr\grid[(i*gridsize)+j]=1
-			EndIf
-		Next
-	Next
-	
 	If 0 Then
 		Local x%,y%
 		
@@ -946,6 +937,15 @@ Function GenForestGrid(fr.Forest)
 			If FullScreen Then DrawImage(CursorIMG,ScaledMouseX(),ScaledMouseY())
 		Until (GetKey()<>0 Or MouseHit(1))
 	EndIf
+	
+	;change branches from -1s to 1s
+	For i=1 To gridsize-2
+		For j=0 To gridsize-1
+			If fr\grid[(i*gridsize)+j]=-1 Then
+				fr\grid[(i*gridsize)+j]=1
+			EndIf
+		Next
+	Next
 	
 	CatchErrors("GenForestGrid")
 End Function
