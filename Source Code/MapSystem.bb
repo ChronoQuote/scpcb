@@ -850,81 +850,67 @@ Function GenForestGrid(fr.Forest)
 	
 	;attempt to create new branches
 	Local new_y%,temp_y%,new_x%
-	Local branch_type%,branch_pos%
+	Local branch_pos%
 	new_y=-3 ;used for counting off; branches will only be considered once every 4 units so as to avoid potentially too many branches
 	While new_y<gridsize-6
 		new_y=new_y+4
 		temp_y=new_y
 		new_x=0
 		If chance(branch_chance) Then
-			branch_type=-1
-			If chance(cobble_chance) Then
-				branch_type=-2
-			EndIf
 			;create a branch at this spot
 			;determine if on left or on right
 			branch_pos=2*Rand(0,1)
 			;get leftmost or rightmost path in this row
-			leftmost=gridsize
+			leftmost=gridsize-1
 			rightmost=0
-			For i=0 To gridsize
+			For i=0 To gridsize-1
 				If fr\grid[((gridsize-1-new_y)*gridsize)+i]=1 Then
 					If i<leftmost Then leftmost=i
 					If i>rightmost Then rightmost=i
 				EndIf
 			Next
 			If branch_pos=0 Then new_x=leftmost-1 Else new_x=rightmost+1
-			;before creating a branch make sure there are no 1's above or below
-			If (temp_y<>0 And fr\grid[((gridsize-1-temp_y+1)*gridsize)+new_x]=1) Or fr\grid[((gridsize-1-temp_y-1)*gridsize)+new_x]=1 Then
-				Exit ;break simply to stop creating the branch
+			;before creating a branch make sure it won't pass the border and there are no 1's above or below
+			If new_x>=0 And new_x<gridsize And fr\grid[((gridsize-1-temp_y-1)*gridsize)+new_x]<>1 And fr\grid[((gridsize-1-temp_y+1)*gridsize)+new_x]<>1 Then
+				fr\grid[((gridsize-1-temp_y)*gridsize)+new_x]=-1 ;make -1s so you don't confuse your branch for a path; will be changed later
+				If branch_pos=0 Then new_x=leftmost-2 Else new_x=rightmost+2
+				;before continuing the branch make sure it won't pass the border
+				If new_x>=0 And new_x<gridsize Then
+					fr\grid[((gridsize-1-temp_y)*gridsize)+new_x]=-1 ;branch out twice to avoid creating an unwanted 2x2 path with the real path
+					i = 2
+					While i<branch_max_life
+						i=i+1
+						If chance(branch_die_chance) Then
+							Exit
+						EndIf
+						If Rand(0,3)=0 Then ;have a higher chance to go up to confuse the player
+							If branch_pos = 0 Then
+								new_x=new_x-1
+							Else
+								new_x=new_x+1
+							EndIf
+						Else
+							temp_y=temp_y+1
+						EndIf
+						
+						;before continuing the branch make sure it won't pass the border and there are no 1's above
+						If new_x<0 Or new_x>=gridsize Or fr\grid[((gridsize-1-temp_y-1)*gridsize)+new_x]=1 Then
+							Exit
+						EndIf
+						
+						fr\grid[((gridsize-1-temp_y)*gridsize)+new_x]=-1 ;make -1s so you don't confuse your branch for a path; will be changed later
+						If temp_y>=gridsize-2 Then Exit
+					Wend
+				EndIf
 			EndIf
-			fr\grid[((gridsize-1-temp_y)*gridsize)+new_x]=branch_type ;make 4s so you don't confuse your branch for a path; will be changed later
-			If branch_pos=0 Then new_x=leftmost-2 Else new_x=rightmost+2
-			fr\grid[((gridsize-1-temp_y)*gridsize)+new_x]=branch_type ;branch out twice to avoid creating an unwanted 2x2 path with the real path
-			i = 2
-			While i<branch_max_life
-				i=i+1
-				If chance(branch_die_chance) Then
-					Exit
-				EndIf
-				If Rand(0,3)=0 Then ;have a higher chance to go up to confuse the player
-					If branch_pos = 0 Then
-						new_x=new_x-1
-					Else
-						new_x=new_x+1
-					EndIf
-				Else
-					temp_y=temp_y+1
-				EndIf
-				
-				;before creating a branch make sure there are no 1's above or below
-				n=((gridsize - 1 - temp_y + 1)*gridsize)+new_x
-				If n < gridsize-1 Then 
-					If temp_y <> 0 And fr\grid[n]=1 Then Exit
-				EndIf
-				n=((gridsize - 1 - temp_y - 1)*gridsize)+new_x
-				If n>0 Then 
-					If fr\grid[n]=1 Then Exit
-				EndIf
-				
-				;If (temp_y <> 0 And fr\grid[((gridsize - 1 - temp_y + 1)*gridsize)+new_x]=1) Or fr\grid[((gridsize - 1 - temp_y - 1)*gridsize)+new_x] = 1 Then
-				;	Exit
-				;EndIf
-				fr\grid[((gridsize-1-temp_y)*gridsize)+new_x]=branch_type ;make 4s so you don't confuse your branch for a path; will be changed later
-				If temp_y>=gridsize-2 Then Exit
-			Wend
 		EndIf
 	Wend
 	
-	;change branches from 4s to 1s (they were 4s so that they didn't accidently create a 2x2 path unintentionally)
-	For i=0 To gridsize-1
+	;change branches from -1s to 1s
+	For i=1 To gridsize-2
 		For j=0 To gridsize-1
 			If fr\grid[(i*gridsize)+j]=-1 Then
 				fr\grid[(i*gridsize)+j]=1
-			ElseIf fr\grid[(i*gridsize)+j]=-2
-				fr\grid[(i*gridsize)+j]=1
-			;ElseIf fr\grid[(i*gridsize)+j]=0
-				
 			EndIf
 		Next
 	Next
