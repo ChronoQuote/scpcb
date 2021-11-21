@@ -56,13 +56,11 @@ End Function
 
 Function WrapAngle#(angle#)
 	If angle = INFINITY Then Return 0.0
-	While angle < 0
-		angle = angle + 360
-	Wend 
-	While angle >= 360
-		angle = angle - 360
-	Wend
-	Return angle
+	If angle < 0
+		Return 360 + (angle Mod 360)
+	Else 
+		Return angle Mod 360.0
+	EndIf
 End Function
 
 Function GetAngle#(x1#, y1#, x2#, y2#)
