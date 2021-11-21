@@ -749,6 +749,7 @@ Const branch_die_chance% = 18
 Const max_deviation_distance% = 3
 Const return_chance% = 27
 Const center = 5 ;(gridsize-1) / 2
+Const min_door_pos% = 3, max_door_pos% = 7
 
 Type Forest
 	Field TileMesh%[6]
@@ -771,8 +772,8 @@ Function GenForestGrid(fr.Forest)
 	
 	Local door1_pos%,door2_pos%
 	Local i%,j%
-	door1_pos=Rand(3,7)
-	door2_pos=Rand(3,7)
+	door1_pos=Rand(min_door_pos,max_door_pos)
+	door2_pos=Rand(min_door_pos,max_door_pos)
 	
 	;clear the grid
 	For i=0 To gridsize-1
@@ -1161,7 +1162,7 @@ Function PlaceForest(fr.Forest,x#,y#,z#,r.Rooms)
 	For i = 0 To 1
 		ty = ((gridsize-1)*i)
 		
-		For tx = 1 To gridsize-1
+		For tx = min_door_pos To max_door_pos
 			If fr\grid[(ty*gridsize)+tx]=3 Then
 				fr\DetailEntities[i]=CopyEntity(fr\DetailMesh[5])
 				ScaleEntity fr\DetailEntities[i],RoomScale,RoomScale,RoomScale
