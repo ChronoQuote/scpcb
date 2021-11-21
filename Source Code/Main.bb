@@ -3825,7 +3825,7 @@ Function MovePlayer()
 	EndIf
 	
 	If (Not NoClip) Then 
-		If ((KeyDown(KEY_DOWN) Or KeyDown(KEY_UP)) Or (KeyDown(KEY_RIGHT) Or KeyDown(KEY_LEFT)) And Playable) Or ForceMove>0 Then
+		If (Playable And (KeyDown(KEY_DOWN) Xor KeyDown(KEY_UP)) Or (KeyDown(KEY_RIGHT) Xor KeyDown(KEY_LEFT))) Or ForceMove > 0.0 Then
 			
 			If Crouch = 0 And (KeyDown(KEY_SPRINT)) And Stamina > 0.0 And (Not IsZombie) Then
 				Sprint = 2.5
@@ -3923,27 +3923,51 @@ Function MovePlayer()
 		temp = False
 		If (Not IsZombie%)
 			If KeyDown(KEY_DOWN) And Playable Then
-				temp = True 
-				angle = 180
-				If KeyDown(KEY_LEFT) Then angle = 135 
-				If KeyDown(KEY_RIGHT) Then angle = -135 
-			ElseIf (KeyDown(KEY_UP) And Playable) Then; Or ForceMove>0
+				If (Not KeyDown(KEY_UP)) Then
+					temp = True
+					angle = 180
+					If KeyDown(KEY_LEFT) Then
+						If (Not KeyDown(KEY_RIGHT)) Then angle = 135
+					ElseIf KeyDown(KEY_RIGHT)
+						angle = -135
+					EndIf
+				Else
+					If KeyDown(KEY_LEFT) Then
+						If (Not KeyDown(KEY_RIGHT)) Then
+							temp = True
+							angle = 90
+						EndIf
+					ElseIf KeyDown(KEY_RIGHT)
+						temp = True
+						angle = -90
+					EndIf
+				EndIf
+			ElseIf KeyDown(KEY_UP) And Playable
 				temp = True
 				angle = 0
-				If KeyDown(KEY_LEFT) Then angle = 45 
-				If KeyDown(KEY_RIGHT) Then angle = -45 
-			ElseIf ForceMove>0 Then
-				temp=True
+				If KeyDown(KEY_LEFT) Then
+					If (Not KeyDown(KEY_RIGHT)) Then angle = 45
+				ElseIf KeyDown(KEY_RIGHT)
+					angle = -45
+				EndIf
+			ElseIf ForceMove > 0
+				temp = True
 				angle = ForceAngle
-			Else If Playable Then
-				If KeyDown(KEY_LEFT) Then angle = 90 : temp = True
-				If KeyDown(KEY_RIGHT) Then angle = -90 : temp = True 
+			ElseIf Playable
+				If KeyDown(KEY_LEFT) Then
+					If (Not KeyDown(KEY_RIGHT)) Then
+						temp = True
+						angle = 90
+					EndIf
+				ElseIf KeyDown(KEY_RIGHT)
+					temp = True
+					angle = -90
+				EndIf
 			EndIf
 		Else
-			temp=True
+			temp = True
 			angle = ForceAngle
 		EndIf
-		
 		angle = WrapAngle(EntityYaw(Collider,True)+angle+90.0)
 		
 		If temp Then 
@@ -10481,5 +10505,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10AD#132C#1AC0
+;~B#10C5#1344#1AD8
 ;~C#Blitz3D
