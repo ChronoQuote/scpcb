@@ -192,6 +192,7 @@ Function SaveGame(file$)
 		WriteFloat f, n\ModelScaleX#
 		WriteFloat f, n\ModelScaleY#
 		WriteFloat f, n\ModelScaleZ#
+		WriteByte f, n\HideFromNVG
 		WriteInt f, n\TextureID
 	Next
 	
@@ -662,6 +663,7 @@ Function LoadGame(file$)
 			ScaleEntity n\obj,n\ModelScaleX,n\ModelScaleY,n\ModelScaleZ
 			SetAnimTime n\obj,frame
 		EndIf
+		n\HideFromNVG = ReadByte(f)
 		n\TextureID = ReadInt(f)
 		If n\TextureID > 0
 			ChangeNPCTextureID(n.NPCs,n\TextureID-1)
@@ -1488,6 +1490,7 @@ Function LoadGameQuick(file$)
 			ScaleEntity n\obj,n\ModelScaleX,n\ModelScaleY,n\ModelScaleZ
 			SetAnimTime n\obj,frame
 		EndIf
+		n\HideFromNVG = ReadByte(f)
 		n\TextureID = ReadInt(f)
 		If n\TextureID > 0
 			ChangeNPCTextureID(n.NPCs,n\TextureID-1)
