@@ -843,10 +843,16 @@ Function UpdateEvents()
 							If e\room\NPC[5]\State <> 11
 								If EntityDistance(e\room\NPC[3]\Collider,e\room\NPC[5]\Collider)>5.0 And EntityDistance(e\room\NPC[4]\Collider,e\room\NPC[5]\Collider)
 									If EntityDistance(e\room\NPC[5]\Collider,Collider)<3.5
-										e\room\NPC[5]\State = 11
-										e\room\NPC[5]\State3 = 1
+										For i=3 To 5
+											e\room\NPC[i]\State = 11 : e\room\NPC[i]\State3 = 1 : e\room\NPC[i]\Reload = 70*3
+											If i < 5 Then
+												If ChannelPlaying(e\room\NPC[i]\SoundCHN) Then StopChannel(e\room\NPC[i]\SoundCHN)
+												If e\room\NPC[i]\Sound <> 0 Then
+													FreeSound_Strict(e\room\NPC[i]\Sound) : e\room\NPC[i]\Sound = 0
+												EndIf
+											EndIf
+										Next
 										e\room\NPC[5]\SoundChn2 = PlaySound2(e\room\NPC[5]\Sound2,Camera,e\room\NPC[5]\Collider)
-										e\room\NPC[5]\Reload = 70*3
 									EndIf
 								EndIf
 							EndIf
@@ -994,10 +1000,16 @@ Function UpdateEvents()
 								If e\room\NPC[5]\State <> 11
 									If EntityDistance(e\room\NPC[3]\Collider,e\room\NPC[5]\Collider)>5.0 And EntityDistance(e\room\NPC[4]\Collider,e\room\NPC[5]\Collider)
 										If EntityDistance(e\room\NPC[5]\Collider,Collider)<3.5
-											e\room\NPC[5]\State = 11
-											e\room\NPC[5]\State3 = 1
+											For i=3 To 5
+												e\room\NPC[i]\State = 11 : e\room\NPC[i]\State3 = 1 : e\room\NPC[i]\Reload = 70*3
+												If i<5 Then
+													If ChannelPlaying(e\room\NPC[i]\SoundCHN) Then StopChannel(e\room\NPC[i]\SoundCHN)
+													If e\room\NPC[i]\Sound <> 0 Then
+														FreeSound_Strict(e\room\NPC[i]\Sound) : e\room\NPC[i]\Sound = 0
+													EndIf
+												EndIf
+											Next
 											e\room\NPC[5]\SoundChn2 = PlaySound2(e\room\NPC[5]\Sound2,Camera,e\room\NPC[5]\Collider)
-											e\room\NPC[5]\Reload = 70*3
 										EndIf
 									EndIf
 								EndIf
@@ -10377,5 +10389,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#11FF#1E7C
+;~B#120B#1E88
 ;~C#Blitz3D
