@@ -4206,7 +4206,7 @@ Function UpdateNPCs()
 								AnimateNPC(n, 556, 580, 0.25, False)
 							Else
 								;AnimateNPC(n, 2343, 2391, n\CurrSpeed*25.0)
-								If n\CurrSpeed >= 0.005 Then
+								If n\CurrSpeed > 0.0 Then
 									AnimateNPC(n, 580, 628, n\CurrSpeed*25.0)
 								Else
 									AnimateNPC(n, 2, 214, 0.25)
