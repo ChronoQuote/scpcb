@@ -1164,29 +1164,79 @@ Function UpdateEvents()
 												e\room\RoomDoors[2]\locked = False
 												UseDoor(e\room\RoomDoors[2],False)
 												e\room\RoomDoors[2]\locked = True
-												e\EventState3 = 910
+												e\room\NPC[3]\State3 = 0
 												SetNPCFrame(e\room\NPC[3],608)
+												e\EventState3 = 910
 											EndIf
 										EndIf
 									EndIf
 								EndIf
 							EndIf
 						Else
-							If e\room\NPC[3]\Frame <= 620.5 And e\room\NPC[3]\State = 8 Then
-								AnimateNPC(e\room\NPC[3],608,621,0.4,False)
+							If e\room\NPC[3]\State3 = 0.0 Then
+								If e\room\NPC[3]\Frame <= 620.5 And e\room\NPC[3]\State = 8 Then
+									AnimateNPC(e\room\NPC[3],608,621,0.4,False)
+								Else
+									e\room\NPC[3]\Angle = EntityYaw(e\room\NPC[3]\Collider)
+									e\room\NPC[3]\State = 9 : e\room\NPC[3]\State3 = 1
+									e\room\NPC[4]\State = 9
+								EndIf
 							Else
-								e\room\NPC[3]\Angle = EntityYaw(e\room\NPC[3]\Collider)
-								e\room\NPC[3]\State = 9
-								e\room\NPC[4]\State = 9
+								If e\room\RoomDoors[2]\Open Then
+									e\room\NPC[3]\State3 = Max(e\room\NPC[3]\State3 + FPSFactor, 50.0)
+									If e\room\NPC[3]\State3 >= 70 * 8 And e\room\NPC[3]\State3 - FPSFactor < 70 * 8 And e\room\NPC[3]\State = 9 Then
+										If e\room\NPC[3]\State2 < 2 Then
+											If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
+											If e\room\NPC[3]\Sound <> 0 Then
+												FreeSound_Strict(e\room\NPC[3]\Sound) : e\room\NPC[3]\Sound = 0
+											EndIf
+											
+											e\room\NPC[3]\Sound = LoadSound_Strict("SFX\Room\Intro\Guard\Ulgrin\EscortRefuse"+Rand(1,2)+".ogg")
+											e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound,Camera,e\room\NPC[3]\Collider)
+											e\room\NPC[3]\State2 = 3 : e\room\NPC[3]\State3 = 50
+										ElseIf e\room\NPC[3]\State2 = 3
+											If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
+											If e\room\NPC[3]\Sound <> 0 Then
+												FreeSound_Strict(e\room\NPC[3]\Sound) : e\room\NPC[3]\Sound = 0
+											EndIf
+											
+											e\room\NPC[3]\Sound = LoadSound_Strict("SFX\Room\Intro\Guard\Ulgrin\EscortPissedOff"+Rand(1,2)+".ogg")
+											e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound,Camera,e\room\NPC[3]\Collider)
+											e\room\NPC[3]\State2 = 4 : e\room\NPC[3]\State3 = 50
+										ElseIf e\room\NPC[3]\State2 = 4
+											If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
+											If e\room\NPC[3]\Sound <> 0 Then
+												FreeSound_Strict(e\room\NPC[3]\Sound) : e\room\NPC[3]\Sound = 0
+											EndIf
+											
+											e\room\NPC[3]\Sound = LoadSound_Strict("SFX\Room\Intro\Guard\Ulgrin\EscortKill"+Rand(1,2)+".ogg")
+											e\room\NPC[3]\SoundCHN = PlaySound2(e\room\NPC[3]\Sound,Camera,e\room\NPC[3]\Collider)
+											e\room\NPC[3]\State2 = 5 : e\room\NPC[3]\State3 = 50 + (70 * 2.5)
+										ElseIf e\room\NPC[3]\State2 = 5
+											For i = 3 To 4
+												e\room\NPC[i]\State = 11 : e\room\NPC[i]\State3 = 1
+											Next
+											For i = 2 To 3
+												e\room\RoomDoors[i]\locked = False
+												UseDoor(e\room\RoomDoors[i], True)
+												e\room\RoomDoors[i]\locked = True
+											Next
+										EndIf
+									EndIf
+								EndIf
+								
 								If Distance(EntityX(Collider), EntityZ(Collider), EntityX(e\room\obj), EntityZ(e\room\obj)) < 4.0 Then
 									e\room\RoomDoors[2]\locked = False
 									UseDoor(e\room\RoomDoors[2],False)
 									e\room\RoomDoors[2]\locked = True
-									e\EventState3 = 0
 									e\room\NPC[3]\State = 0
 									e\room\NPC[4]\State = 0
 									
+									If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
+									
 									UseDoor(e\room\RoomDoors[1],False)
+									
+									e\EventState3 = 0
 								EndIf
 							EndIf
 						EndIf
@@ -10389,5 +10439,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#120B#1E88
+;~B#123D#1EBA
 ;~C#Blitz3D
