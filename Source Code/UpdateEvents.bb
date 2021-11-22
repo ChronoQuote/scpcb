@@ -1733,8 +1733,17 @@ Function UpdateEvents()
 					EndIf
 					
 				Else
+					temp = False
+					For i=3 To 5
+						If e\room\NPC[i] <> Null Then
+							If e\room\NPC[i]\State=1 Or e\room\NPC[i]\State=11 Then
+								temp = True
+								Exit
+							EndIf
+						EndIf
+					Next
 					If KillTimer<0 Then
-						If e\room\NPC[3]\State = 1 Then 
+						If temp Then
 							LoadEventSound(e,"SFX\Room\Intro\Guard\Ulgrin\EscortTerminated.ogg")
 							PlaySound_Strict e\Sound
 						EndIf
@@ -10439,5 +10448,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#123D#1EBA
+;~B#1246#1EC3
 ;~C#Blitz3D
