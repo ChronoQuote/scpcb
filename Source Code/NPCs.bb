@@ -1799,7 +1799,7 @@ Function UpdateNPCs()
 													If n\Path[n\PathLocation-1]\door <> Null Then
 														If (Not n\Path[n\PathLocation-1]\door\IsElevatorDoor) Then
 															If EntityDistance(n\Path[n\PathLocation-1]\obj,n\Collider)>0.3 Then
-																If (n\Path[n\PathLocation-1]\door\MTFClose) And (n\Path[n\PathLocation-1]\door\open) And (n\Path[n\PathLocation-1]\door\buttons[0]<>0 Or n\Path[n\PathLocation-1]\door\buttons[1]<>0) Then
+																If (n\Path[n\PathLocation-1]\door\MTFClose) And (n\Path[n\PathLocation-1]\door\openstate=180) And (n\Path[n\PathLocation-1]\door\buttons[0]<>0 Or n\Path[n\PathLocation-1]\door\buttons[1]<>0) Then
 																	UseDoor(n\Path[n\PathLocation-1]\door, False)
 																EndIf
 															EndIf
