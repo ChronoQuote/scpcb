@@ -2705,22 +2705,21 @@ Repeat
 		EndIf
 		RenderWorld2()
 		
-		BlurVolume = Min(CurveValue(0.0, BlurVolume, 20.0),0.95)
-		If BlurTimer > 0.0 Then
-			BlurVolume = Max(Min(0.95, BlurTimer / 1000.0), BlurVolume)
-			BlurTimer = Max(BlurTimer - FPSfactor, 0.0)
-		End If
-		
-		UpdateBlur(BlurVolume)
-		
 		;[Block]
-		
-		Local darkA# = 0.0
 		If (Not MenuOpen)  Then
+			UpdateDark()
+			
+			BlurVolume = Min(CurveValue(0.0, BlurVolume, 20.0),0.95)
+			If BlurTimer > 0.0 Then
+				BlurVolume = Max(Min(0.95, BlurTimer / 1000.0), BlurVolume)
+				BlurTimer = Max(BlurTimer - FPSfactor, 0.0)
+			End If
+			
+			UpdateBlur(BlurVolume)
+			
 			If Sanity < 0 Then
 				If RestoreSanity Then Sanity = Min(Sanity + FPSfactor, 0.0)
 				If Sanity < (-200) Then 
-					darkA = Max(Min((-Sanity - 200) / 700.0, 0.6), darkA)
 					If KillTimer => 0 Then 
 						HeartBeatVolume = Min(Abs(Sanity+200)/500.0,1.0)
 						HeartBeatRate = Max(70 + Abs(Sanity+200)/6.0,HeartBeatRate)
@@ -2733,7 +2732,6 @@ Repeat
 				EyeStuck = Max(EyeStuck-FPSfactor,0)
 				
 				If EyeStuck < 9000 Then BlurTimer = Max(BlurTimer, (9000-EyeStuck)*0.5)
-				If EyeStuck < 6000 Then darkA = Min(Max(darkA, (6000-EyeStuck)/5000.0),1.0)
 				If EyeStuck < 9000 And EyeStuck+FPSfactor =>9000 Then 
 					Msg = "The eyedrops are causing your eyes to tear up."
 					MsgTimer = 70*6
@@ -2741,14 +2739,6 @@ Repeat
 			EndIf
 			
 			If BlinkTimer < 0 Then
-				If BlinkTimer > - 5 Then
-					darkA = Max(darkA, Sin(Abs(BlinkTimer * 18.0)))
-				ElseIf BlinkTimer > - 15
-					darkA = 1.0
-				Else
-					darkA = Max(darkA, Abs(Sin(BlinkTimer * 18.0)))
-				EndIf
-				
 				If BlinkTimer <= - 20 Then
 					;Randomizes the frequency of blinking. Scales with difficulty.
 					Select SelectedDifficulty\otherFactors
@@ -2766,8 +2756,6 @@ Repeat
 			Else
 				BlinkTimer = BlinkTimer - FPSfactor * 0.6 * BlinkEffect
 				If EyeIrritation > 0 Then BlinkTimer=BlinkTimer-Min(EyeIrritation / 100.0 + 1.0, 4.0) * FPSfactor
-				
-				darkA = Max(darkA, 0.0)
 			End If
 			
 			EyeIrritation = Max(0, EyeIrritation - FPSfactor)
@@ -2779,11 +2767,6 @@ Repeat
 			EndIf
 			
 			LightBlink = Max(LightBlink - (FPSfactor / 35.0), 0)
-			If LightBlink > 0 Then darkA = Min(Max(darkA, LightBlink * Rnd(0.3, 0.8)), 1.0)
-			
-			If Using294 Then darkA=1.0
-			
-			If (Not WearingNightVision) Then darkA = Max((1.0-SecondaryLightOn)*0.9, darkA)
 			
 			If KillTimer < 0 Then
 				InvOpen = False
@@ -2796,7 +2779,6 @@ Repeat
 					MenuOpen = True 
 					If SelectedEnding <> "" Then EndingTimer = Min(KillTimer,-0.1)
 				EndIf
-				darkA = Max(darkA, Min(Abs(KillTimer / 400.0), 1.0))
 			EndIf
 			
 			If FallTimer < 0 Then
@@ -2813,24 +2795,15 @@ Repeat
 				SelectedMonitor = Null
 				BlurTimer = Abs(FallTimer*10)
 				FallTimer = FallTimer-FPSfactor
-				darkA = Max(darkA, Min(Abs(FallTimer / 400.0), 1.0))				
 			EndIf
-			
-			If SelectedItem <> Null Then
-				If SelectedItem\itemtemplate\tempname = "navigator" Or SelectedItem\itemtemplate\tempname = "nav" Then darkA = Max(darkA, 0.5)
-			End If
-			If SelectedScreen <> Null Then darkA = Max(darkA, 0.5)
-			
-			EntityAlpha(Dark, darkA)	
-		EndIf
-		
-		If LightFlash > 0 Then
-			ShowEntity Light
-			EntityAlpha(Light, Max(Min(LightFlash + Rnd(-0.2, 0.2), 1.0), 0.0))
-			LightFlash = Max(LightFlash - (FPSfactor / 70.0), 0)
-		Else
-			HideEntity Light
+			If LightFlash > 0 Then
+				ShowEntity Light
+				EntityAlpha(Light, Max(Min(LightFlash + Rnd(-0.2, 0.2), 1.0), 0.0))
+				LightFlash = Max(LightFlash - (FPSfactor / 70.0), 0)
+			Else
+				HideEntity Light
 			;EntityAlpha(Light, LightFlash)
+			EndIf
 		EndIf
 		
 		;[End block]
@@ -4089,6 +4062,50 @@ Function MovePlayer()
 	EndIf
 	
 	CatchErrors("MovePlayer")
+End Function
+
+Function UpdateDark%()
+	Local darkA#
+	
+	If darkA <> 0.0 Then darkA = 0.0
+	If (Not MenuOpen) Then
+		If Sanity < (-200) Then  darkA = Max(Min((-Sanity - 200) / 700.0, 0.6), darkA)
+		
+		If EyeStuck > 0 Then 
+			If EyeStuck < 6000 Then darkA = Min(Max(darkA, (6000-EyeStuck)/5000.0),1.0)
+		EndIf
+		
+		If BlinkTimer < 0 Then
+			If BlinkTimer > - 5 Then
+				darkA = Max(darkA, Sin(Abs(BlinkTimer * 18.0)))
+			ElseIf BlinkTimer > - 15
+				darkA = 1.0
+			Else
+				darkA = Max(darkA, Abs(Sin(BlinkTimer * 18.0)))
+			EndIf
+		End If
+		
+		If LightBlink > 0 Then darkA = Min(Max(darkA, LightBlink * Rnd(0.3, 0.8)), 1.0)
+		
+		If Using294 Then darkA=1.0
+		
+		If (Not WearingNightVision) Then darkA = Max((1.0-SecondaryLightOn)*0.9, darkA)
+		
+		If KillTimer < 0 Then darkA = Max(darkA, Min(Abs(KillTimer / 400.0), 1.0))
+		If FallTimer < 0 Then darkA = Max(darkA, Min(Abs(FallTimer / 400.0), 1.0))				
+		
+		If SelectedItem <> Null Then
+			If SelectedItem\itemtemplate\tempname = "navigator" Or SelectedItem\itemtemplate\tempname = "nav" Then darkA = Max(darkA, 0.5)
+		End If
+		If SelectedScreen <> Null Then darkA = Max(darkA, 0.5)
+		
+		If darkA<>0.0 Then
+			ShowEntity Dark
+			EntityAlpha Dark, darkA
+		Else
+			HideEntity Dark
+		EndIf	
+	EndIf
 End Function
 
 Function MouseLook()
@@ -6784,8 +6801,6 @@ Function DrawGUI()
 			EndIf
 			
 			If MouseHit2 Then
-				EntityAlpha Dark, 0.0
-				
 				IN$ = SelectedItem\itemtemplate\tempname
 				If IN$ = "scp1025" Then
 					If SelectedItem\itemtemplate\img<>0 Then FreeImage(SelectedItem\itemtemplate\img)
@@ -7669,6 +7684,7 @@ Function LoadEntities()
 	EntityOrder Dark, -1002
 	MoveEntity(Dark, 0, 0, 1.0)
 	EntityAlpha Dark, 0.0
+	HideEntity Dark
 	
 	LightTexture = CreateTexture(1024, 1024, 1 + 2+256)
 	SetBuffer TextureBuffer(LightTexture)
@@ -10505,5 +10521,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C5#1344#1AD8
+;~B#10D6#1355#1AE7
 ;~C#Blitz3D
