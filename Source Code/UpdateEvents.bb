@@ -774,6 +774,10 @@ Function UpdateEvents()
 									;e\room\NPC[3]\EnemyZ = EntityZ(Collider)
 									
 									If e\EventState3 > 250 Then
+										e\room\RoomDoors[6]\locked = False		
+										UseDoor(e\room\RoomDoors[6], False)
+										e\room\RoomDoors[6]\locked = True
+										
 										If e\room\NPC[3]\SoundChn<>0 Then
 											If ChannelPlaying(e\room\NPC[3]\SoundChn) Then StopChannel e\room\NPC[3]\SoundChn
 										EndIf
@@ -10373,5 +10377,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#11FB#1E78
+;~B#11FF#1E7C
 ;~C#Blitz3D
