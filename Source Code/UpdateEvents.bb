@@ -1183,7 +1183,9 @@ Function UpdateEvents()
 								EndIf
 							Else
 								If e\room\RoomDoors[2]\Open Then
-									e\room\NPC[3]\State3 = Max(e\room\NPC[3]\State3 + FPSFactor, 50.0)
+									temp = 1.0
+									If SelectedItem <> Null Then temp = 3.0
+									e\room\NPC[3]\State3 = Max(e\room\NPC[3]\State3 + FPSFactor / temp, 50.0)
 									If e\room\NPC[3]\State3 >= 70 * 8 And e\room\NPC[3]\State3 - FPSFactor < 70 * 8 And e\room\NPC[3]\State = 9 Then
 										If e\room\NPC[3]\State2 < 2 Then
 											If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
@@ -1226,15 +1228,16 @@ Function UpdateEvents()
 								EndIf
 								
 								If Distance(EntityX(Collider), EntityZ(Collider), EntityX(e\room\obj), EntityZ(e\room\obj)) < 4.0 Then
-									e\room\RoomDoors[2]\locked = False
-									UseDoor(e\room\RoomDoors[2],False)
-									e\room\RoomDoors[2]\locked = True
-									e\room\NPC[3]\State = 0
-									e\room\NPC[4]\State = 0
-									
-									If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
-									
 									UseDoor(e\room\RoomDoors[1],False)
+									If e\room\RoomDoors[2]\open Then
+										e\room\RoomDoors[2]\locked = False
+										UseDoor(e\room\RoomDoors[2],False)
+										e\room\RoomDoors[2]\locked = True
+									EndIf
+									For i = 3 To 4
+										e\room\NPC[i]\State = 0
+									Next
+									If ChannelPlaying(e\room\NPC[3]\SoundCHN) Then StopChannel(e\room\NPC[3]\SoundCHN)
 									
 									e\EventState3 = 0
 								EndIf
@@ -10448,5 +10451,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#1246#1EC3
+;~B#1249#1EC6
 ;~C#Blitz3D
