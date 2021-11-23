@@ -3702,7 +3702,7 @@ Function UpdateEvents()
 								If e\room\grid\grid[ix+(iy*gridsz)]>0 Then
 									
 									Select e\room\grid\grid[ix+(iy*gridsz)]
-										Case 1,7
+										Case ROOM1,ROOM4+2
 											
 											tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]-1])
 											
@@ -3719,7 +3719,7 @@ Function UpdateEvents()
 												RotateEntity tempInt,0,0,0
 												e\room\grid\angles[ix+(iy*gridsz)]=0
 											EndIf
-										Case 2
+										Case ROOM2
 											
 											If (ix=firstX And iy=firstY) Or (ix=lastX And iy=lastY) Then
 												e\room\grid\grid[ix+(iy*gridsz)]=6
@@ -3728,7 +3728,7 @@ Function UpdateEvents()
 											If e\room\grid\grid[(ix+1)+((iy)*gridsz)]>0 And e\room\grid\grid[(ix-1)+((iy)*gridsz)]>0 Then ;horizontal
 												tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]-1])
 												
-												AddLight%(Null, e\room\x+ix*2.0, 8.0+(368.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+												AddLight%(Null, e\room\x+ix*2.0, 8.0+(372.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
 												
 												tempInt2=Rand(0,1)
 												RotateEntity tempInt,0.0,tempInt2*180.0+90,0.0
@@ -3737,7 +3737,7 @@ Function UpdateEvents()
 											ElseIf e\room\grid\grid[(ix)+((iy+1)*gridsz)]>0 And e\room\grid\grid[(ix)+((iy-1)*gridsz)]>0 Then ;vertical
 												tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]-1])
 												
-												AddLight%(Null, e\room\x+ix*2.0, 8.0+(368.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+												AddLight%(Null, e\room\x+ix*2.0, 8.0+(372.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
 												
 												tempInt2=Rand(0,1)
 												RotateEntity tempInt,0.0,tempInt2*180.0,0.0
@@ -3745,7 +3745,7 @@ Function UpdateEvents()
 											Else
 												tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]])
 												
-												AddLight%(Null, e\room\x+ix*2.0, 8.0+(412.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+												AddLight%(Null, e\room\x+ix*2.0, 8.0+(416.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
 												
 												ia=e\room\grid\grid[(ix)+((iy+1)*gridsz)]
 												ib=e\room\grid\grid[(ix)+((iy-1)*gridsz)]
@@ -3771,7 +3771,7 @@ Function UpdateEvents()
 												e\room\grid\grid[ix+(iy*gridsz)]=5
 											EndIf
 											
-										Case 3
+										Case ROOM2C
 											tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]])
 											
 											ia=e\room\grid\grid[(ix)+((iy+1)*gridsz)]
@@ -3791,7 +3791,7 @@ Function UpdateEvents()
 												RotateEntity tempInt,0,180,0
 												e\room\grid\angles[ix+(iy*gridsz)]=2
 											EndIf
-										Case 4
+										Case ROOM3
 											tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]])
 											
 											tempInt2=Rand(0,3)
@@ -3804,11 +3804,11 @@ Function UpdateEvents()
 									PositionEntity tempInt,e\room\x+ix*2.0,8.0,e\room\z+iy*2.0,True
 									
 									Select e\room\grid\grid[ix+(iy*gridsz)]
-										Case 1;,5,6
-											AddLight%(Null, e\room\x+ix*2.0, 8.0+(368.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
-										Case 3,4
-											AddLight%(Null, e\room\x+ix*2.0, 8.0+(412.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
-										Case 7
+										Case ROOM1;,5,6
+											AddLight%(Null, e\room\x+ix*2.0, 8.0+(372.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+										Case ROOM2C,ROOM3
+											AddLight%(Null, e\room\x+ix*2.0, 8.0+(416.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+										Case ROOM4+2
 											AddLight%(Null, e\room\x+ix*2.0-(Sin(EntityYaw(tempInt,True))*504.0*RoomScale)+(Cos(EntityYaw(tempInt,True))*16.0*RoomScale), 8.0+(396.0*RoomScale), e\room\z+iy*2.0+(Cos(EntityYaw(tempInt,True))*504.0*RoomScale)+(Sin(EntityYaw(tempInt,True))*16.0*RoomScale), 2, 500.0 * RoomScale, 255, 200, 200)
 											it = CreateItem("SCP-500-01","scp500",e\room\x+ix*2.0+(Cos(EntityYaw(tempInt,True))*(-208.0)*RoomScale)-(Sin(EntityYaw(tempInt,True))*1226.0*RoomScale),8.0+(80.0*RoomScale),e\room\z+iy*2.0+(Sin(EntityYaw(tempInt,True))*(-208.0)*RoomScale)+(Cos(EntityYaw(tempInt,True))*1226.0*RoomScale))
 											EntityType (it\collider, HIT_ITEM)
@@ -4014,22 +4014,22 @@ Function UpdateEvents()
 							For ix=0 To gridsz-1
 								If e\room\grid\grid[ix+(iy*gridsz)]>0 Then
 									Select e\room\grid\grid[ix+(iy*gridsz)]
-										Case 1,7
+										Case ROOM1,ROOM4+2
 											tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]-1])
-										Case 2
+										Case ROOM2
 											If e\room\grid\grid[(ix+1)+((iy)*gridsz)]>0 And e\room\grid\grid[(ix-1)+((iy)*gridsz)]>0 Then ;horizontal
 												tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]-1])
-												AddLight%(Null, e\room\x+ix*2.0, 8.0+(368.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+												AddLight%(Null, e\room\x+ix*2.0, 8.0+(372.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
 											ElseIf e\room\grid\grid[(ix)+((iy+1)*gridsz)]>0 And e\room\grid\grid[(ix)+((iy-1)*gridsz)]>0 Then ;vertical
 												tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]-1])
-												AddLight%(Null, e\room\x+ix*2.0, 8.0+(368.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+												AddLight%(Null, e\room\x+ix*2.0, 8.0+(372.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
 											Else
 												tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]])
-												AddLight%(Null, e\room\x+ix*2.0, 8.0+(412.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+												AddLight%(Null, e\room\x+ix*2.0, 8.0+(416.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
 											EndIf
-										Case 3,4
+										Case ROOM2C,ROOM3
 											tempInt%=CopyEntity(Meshes[e\room\grid\grid[ix+(iy*gridsz)]])
-										Case 5,6
+										Case ROOM4,ROOM4+1
 											tempInt%=CopyEntity(Meshes[5])
 									End Select
 									
@@ -4039,11 +4039,11 @@ Function UpdateEvents()
 									PositionEntity tempInt,e\room\x+ix*2.0,8.0,e\room\z+iy*2.0,True
 									
 									Select e\room\grid\grid[ix+(iy*gridsz)]
-										Case 1,5,6
-											AddLight%(Null, e\room\x+ix*2.0, 8.0+(368.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
-										Case 3,4
-											AddLight%(Null, e\room\x+ix*2.0, 8.0+(412.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
-										Case 7
+										Case ROOM1,ROOM4,ROOM4+1
+											AddLight%(Null, e\room\x+ix*2.0, 8.0+(372.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+										Case ROOM2C,ROOM3
+											AddLight%(Null, e\room\x+ix*2.0, 8.0+(416.0*RoomScale), e\room\z+iy*2.0, 2, 500.0 * RoomScale, 255, 255, 255)
+										Case ROOM4+2
 											AddLight%(Null, e\room\x+ix*2.0-(Sin(EntityYaw(tempInt,True))*504.0*RoomScale)+(Cos(EntityYaw(tempInt,True))*16.0*RoomScale), 8.0+(396.0*RoomScale), e\room\z+iy*2.0+(Cos(EntityYaw(tempInt,True))*504.0*RoomScale)+(Sin(EntityYaw(tempInt,True))*16.0*RoomScale), 2, 500.0 * RoomScale, 255, 200, 200)
 									End Select
 									
@@ -4274,6 +4274,8 @@ Function UpdateEvents()
 							Next
 						Next
 					EndIf ;entityy(collider) >4
+					
+					UpdateGrid(e\room\grid)
 					
 					e\EventState2 = UpdateElevators(e\EventState2, e\room\RoomDoors[0], e\room\RoomDoors[1],e\room\Objects[2],e\room\Objects[3], e, False)
 					e\EventState3 = UpdateElevators(e\EventState3, e\room\RoomDoors[2], e\room\RoomDoors[3],e\room\Objects[4],e\room\Objects[5], e, False)
@@ -10451,5 +10453,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#1249#1EC6
+;~B#124B#1EC8
 ;~C#Blitz3D

@@ -761,13 +761,12 @@ Function LoadGame(file$)
 						EndIf
 					Next
 				Next
-				For x=0 To 5
+				For x=0 To 6
 					If r\grid\Meshes[x]<>0 Then
-						FreeEntity r\grid\Meshes[x]
-						r\grid\Meshes[x]=0
+						FreeEntity r\grid\Meshes[x] : r\grid\Meshes[x]=0
 					EndIf
 				Next
-				Delete r\grid
+				Delete r\grid : r\grid=Null
 			EndIf
 			r\grid=New Grids
 			For y=0 To gridsz-1
@@ -1587,14 +1586,12 @@ Function LoadGameQuick(file$)
 						EndIf
 					Next
 				Next
-				For x=0 To 5
+				For x=0 To 6
 					If r\grid\Meshes[x]<>0 Then
-						FreeEntity r\grid\Meshes[x]
-						r\grid\Meshes[x]=0
+						FreeEntity r\grid\Meshes[x] : r\grid\Meshes[x]=0
 					EndIf
 				Next
-				Delete r\grid
-				r\grid=Null
+				Delete r\grid : r\grid=Null
 			EndIf
 		EndIf
 		
