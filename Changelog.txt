@@ -1,4 +1,35 @@
-﻿v1.3.11
+﻿- Fixed SCP-1162 sometimes injuring you when your inventory isn't empty.
+- Decals now travel with elevators.
+- Fixed various MAVs.
+- Fixed MTF units not announcing the presence of SCP-049-2.
+- Fixed SCP-860-2 being able to spawn in view of the player.
+- Fixed text not having the right appearance in a few places.
+- Fixed messages being visible in the pause menu or console.
+- Both exit gates will now be unlocked if the electrical center failed to generate.
+- Added SCP-372 to the blue night vision goggles' interface.
+- Fixed SCP-1025's appendicitis messages not appearing.
+- Fixed SCP-966 playing too many sounds at a time.
+- Fixed walking and sprinting having incorrectly swapped noise volumes for sneaking past NPCs.
+- Reordered two achievements to keep SCP encounter achievements together.
+- Improved the accuracy of the "SCPs encountered" statistic displayed on the end screen.
+- Fixed SCP-966's debuff messages not appearing.
+- Small fixes and improvements to guard AI.
+- Documents refined by SCP-914 on "1:1" and documents found in archive rooms can now be any SCP document.
+- Fixed SCP-294 drinks being refined by SCP-914 incorrectly.
+- Fixed non-facility rooms contributing to the "rooms found" statistic displayed on the end screen.
+- Optimized navigator performance to reduce lag while the navigator is open.
+- Fixed forest tiles sometimes being missing.
+- Fixed forest sometimes generating unreachable tiles.
+- Holding opposing direction keys now moves you in neither direction instead of prioritizing right and down.
+- Fixed doors getting stuck for a while after being closed by SCP-049.
+- The cell door in the intro now closes behind you, fixing a bug where the guards could get stuck inside.
+- Fixed SCP-966's walking animation not playing.
+- Fixed certain NPCs sometimes appearing on the navigator and the blue night vision goggles' interface when they're not supposed to.
+- Many more optimizations and small fixes.
+
+----------------------------------------------------------------------------------
+
+v1.3.11
 Save files from version 1.3.10 are compatible with this version.
 
 - Added a mouse smoothing option.
@@ -150,6 +181,7 @@ Bug fixes:
     - Attempt to fix the clerk not dying at the tesla gate.
     - Attempt to fix door objects appearing in the center of the rooms.
     - The game was patched with the 4GB patch, which should prevent the game from lagging and crashing in most cases.
+
 ----------------------------------------------------------------------------------
 
 v1.3.9
