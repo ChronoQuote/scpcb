@@ -614,7 +614,7 @@ Function PickItem(item.Items)
 			If Inventory(n) = Null Then
 				Select item\itemtemplate\tempname
 					Case "1123"
-						If Not (Wearing714 = 1) Then
+						If (Not Wearing714) And WearingGasMask <> 3 And WearingHazmat <> 3 Then
 							If PlayerRoom\RoomTemplate\Name <> "room1123" Then
 								LightFlash = 7
 								PlaySound_Strict(LoadTempSound("SFX\SCP\1123\Touch.ogg"))		

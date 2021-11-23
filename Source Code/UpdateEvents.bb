@@ -2036,7 +2036,7 @@ Function UpdateEvents()
 								EndIf
 							EndIf
 						Next
-						If (CoffinDistance < 4.0) And (hasBatteryFor895) And (Not Wearing714) Then
+						If (CoffinDistance < 4.0) And (hasBatteryFor895) And (Not Wearing714) And WearingGasMask <> 3 And WearingHazmat <> 3 Then
 							tempF# = point_direction(EntityX(Collider,True),EntityZ(Collider,True),EntityX(e\room\Objects[1],True),EntityZ(e\room\Objects[1],True))
 							tempF2# = EntityYaw(Collider)
 							tempF3# = angleDist(tempF+90+Sin(WrapAngle(e\EventState3/10)),tempF2)
@@ -5333,7 +5333,7 @@ Function UpdateEvents()
 							EndIf
 						EndIf
 						
-						If Wearing714=False And WearingGasMask<3 And WearingHazmat<3 Then
+						If (Not Wearing714) And WearingGasMask<>3 And WearingHazmat<>3 Then
 							;temp = False
 							If EntityVisible(e\room\Objects[2],Camera) Then 							
 							;012 not visible, walk to the door														
@@ -5827,7 +5827,7 @@ Function UpdateEvents()
 										e\EventState2 = Min(e\EventState2+(FPSfactor/6000),1.0)
 										e\EventState3 = CurveValue(e\EventState2, e\EventState3, 50)
 										
-										If (Not Wearing714) And WearingHazmat<3 And WearingGasMask<3 Then
+										If (Not Wearing714) And WearingHazmat<>3 And WearingGasMask<>3 Then
 											Sanity=Sanity-FPSfactor*1.1
 											BlurTimer = Sin(MilliSecs2()/10)*Abs(Sanity)
 										EndIf
@@ -5866,7 +5866,7 @@ Function UpdateEvents()
 							e\EventState3 = Max(e\EventState3-(FPSfactor/100),0)
 						EndIf
 						
-						If e\EventState3 > 0 And (Not Wearing714) And WearingHazmat<3 And WearingGasMask<3 Then 
+						If e\EventState3 > 0 And (Not Wearing714) And WearingHazmat<>3 And WearingGasMask<>3 Then 
 							e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\obj, 10, e\EventState3)
 							e\SoundCHN2 = LoopSound2(e\Sound2, e\SoundCHN2, Camera, e\room\obj, 10, (e\EventState3-0.5)*2)
 						EndIf

@@ -2112,7 +2112,7 @@ Function UpdateDoors()
 					EndIf
 					If d\AutoClose And RemoteDoorOn = True Then
 						If EntityDistance(Camera, d\obj) < 2.1 Then
-							If (Not Wearing714) Then PlaySound_Strict HorrorSFX(7)
+							If (Not Wearing714) And WearingGasMask <> 3 And WearingHazmat <> 3 Then PlaySound_Strict HorrorSFX(7)
 							d\open = False : d\SoundCHN = PlaySound2(CloseDoorSFX(Min(d\dir,1), Rand(0, 2)), Camera, d\obj) : d\AutoClose = False
 						EndIf
 					EndIf				
@@ -4241,7 +4241,7 @@ Function MouseLook()
 	EndIf
 	
 	If WearingGasMask Or WearingHazmat Or Wearing1499 Then
-		If Wearing714 = False Then
+		If (Not Wearing714) Then
 			If WearingGasMask = 2 Or Wearing1499 = 2 Or WearingHazmat = 2 Then
 				Stamina = Min(100, Stamina + (100.0-Stamina)*0.01*FPSfactor)
 			EndIf
@@ -5441,7 +5441,7 @@ Function DrawGUI()
 					;[End Block]
 				Case "1123"
 					;[Block]
-					If Not (Wearing714 = 1) Then
+					If (Not Wearing714) And WearingGasMask <> 3 And WearingHazmat <> 3 Then
 						If PlayerRoom\RoomTemplate\Name <> "room1123" Then
 							LightFlash = 7
 							PlaySound_Strict(LoadTempSound("SFX\SCP\1123\Touch.ogg"))		
@@ -5648,34 +5648,28 @@ Function DrawGUI()
 				Case "eyedrops"
 					;[Block]
 					If CanUseItem(False,False,False)
-						If (Not (Wearing714=1)) Then ;wtf is this
-							BlinkEffect = 0.6
-							BlinkEffectTimer = Rand(20,30)
-							BlurTimer = 200
-						EndIf
+						BlinkEffect = 0.6
+						BlinkEffectTimer = Rand(20,30)
+						BlurTimer = 200
 						RemoveItem(SelectedItem)
 					EndIf
 					;[End Block]
 				Case "fineeyedrops"
 					;[Block]
 					If CanUseItem(False,False,False)
-						If (Not (Wearing714=1)) Then 
-							BlinkEffect = 0.4
-							BlinkEffectTimer = Rand(30,40)
-							Bloodloss = Max(Bloodloss-1.0, 0)
-							BlurTimer = 200
-						EndIf
+						BlinkEffect = 0.4
+						BlinkEffectTimer = Rand(30,40)
+						Bloodloss = Max(Bloodloss-1.0, 0)
+						BlurTimer = 200
 						RemoveItem(SelectedItem)
 					EndIf
 					;[End Block]
 				Case "supereyedrops"
 					;[Block]
 					If CanUseItem(False,False,False)
-						If (Not (Wearing714 = 1)) Then
-							BlinkEffect = 0.0
-							BlinkEffectTimer = 60
-							EyeStuck = 10000
-						EndIf
+						BlinkEffect = 0.0
+						BlinkEffectTimer = 60
+						EyeStuck = 10000
 						BlurTimer = 1000
 						RemoveItem(SelectedItem)
 					EndIf
@@ -5735,7 +5729,7 @@ Function DrawGUI()
 						MaskImage(SelectedItem\itemtemplate\img, 255, 0, 255)
 					EndIf
 					
-					If (Not Wearing714) Then SCP1025state[SelectedItem\state]=Max(1,SCP1025state[SelectedItem\state])
+					If (Not Wearing714) And WearingGasMask <> 3 And WearingHazmat <> 3 Then SCP1025state[SelectedItem\state]=Max(1,SCP1025state[SelectedItem\state])
 					
 					DrawImage(SelectedItem\itemtemplate\img, GraphicWidth / 2 - ImageWidth(SelectedItem\itemtemplate\img) / 2, GraphicHeight / 2 - ImageHeight(SelectedItem\itemtemplate\img) / 2)
 					;[End Block]
@@ -6204,7 +6198,7 @@ Function DrawGUI()
 				Case "420"
 					;[Block]
 					If CanUseItem(False,False,True)
-						If Wearing714=1 Then
+						If Wearing714=1 Or WearingGasMask = 3 Or WearingHazmat = 3 Then
 							Msg = Chr(34) + "DUDE WTF THIS SHIT DOESN'T EVEN WORK" + Chr(34)
 						Else
 							Msg = Chr(34) + "MAN DATS SUM GOOD ASS SHIT" + Chr(34)
@@ -6220,7 +6214,7 @@ Function DrawGUI()
 				Case "420s"
 					;[Block]
 					If CanUseItem(False,False,True)
-						If Wearing714=1 Then
+						If Wearing714=1 Or WearingGasMask = 3 Or WearingHazmat = 3 Then
 							Msg = Chr(34) + "DUDE WTF THIS SHIT DOESN'T EVEN WORK" + Chr(34)
 						Else
 							DeathMSG = "Subject D-9341 found in a comatose state in [DATA REDACTED]. The subject was holding what appears to be a cigarette while smiling widely. "
@@ -10521,5 +10515,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D6#1355#1AE7
+;~B#10D6#1355#1AE1
 ;~C#Blitz3D
