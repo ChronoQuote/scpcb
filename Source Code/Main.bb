@@ -8728,11 +8728,11 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
 				Case "fine"
-					item\invSlots = Max(item\state2,15)
+					item\invSlots = Max(item\invSlots,15)
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
 				Case "very fine"
-					item\invSlots = Max(item\state2,20)
+					item\invSlots = Max(item\invSlots,20)
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
 			End Select
