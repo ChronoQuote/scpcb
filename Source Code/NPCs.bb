@@ -952,8 +952,8 @@ Function UpdateNPCs()
 						If n\State <= 0 Then	;attacking	
 							If EntityY(n\Collider) < EntityY(Collider) - 20.0 - 0.55 Then
 								If Not PlayerRoom\RoomTemplate\DisableDecals Then
-									de.Decals = CreateDecal(0, EntityX(Collider), 0.01, EntityZ(Collider), 90, Rand(360), 0)
-									de\Size = 0.05 : de\SizeChange = 0.001 : EntityAlpha(de\obj, 0.8) : UpdateDecals
+									de.Decals = CreateDecal(0, EntityX(Collider), 0.01, EntityZ(Collider), 90, Rand(360), 0, 0.05, 0.8)
+									de\SizeChange = 0.001
 								EndIf
 								
 								n\PrevY = EntityY(Collider)
@@ -1361,8 +1361,7 @@ Function UpdateNPCs()
 													TurnEntity pvt, 90, 0, 0
 													EntityPick(pvt,0.3)
 													
-													de.Decals = CreateDecal(Rand(15,16), PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0)
-													de\Size = Rnd(0.2,0.6) : EntityAlpha(de\obj, 1.0) : ScaleSprite de\obj, de\Size, de\Size
+													de.Decals = CreateDecal(Rand(15,16), PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0, Rnd(0.2, 0.6))
 												Next
 												FreeEntity pvt
 											EndIf
@@ -3936,8 +3935,7 @@ Function UpdateNPCs()
 										Case 4
 											If PlayerRoom\RoomTemplate\DisableDecals = False Then
 												CameraShake = 5.0
-												de.Decals = CreateDecal(1, EntityX(n\Collider), 0.01, EntityZ(n\Collider), 90, Rand(360), 0)
-												de\Size = 0.3 : UpdateDecals
+												de.Decals = CreateDecal(1, EntityX(n\Collider), 0.01, EntityZ(n\Collider), 90, Rand(360), 0, 0.3)
 												PlaySound_Strict(LoadTempSound("SFX\General\BodyFall.ogg"))
 												If Distance(EntityX(Collider),EntityZ(Collider),EntityX(n\Collider),EntityZ(n\Collider))<0.8 Then
 													Injuries = Injuries + Rnd(0.3,0.5)
@@ -7009,14 +7007,10 @@ Function Shoot(x#, y#, z#, hitProb# = 1.0, particles% = True, instaKill% = False
 					Next
 					
 					;bullet hole decal
-					Local de.Decals = CreateDecal(Rand(13,14), PickedX(),PickedY(),PickedZ(), 0,0,0)
+					Local de.Decals = CreateDecal(Rand(13,14), PickedX(),PickedY(),PickedZ(), 0,0,0,Rnd(0.028,0.034),1.0,1,2)
 					AlignToVector de\obj,-PickedNX(),-PickedNY(),-PickedNZ(),3
 					MoveEntity de\obj, 0,0,-0.001
-					EntityFX de\obj, 1
 					de\lifetime = 70*20
-					EntityBlend de\obj, 2
-					de\Size = Rnd(0.028,0.034)
-					ScaleSprite de\obj, de\Size, de\Size
 				EndIf				
 			EndIf
 			FreeEntity pvt
@@ -7386,5 +7380,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#17E#1291#132B#13C4#157D#1688#1849#18A5
+;~B#17E#128F#1329#13C2#157B#1686#1847#18A3
 ;~C#Blitz3D

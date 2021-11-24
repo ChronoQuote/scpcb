@@ -328,22 +328,24 @@ Function SaveGame(file$)
 	For d.Decals = Each Decals
 		WriteInt f, d\ID
 		
-		WriteFloat f, EntityX(d\obj,True)
-		WriteFloat f, EntityY(d\obj,True)
-		WriteFloat f, EntityZ(d\obj,True)
+		WriteFloat f, EntityX(d\obj, True)
+		WriteFloat f, EntityY(d\obj, True)
+		WriteFloat f, EntityZ(d\obj, True)
 		
-		WriteFloat f, EntityPitch(d\obj,True)
-		WriteFloat f, EntityYaw(d\obj,True)
-		WriteFloat f, EntityRoll(d\obj,True)
-		
-		WriteByte f, d\blendmode
-		WriteInt f, d\fx
+		WriteFloat f, EntityPitch(d\obj, True)
+		WriteFloat f, EntityYaw(d\obj, True)
+		WriteFloat f, EntityRoll(d\obj, True)
 		
 		WriteFloat f, d\Size
 		WriteFloat f, d\Alpha
-		WriteFloat f, d\AlphaChange
+		WriteByte f, d\FX
+		WriteByte f, d\BlendMode
+		WriteByte f, d\R : WriteByte f, d\G : WriteByte f, d\B
+		
 		WriteFloat f, d\Timer
-		WriteFloat f, d\lifetime
+		WriteFloat f, d\LifeTime
+		WriteFloat f, d\SizeChange
+		WriteFloat f, d\AlphaChange
 	Next
 	
 	Local e.Events
@@ -953,7 +955,7 @@ Function LoadGame(file$)
 	
 	Local d.Decals
 	For d.Decals = Each Decals
-		FreeEntity d\obj
+		FreeEntity d\obj : d\obj = 0
 		Delete d
 	Next
 	
@@ -967,22 +969,40 @@ Function LoadGame(file$)
 		Local yaw# = ReadFloat(f)
 		Local roll# = ReadFloat(f)
 		d.Decals = CreateDecal(id, x, y, z, pitch, yaw, roll)
-		d\blendmode = ReadByte (f)
-		d\fx = ReadInt(f)
+		Local size# = ReadFloat(f)
+		Local alpha# = ReadFloat(f)
+		Local fx% = ReadByte(f)
+		Local blendmode% = ReadByte(f)
+		Local red% = ReadByte(f), green% = ReadByte(f), blue% = ReadByte(f)
 		
-		d\Size = ReadFloat(f)
-		d\Alpha = ReadFloat(f)
-		d\AlphaChange = ReadFloat(f)
-		d\Timer = ReadFloat(f)
-		d\lifetime = ReadFloat(f)
+		Local decalTimer# = ReadFloat(f)
+		Local lifeTime# = ReadFloat(f)
+		Local sizechange# = ReadFloat(f)
+		Local alphachange# = ReadFloat(f)
 		
-		ScaleSprite(d\obj, d\Size, d\Size)
-		EntityBlend d\obj, d\blendmode
-		EntityFX d\obj, d\fx
+		For d.Decals = Each Decals
+			If EntityX(d\OBJ, True) = x And EntityY(d\OBJ, True) = y And EntityZ(d\OBJ, True) = z Then
+				d\Size = size
+				d\Alpha = alpha
+				d\FX = fx
+				d\BlendMode = blendmode
+				d\R = red : d\G = green : d\B = blue
+				d\Timer = decalTimer
+				d\LifeTime = lifeTime
+				d\SizeChange = sizechange
+				d\AlphaChange = alphachange
+				
+				ScaleSprite(d\OBJ, size, size)
+				EntityAlpha(d\OBJ, alpha)
+				EntityFX(d\OBJ, fx)
+				EntityBlend(d\OBJ, blendmode)
+				If red <> 0 Or green <> 0 Or blue <> 0 Then EntityColor(d\OBJ, red, green, blue)
+				Exit
+			EndIf
+		Next
 		
 		DebugLog "Created Decal @"+x+","+y+","+z
 	Next
-	UpdateDecals()
 	
 	temp = ReadInt(f)
 	For i = 1 To temp
@@ -1244,7 +1264,7 @@ Function LoadGame(file$)
 		EndIf
 	EndIf
 	
-	UpdateDoorsTimer = 0
+	UpdateTimer = 0
 	
 	CatchErrors("LoadGame")
 End Function
@@ -1674,7 +1694,7 @@ Function LoadGameQuick(file$)
 	
 	Local d.Decals
 	For d.Decals = Each Decals
-		FreeEntity d\obj
+		FreeEntity d\obj : d\obj = 0
 		Delete d
 	Next
 	
@@ -1688,22 +1708,40 @@ Function LoadGameQuick(file$)
 		Local yaw# = ReadFloat(f)
 		Local roll# = ReadFloat(f)
 		d.Decals = CreateDecal(id, x, y, z, pitch, yaw, roll)
-		d\blendmode = ReadByte (f)
-		d\fx = ReadInt(f)
+		Local size# = ReadFloat(f)
+		Local alpha# = ReadFloat(f)
+		Local fx% = ReadByte(f)
+		Local blendmode% = ReadByte(f)
+		Local red% = ReadByte(f), green% = ReadByte(f), blue% = ReadByte(f)
 		
-		d\Size = ReadFloat(f)
-		d\Alpha = ReadFloat(f)
-		d\AlphaChange = ReadFloat(f)
-		d\Timer = ReadFloat(f)
-		d\lifetime = ReadFloat(f)
+		Local decalTimer# = ReadFloat(f)
+		Local lifeTime# = ReadFloat(f)
+		Local sizechange# = ReadFloat(f)
+		Local alphachange# = ReadFloat(f)
 		
-		ScaleSprite(d\obj, d\Size, d\Size)
-		EntityBlend d\obj, d\blendmode
-		EntityFX d\obj, d\fx
+		For d.Decals = Each Decals
+			If EntityX(d\obj, True) = x And EntityY(d\obj, True) = y And EntityZ(d\obj, True) = z Then
+				d\Size = size
+				d\Alpha = alpha
+				d\FX = fx
+				d\BlendMode = blendmode
+				d\R = red : d\G = green : d\B = blue
+				d\Timer = decalTimer
+				d\LifeTime = lifeTime
+				d\SizeChange = sizechange
+				d\AlphaChange = alphachange
+				
+				ScaleSprite(d\obj, size, size)
+				EntityAlpha(d\obj, alpha)
+				EntityFX(d\obj, fx)
+				EntityBlend(d\obj, blendmode)
+				If red <> 0 Or green <> 0 Or blue <> 0 Then EntityColor(d\obj, red, green, blue)
+				Exit
+			EndIf
+		Next
 		
 		DebugLog "Created Decal @"+x+","+y+","+z
 	Next
-	UpdateDecals()
 	
 	Local e.Events
 	For e.Events = Each Events
@@ -1906,7 +1944,7 @@ Function LoadGameQuick(file$)
 		EndIf
 	EndIf
 	
-	UpdateDoorsTimer = 0
+	UpdateTimer = 0
 	
 	;Free some entities that could potentially cause memory leaks (for the endings)
 	;This is only required for the LoadGameQuick function, as the other one is from the menu where everything is already deleted anyways

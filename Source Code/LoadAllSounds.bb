@@ -204,6 +204,7 @@ Next
 For i = 0 To 2
 	Step2SFX(i) = LoadSound_Strict("SFX\Step\StepPD" + (i + 1) + ".ogg")
 	Step2SFX(i+3) = LoadSound_Strict("SFX\Step\StepForest" + (i + 1) + ".ogg")
+	If i < 2 Then Step2SFX(i+6) = LoadSound_Strict("SFX\Step\StepFluid" + (i + 1) + ".ogg")
 Next 
 End Function
 
@@ -217,5 +218,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#0
 ;~C#Blitz3D

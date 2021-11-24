@@ -1692,7 +1692,7 @@ Global ApacheSFX
 Global CurrStepSFX
 Dim StepSFX%(5, 2, 8) ;(normal/metal, walk/run, id)
 
-Dim Step2SFX(6)
+Dim Step2SFX(8)
 
 DrawLoading(30, True)
 
@@ -1802,7 +1802,7 @@ Include "Source Code\Particles.bb"
 ;-------------------------------------  Doors --------------------------------------------------------------
 
 Global ClosestButton%, ClosestDoor.Doors
-Global SelectedDoor.Doors, UpdateDoorsTimer#
+Global SelectedDoor.Doors
 Global DoorTempID%
 Type Doors
 	Field obj%, obj2%, frameobj%, buttons%[2]
@@ -2012,7 +2012,7 @@ End Function
 Function UpdateDoors()
 	
 	Local i%, d.Doors, x#, z#, dist#
-	If UpdateDoorsTimer =< 0 Then
+	If UpdateTimer =< 0 Then
 		For d.Doors = Each Doors
 			Local xdist# = Abs(EntityX(Collider)-EntityX(d\obj,True))
 			Local zdist# = Abs(EntityZ(Collider)-EntityZ(d\obj,True))
@@ -2033,17 +2033,13 @@ Function UpdateDoors()
 				If d\buttons[1] <> 0 Then ShowEntity d\buttons[1]
 			EndIf
 		Next
-		
-		UpdateDoorsTimer = 30
-	Else
-		UpdateDoorsTimer = Max(UpdateDoorsTimer-FPSfactor,0)
 	EndIf
 	
 	ClosestButton = 0
 	ClosestDoor = Null
 	
 	For d.Doors = Each Doors
-		If d\dist < HideDistance*2 Or d\IsElevatorDoor>0 Then ;Make elevator doors update everytime because if not, this can cause a bug where the elevators suddenly won't work, most noticeable in room2tunnel - ENDSHN
+		If d\dist =< HideDistance*2 Or d\IsElevatorDoor>0 Then ;Make elevator doors update everytime because if not, this can cause a bug where the elevators suddenly won't work, most noticeable in room2tunnel - ENDSHN
 			
 			If (d\openstate >= 180 Or d\openstate <= 0) And GrabbedEntity = 0 Then
 				For i% = 0 To 1
@@ -2657,6 +2653,7 @@ Repeat
 			EndIf
 			MovePlayer()
 			InFacility = CheckForPlayerInFacility()
+			UpdateGameTimer()
 			If PlayerRoom\RoomTemplate\Name = "dimension1499"
 				If QuickLoadPercent = -1 Or QuickLoadPercent = 100
 					UpdateDimension1499()
@@ -3854,8 +3851,10 @@ Function MovePlayer()
 						tempchn% = PlaySound_Strict(StepSFX(0, 1, Rand(0, 7)))
 						ChannelVolume tempchn, (1.0-(Crouch*0.6))*SFXVolume#
 					End If
+				ElseIf CurrStepSFX=4
+					tempchn% = PlaySound_Strict(Step2SFX(Rand(6,7)))
+					ChannelVolume tempchn, (1.0-(Crouch*0.4))*SFXVolume#
 				EndIf
-				
 			EndIf	
 		EndIf
 	Else ;noclip on
@@ -3966,6 +3965,8 @@ Function MovePlayer()
 					PlaySound_Strict(Step2SFX(Rand(3, 5)))
 				ElseIf CurrStepSFX=3
 					PlaySound_Strict(StepSFX(0, 0, Rand(0, 7)))
+				ElseIf CurrStepSFX=4
+					PlaySound_Strict(Step2SFX(Rand(6, 7)))
 				EndIf
 				PlayerSoundVolume = Max(3.0,PlayerSoundVolume)
 			EndIf
@@ -4011,8 +4012,8 @@ Function MovePlayer()
 			PositionEntity pvt, EntityX(Collider)+Rnd(-0.05,0.05),EntityY(Collider)-0.05,EntityZ(Collider)+Rnd(-0.05,0.05)
 			TurnEntity pvt, 90, 0, 0
 			EntityPick(pvt,0.3)
-			de.decals = CreateDecal(Rand(15,16), PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0)
-			de\size = Rnd(0.03,0.08)*Min(Injuries,3.0) : EntityAlpha(de\obj, 1.0) : ScaleSprite de\obj, de\size, de\size
+			de.decals = CreateDecal(Rand(15,16), PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0, Rnd(0.03, 0.08) * Min(Injuries, 3.0))
+			EntityParent(de\obj, PlayerRoom\obj)
 			tempchn% = PlaySound_Strict (DripSFX(Rand(0,2)))
 			ChannelVolume tempchn, Rnd(0.0,0.8)*SFXVolume
 			ChannelPitch tempchn, Rand(20000,30000)
@@ -7855,10 +7856,9 @@ Function LoadEntities()
 	
 	DrawLoading(20)
 	
-	For i = 0 To 6
+	For i = 0 To 7
 		DecalTextures(i) = LoadTexture_Strict("GFX\decal" + (i + 1) + ".png", 1 + 2)
 	Next
-	DecalTextures(7) = LoadTexture_Strict("GFX\items\INVpaperstrips.jpg", 1 + 2)
 	For i = 8 To 12
 		DecalTextures(i) = LoadTexture_Strict("GFX\decalpd"+(i-7)+".jpg", 1 + 2)	
 	Next
@@ -7868,7 +7868,7 @@ Function LoadEntities()
 	For i = 15 To 16
 		DecalTextures(i) = LoadTexture_Strict("GFX\blooddrop"+(i-14)+".png", 1 + 2)	
 	Next
-	DecalTextures(17) = LoadTexture_Strict("GFX\decal8.png", 1 + 2)	
+	DecalTextures(17) = LoadTexture_Strict("GFX\items\INVpaperstrips.jpg", 1 + 2)
 	DecalTextures(18) = LoadTexture_Strict("GFX\decalpd6.dc", 1 + 2)	
 	DecalTextures(19) = LoadTexture_Strict("GFX\decal19.png", 1 + 2)
 	DecalTextures(20) = LoadTexture_Strict("GFX\decal427.png", 1 + 2)
@@ -8170,15 +8170,14 @@ Function InitNewGame()
 		
 		If (Not r\RoomTemplate\DisableDecals) Then
 			If Rand(4) = 1 Then
-				de.Decals = CreateDecal(Rand(2, 3), EntityX(r\obj)+Rnd(- 2,2), 0.003, EntityZ(r\obj)+Rnd(-2,2), 90, Rand(360), 0)
-				de\Size = Rnd(0.1, 0.4) : ScaleSprite(de\obj, de\Size, de\Size)
-				EntityAlpha(de\obj, Rnd(0.85, 0.95))
+				de.Decals = CreateDecal(Rand(2, 3), EntityX(r\obj)+Rnd(- 2,2), 0.005, EntityZ(r\obj)+Rnd(-2,2), 90, Rand(360), 0, Rnd(0.1, 0.4), Rnd(0.85, 0.95))
+				EntityParent(de\obj, r\obj)
 			EndIf
 			
 			If Rand(4) = 1 Then
-				de.Decals = CreateDecal(0, EntityX(r\obj)+Rnd(- 2,2), 0.003, EntityZ(r\obj)+Rnd(-2,2), 90, Rand(360), 0)
-				de\Size = Rnd(0.5, 0.7) : EntityAlpha(de\obj, 0.7) : de\ID = 1 : ScaleSprite(de\obj, de\Size, de\Size)
-				EntityAlpha(de\obj, Rnd(0.7, 0.85))
+				de.Decals = CreateDecal(0, EntityX(r\obj)+Rnd(- 2,2), 0.005, EntityZ(r\obj)+Rnd(-2,2), 90, Rand(360), 0, Rnd(0.5, 0.7), Rnd(0.7, 0.85))
+				de\ID = 1
+				EntityParent(de\obj, r\obj)
 			EndIf
 		EndIf
 		
@@ -8659,6 +8658,16 @@ Include "Source Code\Sounds.bb"
 
 ;--------------------------------------- random -------------------------------------------------------
 
+Global UpdateTimer#
+
+Function UpdateGameTimer%()
+	If UpdateTimer =< 0.0 Then
+		UpdateTimer = 30.0
+	Else
+		UpdateTimer = UpdateTimer - FPSfactor
+	EndIf
+End Function
+
 Function Use914(item.Items, setting$, x#, y#, z#)
 	
 	RefinedItems = RefinedItems+1
@@ -8668,8 +8677,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Gas Mask", "Heavy Gas Mask"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
 				Case "1:1"
 					PositionEntity(item\collider, x, y, z)
@@ -8681,8 +8690,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "SCP-1499"
 				Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
 				Case "1:1"
 					it2 = CreateItem("Gas Mask", "gasmask", x, y, z)
@@ -8701,8 +8710,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Ballistic Vest"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
 				Case "1:1"
 					PositionEntity(item\collider, x, y, z)
@@ -8717,8 +8726,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Clipboard"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(7, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(17, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 					For i% = 0 To 19
 						If item\SecondInv[i]<>Null Then RemoveItem(item\SecondInv[i])
 						item\SecondInv[i]=Null
@@ -8739,8 +8748,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Cowbell"
 			Select setting
 				Case "rough","coarse"
-					d.Decals = CreateDecal(0, x, 8*RoomScale+0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8*RoomScale+0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
 				Case "1:1","fine","very fine"
 					PositionEntity(item\collider, x, y, z)
@@ -8749,8 +8758,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Night Vision Goggles"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
 				Case "1:1"
 					PositionEntity(item\collider, x, y, z)
@@ -8811,8 +8820,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Severed Hand", "Black Severed Hand"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(3, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1", "fine", "very fine"
 					If (item\itemtemplate\name = "Severed Hand")
 						it2 = CreateItem("Black Severed Hand", "hand2", x, y, z)
@@ -8824,8 +8833,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "First Aid Kit", "Blue First Aid Kit"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 				If Rand(2)=1 Then
 					it2 = CreateItem("Blue First Aid Kit", "firstaid2", x, y, z)
@@ -8841,8 +8850,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Level 1 Key Card", "Level 2 Key Card", "Level 3 Key Card", "Level 4 Key Card", "Level 5 Key Card", "Key Card"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.07 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("Playing Card", "misc", x, y, z)
 				Case "fine"
@@ -8986,8 +8995,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Key Card Omni"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.07 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					If Rand(2)=1 Then
 						it2 = CreateItem("Mastercard", "misc", x, y, z)
@@ -9002,8 +9011,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Playing Card", "Coin", "Quarter"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.07 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("Level 1 Key Card", "key1", x, y, z)	
 			    Case "fine", "very fine"
@@ -9013,8 +9022,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Mastercard"
 			Select setting
 				Case "rough"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-					d\Size = 0.07 : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "coarse"
 					it2 = CreateItem("Quarter", "25ct", x, y, z)
 					Local it3.Items,it4.Items,it5.Items
@@ -9069,8 +9078,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					For n.npcs = Each NPCs
 						If n\npctype = NPCtype5131 Then RemoveNPC(n)
 					Next
-					d.Decals = CreateDecal(0, x, 8*RoomScale+0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1", "fine", "very fine"
 					it2 = CreateItem("SCP-513", "scp513", x, y, z)
 					
@@ -9080,8 +9089,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Some SCP-420-J", "Cigarette"
 			Select setting
 				Case "rough", "coarse"			
-					d.Decals = CreateDecal(0, x, 8*RoomScale+0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("Cigarette", "cigarette", x + 1.5, y + 0.5, z + 1.0)
 				Case "fine"
@@ -9094,8 +9103,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "9V Battery", "18V Battery", "Strange Battery"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("18V Battery", "18vbat", x, y, z)
 				Case "fine"
@@ -9108,8 +9117,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "ReVision Eyedrops", "RedVision Eyedrops", "Eyedrops"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("RedVision Eyedrops", "eyedrops", x,y,z)
 				Case "fine"
@@ -9122,8 +9131,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Hazmat Suit"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("Hazmat Suit", "hazmatsuit", x,y,z)
 				Case "fine"
@@ -9139,8 +9148,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case "syringe"
 					Select setting
 						Case "rough", "coarse"
-							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-							d\Size = 0.07 : ScaleSprite(d\obj, d\Size, d\Size)
+							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+							EntityParent(d\obj, PlayerRoom\obj)
 						Case "1:1"
 							it2 = CreateItem("Small First Aid Kit", "finefirstaid", x, y, z)	
 						Case "fine"
@@ -9152,8 +9161,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case "finesyringe"
 					Select setting
 						Case "rough"
-							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-							d\Size = 0.07 : ScaleSprite(d\obj, d\Size, d\Size)
+							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+							EntityParent(d\obj, PlayerRoom\obj)
 						Case "coarse"
 							it2 = CreateItem("First Aid Kit", "firstaid", x, y, z)
 						Case "1:1"
@@ -9177,8 +9186,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "SCP-500-01", "Upgraded pill", "Pill"
 			Select setting
 				Case "rough", "coarse"
-					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.010, z, 90, Rand(360), 0)
-					d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+					EntityParent(d\obj, PlayerRoom\obj)
 				Case "1:1"
 					it2 = CreateItem("Pill", "pill", x, y, z)
 					RemoveItem(item)
@@ -9207,8 +9216,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case "cup"
 					Select setting
 						Case "rough", "coarse"
-							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.010, z, 90, Rand(360), 0)
-							d\Size = 0.2 : EntityAlpha(d\obj, 0.8) : ScaleSprite(d\obj, d\Size, d\Size)
+							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
+							EntityParent(d\obj, PlayerRoom\obj)
 						Case "1:1"
 							it2 = CreateItem("cup", "cup", x,y,z, 255-item\r,255-item\g,255-item\b,item\a)
 							it2\name = item\name
@@ -9230,8 +9239,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case "paper"
 					Select setting
 						Case "rough", "coarse"
-							d.Decals = CreateDecal(7, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0)
-							d\Size = 0.12 : ScaleSprite(d\obj, d\Size, d\Size)
+							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+							EntityParent(d\obj, PlayerRoom\obj)
 						Case "1:1"
 							it2 = CreateItem("Document SCP-" + GetRandDocument(), "paper", x, y, z)
 						Case "fine", "very fine"
@@ -9517,8 +9526,8 @@ Function Use427()
 			PositionEntity pvt, EntityX(Collider)+Rnd(-0.05,0.05),EntityY(Collider)-0.05,EntityZ(Collider)+Rnd(-0.05,0.05)
 			TurnEntity pvt, 90, 0, 0
 			EntityPick(pvt,0.3)
-			de.Decals = CreateDecal(20, PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0)
-			de\Size = Rnd(0.03,0.08)*2.0 : EntityAlpha(de\obj, 1.0) : ScaleSprite de\obj, de\Size, de\Size
+			de.Decals = CreateDecal(20, PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0, Rnd(0.03, 0.08) * 2.0)
+			EntityParent(de\obj, PlayerRoom\obj)
 			tempchn% = PlaySound_Strict (DripSFX(Rand(0,2)))
 			ChannelVolume tempchn, Rnd(0.0,0.8)*SFXVolume
 			ChannelPitch tempchn, Rand(20000,30000)
@@ -9740,9 +9749,8 @@ Function UpdateInfect()
 						DeathMSG = DeathMSG + "SCP-008 infection was confirmed, after which the body was incinerated."
 						
 						Kill()
-						de.Decals = CreateDecal(3, EntityX(PlayerRoom\NPC[0]\Collider), 544*RoomScale + 0.01, EntityZ(PlayerRoom\NPC[0]\Collider),90,Rnd(360),0)
-						de\Size = 0.8
-						ScaleSprite(de\obj, de\Size,de\Size)
+						de.Decals = CreateDecal(3, EntityX(PlayerRoom\NPC[0]\Collider), 544*RoomScale + 0.005, EntityZ(PlayerRoom\NPC[0]\Collider),90,Rnd(360),0,0.8)
+						EntityParent(de\obj, PlayerRoom\obj)
 					ElseIf Infect > 96
 						BlinkTimer = Max(Min(-10*(Infect-96),BlinkTimer),-10)
 					Else
@@ -9813,83 +9821,107 @@ Type Decals
 	Field fx%
 	Field ID%
 	Field Timer#
-	
 	Field lifetime#
-	
-	Field x#, y#, z#
-	Field pitch#, yaw#, roll#
+	Field R%, G%, B%
+	Field Dist#
 End Type
 
-Function CreateDecal.Decals(id%, x#, y#, z#, pitch#, yaw#, roll#)
+Function CreateDecal.Decals(id%, x#, y#, z#, pitch#, yaw#, roll#, size# = 1.0, alpha# = 1.0, fx% = 0, blendmode% = 1, r% = 0, g% = 0, b% = 0)
 	Local d.Decals = New Decals
-	
-	d\x = x
-	d\y = y
-	d\z = z
-	d\pitch = pitch
-	d\yaw = yaw
-	d\roll = roll
 	
 	d\MaxSize = 1.0
 	
-	d\Alpha = 1.0
-	d\Size = 1.0
+	d\Size = size
+	d\Alpha = alpha
 	d\obj = CreateSprite()
-	d\blendmode = 1
+	d\blendmode = blendmode : d\fx = fx
+	d\R = r : d\G = g : d\B = b
 	
 	EntityTexture(d\obj, DecalTextures(id))
-	EntityFX(d\obj, 0)
+	EntityFX(d\obj, fx)
 	SpriteViewMode(d\obj, 2)
 	PositionEntity(d\obj, x, y, z)
 	RotateEntity(d\obj, pitch, yaw, roll)
+	ScaleSprite(d\obj, size, size)
+	EntityAlpha(d\obj, alpha)
+	EntityBlend(d\obj, blendmode)
+	If r <> 0 Or g <> 0 Or b <> 0 Then EntityColor(d\obj, r, g, b)
 	
 	d\ID = id
 	
-	If DecalTextures(id) = 0 Or d\obj = 0 Then Return Null
-	
+	If (Not DecalTextures(id)) Then
+		RuntimeError("Decal Texture ID: " + id + " not found.")
+	EndIf
 	Return d
 End Function
 
 Function UpdateDecals()
 	Local d.Decals
+	If UpdateTimer =< 0 Then
+		For d.Decals = Each Decals
+			Local xdist# = Abs(EntityX(Collider)-EntityX(d\obj,True))
+			Local zdist# = Abs(EntityZ(Collider)-EntityZ(d\obj,True))
+			
+			d\Dist = xdist+zdist
+			
+			If d\Dist > HideDistance*2 Then
+				If d\obj <> 0 Then HideEntity d\obj
+			Else
+				If d\obj <> 0 Then ShowEntity d\obj
+			EndIf
+		Next
+	EndIf
 	For d.Decals = Each Decals
-		If d\SizeChange <> 0 Then
-			d\Size=d\Size + d\SizeChange * FPSfactor
-			ScaleSprite(d\obj, d\Size, d\Size)
+		If d\Dist =< HideDistance*2 Then
+			If d\SizeChange <> 0 Then
+				d\Size=d\Size + d\SizeChange * FPSfactor
+				ScaleSprite(d\obj, d\Size, d\Size)
+				
+				Select d\ID
+					Case 0
+						If d\Timer <= 0 Then
+							Local angle# = Rand(360)
+							Local temp# = Rnd(d\Size)
+							Local d2.Decals = CreateDecal(1, EntityX(d\obj) + Cos(angle) * temp, EntityY(d\obj) - 0.005, EntityZ(d\obj) + Sin(angle) * temp, EntityPitch(d\obj), Rnd(360), EntityRoll(d\obj), Rnd(0.1, 0.5))
+							EntityParent(d2\obj, GetParent(d\obj))
+							PlaySound2(DecaySFX(Rand(1, 3)), Camera, d2\obj, 10.0, Rnd(0.1, 0.5))
+							;d\Timer = d\Timer + Rand(50,150)
+							d\Timer = Rand(50, 100)
+						Else
+							d\Timer= d\Timer-FPSfactor
+						End If
+					;Case 6
+					;	EntityBlend d\obj, 2
+				End Select
+				
+				If d\Size >= d\MaxSize Then d\SizeChange = 0 : d\Size = d\MaxSize
+			End If
 			
-			Select d\ID
-				Case 0
-					If d\Timer <= 0 Then
-						Local angle# = Rand(360)
-						Local temp# = Rnd(d\Size)
-						Local d2.Decals = CreateDecal(1, EntityX(d\obj) + Cos(angle) * temp, EntityY(d\obj) - 0.0005, EntityZ(d\obj) + Sin(angle) * temp, EntityPitch(d\obj), Rnd(360), EntityRoll(d\obj))
-						d2\Size = Rnd(0.1, 0.5) : ScaleSprite(d2\obj, d2\Size, d2\Size)
-						PlaySound2(DecaySFX(Rand(1, 3)), Camera, d2\obj, 10.0, Rnd(0.1, 0.5))
-						;d\Timer = d\Timer + Rand(50,150)
-						d\Timer = Rand(50, 100)
-					Else
-						d\Timer= d\Timer-FPSfactor
-					End If
-				;Case 6
-				;	EntityBlend d\obj, 2
-			End Select
+			If d\AlphaChange <> 0 Then
+				d\Alpha = Min(d\Alpha + FPSfactor * d\AlphaChange, 1.0)
+				EntityAlpha(d\obj, d\Alpha)
+			End If
 			
-			If d\Size >= d\MaxSize Then d\SizeChange = 0 : d\Size = d\MaxSize
-		End If
-		
-		If d\AlphaChange <> 0 Then
-			d\Alpha = Min(d\Alpha + FPSfactor * d\AlphaChange, 1.0)
-			EntityAlpha(d\obj, d\Alpha)
-		End If
-		
-		If d\lifetime > 0 Then
-			d\lifetime=Max(d\lifetime-FPSfactor,5)
+			If d\lifetime > 0 Then
+				d\lifetime=Max(d\lifetime-FPSfactor,5)
+			EndIf
+			
+			Local Dist# = EntityDistance(Collider, d\obj)
+			If (Dist < d\Size) And (EntityPitch(d\obj) = 90.0) Then
+				Select d\ID
+					Case 0
+						CurrStepSFX = 1
+						CurrSpeed = CurveValue(0.0, CurrSpeed, Max(Dist * 50.0, 1.0))
+					Case 2, 3, 4, 5, 6, 7, 16, 17, 18
+						CurrStepSFX = 4
+				End Select
+			EndIf
+			
+			If d\Size <= 0 Or d\Alpha <= 0 Or d\lifetime=5.0  Then
+				FreeEntity(d\obj)
+				Delete d
+			End If
 		EndIf
-		
-		If d\Size <= 0 Or d\Alpha <= 0 Or d\lifetime=5.0  Then
-			FreeEntity(d\obj)
-			Delete d
-		End If
 	Next
 End Function
 
@@ -10517,5 +10549,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D6#1355#1AE1
+;~B#10D7#1356#1AE2
 ;~C#Blitz3D

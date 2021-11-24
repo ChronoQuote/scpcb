@@ -878,13 +878,12 @@ Function Update294()
 			PositionEntity(pvt, EntityX(Camera), EntityY(Collider) - 0.05, EntityZ(Camera))
 			TurnEntity(pvt, 90, 0, 0)
 			EntityPick(pvt, 0.3)
-			de.decals = CreateDecal(5, PickedX(), PickedY() + 0.005, PickedZ(), 90, 180, 0)
-			de\Size = 0.001 : de\SizeChange = 0.001 : de\MaxSize = 0.6 : EntityAlpha(de\obj, 1.0) : EntityColor(de\obj, 0.0, Rnd(200, 255), 0.0) : ScaleSprite de\obj, de\size, de\size
+			de.decals = CreateDecal(5, PickedX(), PickedY() + 0.005, PickedZ(), 90, 180, 0, 0.001, 1.0, 0, 1, 0.0, Rnd(200, 255), 0.0)
+			de\SizeChange = 0.001 : de\MaxSize = 0.6
+			EntityParent(de\obj, PlayerRoom\obj)
 			FreeEntity pvt
 			Vomit = True
 		EndIf
-		
-		UpdateDecals()
 		
 		mouse_y_speed_1 = mouse_y_speed_1 + Max((1.0 + VomitTimer / 10), 0.0)
 		

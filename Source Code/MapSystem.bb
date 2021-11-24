@@ -2157,15 +2157,12 @@ Function FillRoom(r.Rooms)
 		Case "lockroom2"
 			;[Block]
 			For i = 0 To 5
-				de.Decals = CreateDecal(Rand(2,3), r\x+Rnd(-392,520)*RoomScale, 3.0*RoomScale+Rnd(0,0.001), r\z+Rnd(-392,520)*RoomScale,90,Rnd(360),0)
-				de\Size = Rnd(0.3,0.6)
-				ScaleSprite(de\obj, de\Size,de\Size)
-				CreateDecal(Rand(15,16), r\x+Rnd(-392,520)*RoomScale, 3.0*RoomScale+Rnd(0,0.001), r\z+Rnd(-392,520)*RoomScale,90,Rnd(360),0)
-				de\Size = Rnd(0.1,0.6)
-				ScaleSprite(de\obj, de\Size,de\Size)
-				CreateDecal(Rand(15,16), r\x+Rnd(-0.5,0.5), 3.0*RoomScale+Rnd(0,0.001), r\z+Rnd(-0.5,0.5),90,Rnd(360),0)
-				de\Size = Rnd(0.1,0.6)
-				ScaleSprite(de\obj, de\Size,de\Size)
+				de.Decals = CreateDecal(Rand(2,3), r\x+Rnd(-392,520)*RoomScale, 3.0*RoomScale+Rnd(0.001,0.005), r\z+Rnd(-392,520)*RoomScale,90,Rnd(360),0,Rnd(0.3,0.6))
+				EntityParent(de\obj, r\obj)
+				de.Decals = CreateDecal(Rand(15,16), r\x+Rnd(-392,520)*RoomScale, 3.0*RoomScale+Rnd(0.001,0.005), r\z+Rnd(-392,520)*RoomScale,90,Rnd(360),0,Rnd(0.1,0.6))
+				EntityParent(de\obj, r\obj)
+				de.Decals = CreateDecal(Rand(15,16), r\x+Rnd(-0.5,0.5), 3.0*RoomScale+Rnd(0.001,0.005), r\z+Rnd(-0.5,0.5),90,Rnd(360),0,Rnd(0.1,0.6))
+				EntityParent(de\obj, r\obj)
 			Next
 			
 			sc.SecurityCams = CreateSecurityCam(r\x + 512.0 * RoomScale, r\y + 384 * RoomScale, r\z + 384.0 * RoomScale, r, True)
@@ -2472,9 +2469,7 @@ Function FillRoom(r.Rooms)
 			r\Objects[2] = CreatePivot(r\obj)
 			PositionEntity (r\Objects[2], r\x + 1184.0*RoomScale, -448.0*RoomScale, r\z+1792.0*RoomScale, True)
 			
-			de.Decals = CreateDecal(3,  r\x + 1184.0*RoomScale, -448.0*RoomScale+0.01, r\z+1792.0*RoomScale,90,Rnd(360),0)
-			de\Size = 0.5
-			ScaleSprite(de\obj, de\Size,de\Size)
+			de.Decals = CreateDecal(3,  r\x + 1184.0*RoomScale, -448.0*RoomScale+0.005, r\z+1792.0*RoomScale,90,Rnd(360),0,0.5)
 			EntityParent de\obj, r\obj
 			;[End Block]
 		Case "checkpoint1"
@@ -2723,10 +2718,8 @@ Function FillRoom(r.Rooms)
 			r\Objects[1] = CreatePivot(r\obj)
             PositionEntity r\Objects[1],r\x + 1344.0 * RoomScale, -752.0 * RoomScale,r\z - 384.0 * RoomScale,True
             
-            de.Decals = CreateDecal(3,  r\x + 1334.0*RoomScale, -796.0*RoomScale+0.01, r\z-220.0*RoomScale,90,Rnd(360),0)
-            de\Size = 0.25
-            ScaleSprite(de\obj, de\Size,de\Size)
-            EntityParent de\obj, r\obj
+            de.Decals = CreateDecal(3,  r\x + 1334.0*RoomScale, -796.0*RoomScale+0.005, r\z-220.0*RoomScale,90,Rnd(360),0,0.25)
+			EntityParent de\obj, r\obj
 			
 			r\Objects[2] = CreateButton(r\x + 1181.0 *RoomScale, r\y + 180.0 * RoomScale, r\z - 512.0 * RoomScale, 0, 270)
             EntityParent (r\Objects[2],r\obj)
@@ -2774,10 +2767,10 @@ Function FillRoom(r.Rooms)
 			
 			de.Decals = CreateDecal(0, r\x - 808.0 * RoomScale, 0.005, r\z - 72.0 * RoomScale, 90, Rand(360), 0)
 			EntityParent(de\obj, r\obj)
-			de.Decals = CreateDecal(2, r\x - 808.0 * RoomScale, 0.01, r\z - 72.0 * RoomScale, 90, Rand(360), 0)
-			de\Size = 0.3 : ScaleSprite(de\obj, de\Size, de\Size) : EntityParent(de\obj, r\obj)
+			de.Decals = CreateDecal(2, r\x - 808.0 * RoomScale, 0.005, r\z - 72.0 * RoomScale, 90, Rand(360), 0, 0.3)
+			EntityParent(de\obj, r\obj)
 			
-			de.Decals = CreateDecal(0, r\x - 432.0 * RoomScale, 0.01, r\z, 90, Rand(360), 0)
+			de.Decals = CreateDecal(0, r\x - 432.0 * RoomScale, 0.005, r\z, 90, Rand(360), 0)
 			EntityParent(de\obj, r\obj)
 			
 			r\Objects[0] = CreatePivot(r\obj)
@@ -3267,9 +3260,7 @@ Function FillRoom(r.Rooms)
 			EntityParent(it\collider, r\obj)
 			it\state = 450
 			
-			de.Decals = CreateDecal(3,  r\x + x*RoomScale, -5632.0*RoomScale+0.01, r\z+z*RoomScale,90,Rnd(360),0)
-			de\Size = 0.5
-			ScaleSprite(de\obj, de\Size,de\Size)
+			de.Decals = CreateDecal(3,  r\x + x*RoomScale, -5632.0*RoomScale+0.005, r\z+z*RoomScale,90,Rnd(360),0,0.5)
 			EntityParent de\obj, r\obj
 			
 			;Objects [20],[21],[22],[23]
@@ -3509,9 +3500,7 @@ Function FillRoom(r.Rooms)
 			it.Items = CreateItem("Severed Hand", "hand", r\x - 784*RoomScale, -576*RoomScale+0.3, r\z+640*RoomScale)
 			EntityParent(it\collider, r\obj)
 			
-			de.Decals = CreateDecal(3,  r\x - 784*RoomScale, -768*RoomScale+0.01, r\z+640*RoomScale,90,Rnd(360),0)
-			de\Size = 0.5
-			ScaleSprite(de\obj, de\Size,de\Size)
+			de.Decals = CreateDecal(3,  r\x - 784*RoomScale, -768*RoomScale+0.005, r\z+640*RoomScale,90,Rnd(360),0,0.5)
 			EntityParent de\obj, r\obj
 			;[End Block]
 		Case "tunnel2"
@@ -4019,13 +4008,7 @@ Function FillRoom(r.Rooms)
 						dx# = -544.0
 						dz# = 636.0
 				End Select
-				de.Decals = CreateDecal(Rand(15,16),r\x+dx#*RoomScale,0.005,r\z+dz#*RoomScale,90,Rand(360),0)
-				If i > 10 Then
-					de\Size = Rnd(0.2,0.25)
-				Else
-					de\Size = Rnd(0.1,0.17)
-				EndIf
-				EntityAlpha(de\obj, 1.0) : ScaleSprite(de\obj,de\Size,de\Size)
+				de.Decals = CreateDecal(Rand(15,16),r\x+dx#*RoomScale,0.005,r\z+dz#*RoomScale,90,Rand(360),0,((i>10)*Rnd(0.2,0.25))+((i=<10)*Rnd(0.1,0.17)))
 				EntityParent de\obj, r\obj
 			Next
 			;[End Block]
@@ -4301,16 +4284,11 @@ Function FillRoom(r.Rooms)
 			FreeEntity(r\RoomDoors[1]\buttons[0]) : r\RoomDoors[1]\buttons[0] = 0
 			FreeEntity(r\RoomDoors[1]\buttons[1]) : r\RoomDoors[1]\buttons[1] = 0
 			
-			de.Decals = CreateDecal(Rand(4, 5), EntityX(r\Objects[5], True), 0.002, EntityZ(r\Objects[5], True), 90, Rnd(360), 0)
-			de\Size = 1.2
-			ScaleSprite(de\obj, de\Size, de\Size)
+			de.Decals = CreateDecal(Rand(4, 5), EntityX(r\Objects[5], True), 0.005, EntityZ(r\Objects[5], True), 90, Rnd(360), 0, 1.2)
 			
 			For xtemp% = 0 To 1
 				For ztemp% = 0 To 1
-					de.Decals = CreateDecal(Rand(4, 6), r\x + 700.0 * RoomScale + xtemp * 700.0 * RoomScale + Rnd(-0.5, 0.5), Rnd(0.001, 0.0018), r\z + 600 * ztemp * RoomScale + Rnd(-0.5, 0.5), 90, Rnd(360), 0)
-					de\Size = Rnd(0.5, 0.8)
-					de\Alpha = Rnd(0.8, 1.0)
-					ScaleSprite(de\obj, de\Size, de\Size)
+					de.Decals = CreateDecal(Rand(4, 6), r\x + 700.0 * RoomScale + xtemp * 700.0 * RoomScale + Rnd(-0.5, 0.5), Rnd(0.001, 0.0018), r\z + 600 * ztemp * RoomScale + Rnd(-0.5, 0.5), 90, Rnd(360), 0, Rnd(0.5, 0.8), Rnd(0.8, 1.0))
 				Next
 			Next
 			
@@ -4771,14 +4749,8 @@ Function FillRoom(r.Rooms)
 			r\RoomDoors[0] = CreateDoor(r\x,2048*RoomScale,r\z+32.0-1024*RoomScale,0,r,False)
 			r\RoomDoors[1] = CreateDoor(r\x,2048*RoomScale,r\z+32.0+1024*RoomScale,180,r,False)
 			
-			de.Decals = CreateDecal(18, r\x-(1536*RoomScale), 0.02,r\z+608*RoomScale+32.0, 90,0,0)
+			de.Decals = CreateDecal(18, r\x-(1536*RoomScale), 0.005,r\z+608*RoomScale+32.0, 90,0,0,Rnd(0.8, 0.8),1.0,1+8,2)
 			EntityParent(de\obj, r\obj)
-			de\Size = Rnd(0.8, 0.8)
-			de\blendmode = 2
-			de\fx = 1+8
-			ScaleSprite(de\obj, de\Size, de\Size)
-			EntityFX(de\obj, 1+8)
-			EntityBlend de\obj, 2
 			
 			ScaleEntity (r\Objects[10],RoomScale*1.5,RoomScale*2.0,RoomScale*1.5,True)			
 			PositionEntity(r\Objects[11],r\x,r\y,r\z+64.0,True)			
@@ -4797,13 +4769,8 @@ Function FillRoom(r.Rooms)
 				EntityParent (r\Objects[i-1], r\obj)
 				
 				If i < 6 Then 
-					de.Decals = CreateDecal(i+7, r\x+Cos(angle)*(512.0*RoomScale)*3.0, 0.02,r\z+Sin(angle)*(512.0*RoomScale)*3.0, 90,angle-90,0)
-					de\Size = Rnd(0.5, 0.5)
-					de\blendmode = 2
-					de\fx = 1+8
-					ScaleSprite(de\obj, de\Size, de\Size)
-					EntityFX(de\obj, 1+8)
-					EntityBlend de\obj, 2
+					de.Decals = CreateDecal(i+7, r\x+Cos(angle)*(512.0*RoomScale)*3.0, 0.02,r\z+Sin(angle)*(512.0*RoomScale)*3.0, 90,angle-90,0,Rnd(0.5,0.5),1.0,1+8,2)
+					EntityParent(de\obj, r\obj)
 				EndIf				
 			Next
 			
@@ -4896,9 +4863,7 @@ Function FillRoom(r.Rooms)
 				r\Objects[2] = CreatePivot(r\obj)
 				PositionEntity (r\Objects[2], r\x - 156.825*RoomScale, -37.3458*RoomScale, r\z+121.364*RoomScale, True)
 				
-				de.Decals = CreateDecal(3,  r\x - 156.825*RoomScale, -37.3458*RoomScale, r\z+121.364*RoomScale,90,Rnd(360),0)
-				de\Size = 0.5
-				ScaleSprite(de\obj, de\Size,de\Size)
+				de.Decals = CreateDecal(3,  r\x - 156.825*RoomScale, -37.3458*RoomScale, r\z+121.364*RoomScale,90,Rnd(360),0,0.5)
 				EntityParent de\obj, r\obj
 				
 				;260 300 -350
@@ -6654,7 +6619,7 @@ Function UpdateElevators#(State#, door1.Doors, door2.Doors, room1, room2, event.
 						EndIf
 						
 						TeleportEntity(Collider, EntityX(room2,True)+x,(0.1*FPSfactor)+EntityY(room2,True)+(EntityY(Collider)-EntityY(room1,True)),EntityZ(room2,True)+z,0.3,True)
-						UpdateDoorsTimer = 0
+						UpdateTimer = 0
 						DropSpeed = 0
 						UpdateDoors()
 						UpdateRooms()
@@ -6775,7 +6740,7 @@ Function UpdateElevators#(State#, door1.Doors, door2.Doors, room1, room2, event.
 						EndIf
 						
 						TeleportEntity(Collider, EntityX(room1,True)+x,(0.1*FPSfactor)+EntityY(room1,True)+(EntityY(Collider)-EntityY(room2,True)),EntityZ(room1,True)+z,0.3,True)
-						UpdateDoorsTimer = 0
+						UpdateTimer = 0
 						DropSpeed = 0
 						UpdateDoors()
 						UpdateRooms()
@@ -8491,5 +8456,5 @@ End Function
 
 ;~IDEal Editor Parameters:
 ;~F#2#A#35#100#107#10E#115#12E#136#13E
-;~B#11C6
+;~B#11B0
 ;~C#Blitz3D
