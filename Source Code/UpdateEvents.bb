@@ -4946,14 +4946,16 @@ Function UpdateEvents()
 								
 								TFormPoint EntityX(it\collider),EntityY(it\collider),EntityZ(it\collider),0,e\room\obj
 								x = TFormedX() : y = TFormedY() : z = TFormedZ()
-								If TFormedX()>264 Then
-									TFormPoint x-1024,y,z,e\room\obj,0
-									PositionEntity it\collider, TFormedX(), TFormedY(), TFormedZ()
-									ResetEntity it\collider
-								ElseIf TFormedX()<-264
-									TFormPoint x+1024,y,z,e\room\obj,0
-									PositionEntity it\collider, TFormedX(), TFormedY(), TFormedZ()
-									ResetEntity it\collider
+								If z>=-290 And z<=560 Then
+									If x>=264 And x<=760 Then
+										TFormPoint x-1024,y,z,e\room\obj,0
+										PositionEntity it\collider, TFormedX(), TFormedY(), TFormedZ()
+										ResetEntity it\collider
+									ElseIf x<=-264 And x>=-760
+										TFormPoint x+1024,y,z,e\room\obj,0
+										PositionEntity it\collider, TFormedX(), TFormedY(), TFormedZ()
+										ResetEntity it\collider
+									EndIf
 								EndIf
 								
 							EndIf
@@ -5048,27 +5050,38 @@ Function UpdateEvents()
 						
 						;If Abs(TFormedX())<264 Then 
 						For it.Items = Each Items
-							If (it\Dropped=1 And Abs(TFormedX())<264) Or it\Dropped=-1 Then
-								DebugLog "dropping/picking: "+it\Dropped+" - "+EntityX(it\collider)+", "+EntityY(it\collider)+", "+EntityZ(it\collider)
-								
+							If it\Dropped=1 Or it\Dropped=-1 Then
 								TFormPoint EntityX(it\collider),EntityY(it\collider),EntityZ(it\collider),0,e\room\obj
 								x = TFormedX() : y = TFormedY() : z = TFormedZ()
 								
-								If it\Dropped=1 Then
+								If it\Dropped=1 And Abs(x)<264 Then
+									DebugLog "dropping: "+EntityX(it\collider)+", "+EntityY(it\collider)+", "+EntityZ(it\collider)
+									
 									For i = - 1 To 1 Step 2
 										TFormPoint x+1024*i,y,z,e\room\obj,0
-										it2.items = CreateItem(it\name, it\itemtemplate\tempname, TFormedX(), EntityY(it\collider), TFormedZ())
+										it2.Items = CreateItem(it\name, it\itemtemplate\tempname, TFormedX(), EntityY(it\collider), TFormedZ(), it\r, it\g, it\b, it\a)
+										it2\state = it\state : it2\state2 = it\state2
+										If it\invSlots > 0 Then
+											it2\invSlots = it\invSlots
+											For j = 0 To it\invSlots - 1
+												it2\SecondInv[j] = it\SecondInv[j]
+											Next
+											SetAnimTime it2\model, AnimTime(it\model)
+											it2\invimg = it\invimg
+										EndIf
 										RotateEntity(it2\collider, EntityPitch(it\collider),EntityYaw(it\collider),0)
 										EntityType(it2\collider, HIT_ITEM)
 									Next
-								Else
-									For it2.items = Each Items
-										If it2<>it And it2\dist < 15.0 Then
+								ElseIf it\Dropped=-1
+									DebugLog "picking: "+EntityX(it\collider)+", "+EntityY(it\collider)+", "+EntityZ(it\collider)
+									
+									For it2.Items = Each Items
+										If it2<>it And it2\dist < 15.0 And it2\itemtemplate = it\itemtemplate Then
 											
 											TFormPoint EntityX(it2\collider),EntityY(it2\collider),EntityZ(it2\collider),0,e\room\obj
 											DebugLog TFormedZ()+" - "+z
 											
-											If TFormedZ()=z Then RemoveItem(it2) : DebugLog "item removed"									
+											If TFormedZ()=z Then RemoveItem(it2) : DebugLog "item removed"
 										EndIf
 									Next
 								EndIf

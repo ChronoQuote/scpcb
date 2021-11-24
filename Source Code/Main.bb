@@ -4894,6 +4894,8 @@ Function DrawGUI()
 				If MouseSlot = 66 Then
 					If SelectedItem\itemtemplate\sound <> 66 Then PlaySound_Strict(PickSFX(SelectedItem\itemtemplate\sound))
 					
+					SelectedItem\Dropped = 1
+					
 					ShowEntity(SelectedItem\collider)
 					PositionEntity(SelectedItem\collider, EntityX(Camera), EntityY(Camera), EntityZ(Camera))
 					RotateEntity(SelectedItem\collider, EntityPitch(Camera), EntityYaw(Camera), 0)
@@ -5228,7 +5230,7 @@ Function DrawGUI()
 										MsgTimer = 70 * 5
 									EndIf
 								ElseIf Inventory(MouseSlot)\itemtemplate\tempname = "wallet" Then
-									;Add an item to clipboard
+									;Add an item to wallet
 									added.Items = Null
 									b$ = SelectedItem\itemtemplate\tempname
 									b2$ = SelectedItem\itemtemplate\name
