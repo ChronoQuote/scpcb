@@ -1121,6 +1121,9 @@ Function UpdateMainMenu()
 	AASetFont Font1
 End Function
 
+Const LauncherWidth% = 640
+Const LauncherHeight% = 480
+
 Function UpdateLauncher()
 	MenuScale = 1
 	
@@ -1165,6 +1168,8 @@ Function UpdateLauncher()
 	CheckForUpdates()
 	
 	AppTitle "SCP - Containment Breach Launcher"
+	
+	Local Quit% = False
 	
 	Repeat
 		
@@ -1280,7 +1285,10 @@ Function UpdateLauncher()
 			Exit
 		EndIf
 		
-		If DrawButton(LauncherWidth - 30 - 90, LauncherHeight - 50, 100, 30, "EXIT", False, False, False) Then End
+		If DrawButton(LauncherWidth - 30 - 90, LauncherHeight - 50, 100, 30, "EXIT", False, False, False) Then
+			Quit = True
+			Exit
+		EndIf
 		Flip
 	Forever
 	
@@ -1313,6 +1321,7 @@ Function UpdateLauncher()
 		PutINIValue(OptionFile, "options", "check for updates", "false")
 	EndIf
 	
+	If Quit Then End()
 End Function
 
 

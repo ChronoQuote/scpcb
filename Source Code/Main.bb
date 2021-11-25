@@ -48,8 +48,6 @@ Dim ArrowIMG(4)
 
 ;[Block]
 
-Global LauncherWidth%= Min(GetINIInt(OptionFile, "launcher", "launcher width"), 1024)
-Global LauncherHeight% = Min(GetINIInt(OptionFile, "launcher", "launcher height"), 768)
 Global LauncherEnabled% = GetINIInt(OptionFile, "launcher", "launcher enabled")
 Global LauncherIMG%
 
@@ -10549,5 +10547,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D7#1356#1AE2
+;~B#10D5#1354#1AE0
 ;~C#Blitz3D
