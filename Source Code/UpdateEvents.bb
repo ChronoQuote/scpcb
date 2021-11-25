@@ -5008,9 +5008,13 @@ Function UpdateEvents()
 							Case 30
 								i = Rand(0,MaxItemAmount-1)
 								If Inventory(i)<>Null Then RemoveItem(Inventory(i))
-								Inventory(i) = CreateItem("Strange Note", "paper", 1,1,1)
-								HideEntity Inventory(i)\collider
-								Inventory(i)\Picked = True
+								it.Items = CreateItem("Strange Note", "paper", 1,1,1)
+								it\Picked = True
+								it\itemtemplate\found = True
+								Inventory(i) = it
+								HideEntity(it\collider)
+								EntityType(it\collider, HIT_ITEM)
+								ItemAmount = ItemAmount + 1
 							Case 35
 								For i = 0 To 3
 									de.Decals = CreateDecal(7, e\room\x+Rnd(-2,2), 700*RoomScale, e\room\z+Rnd(-2,2), 270, Rand(360), 0, 0.05, 0.8)
