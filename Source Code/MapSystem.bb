@@ -5472,12 +5472,11 @@ Function UpdateRooms()
 		EndIf
 	Next
 	
-	MapFound(Floor(EntityX(PlayerRoom\obj) / 8.0), Floor(EntityZ(PlayerRoom\obj) / 8.0)) = 1
-	PlayerRoom\found = True
-	
 	TempLightVolume = Max(TempLightVolume / 4.5, 1.0)
 	
 	If PlayerRoom<>Null Then
+		MapFound(Floor(EntityX(PlayerRoom\obj) / 8.0), Floor(EntityZ(PlayerRoom\obj) / 8.0)) = 1
+		PlayerRoom\found = True
 		EntityAlpha(GetChild(PlayerRoom\obj,2),1)
 		For i=0 To 3
 			If PlayerRoom\Adjacent[i]<>Null Then
