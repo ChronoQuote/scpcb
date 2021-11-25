@@ -540,18 +540,18 @@ Function UpdateItems()
 					EndIf
 				EndIf
 				
-				If i\dist<HideDist*0.2 Then
-					For i2.Items = Each Items
-						If i<>i2 And (Not i2\Picked) And i2\dist<HideDist*0.2 Then
-							
-							xtemp# = (EntityX(i2\collider,True)-EntityX(i\collider,True))
-							ytemp# = (EntityY(i2\collider,True)-EntityY(i\collider,True))
-							ztemp# = (EntityZ(i2\collider,True)-EntityZ(i\collider,True))
-							
-							ed# = (xtemp*xtemp+ztemp*ztemp)
-							If ed<0.07 And Abs(ytemp)<0.25 Then
-								;items are too close together, push away
-								If PlayerRoom\RoomTemplate\Name	<> "room2storage" Then
+				;items are too close together, push away
+				If PlayerRoom\RoomTemplate\Name	<> "room2storage" Then
+					If i\dist<HideDist*0.2 Then
+						For i2.Items = Each Items
+							If i<>i2 And (Not i2\Picked) And i2\dist<HideDist*0.2 Then
+								
+								xtemp# = (EntityX(i2\collider,True)-EntityX(i\collider,True))
+								ytemp# = (EntityY(i2\collider,True)-EntityY(i\collider,True))
+								ztemp# = (EntityZ(i2\collider,True)-EntityZ(i\collider,True))
+								
+								ed# = (xtemp*xtemp+ztemp*ztemp)
+								If ed<0.07 And Abs(ytemp)<0.25 Then
 									xtemp = xtemp*(0.07-ed)
 									ztemp = ztemp*(0.07-ed)
 									
@@ -564,8 +564,8 @@ Function UpdateItems()
 									TranslateEntity i\collider,-xtemp,0,-ztemp
 								EndIf
 							EndIf
-						EndIf
-					Next
+						Next
+					EndIf
 				EndIf
 				
 				If EntityY(i\collider) < - 35.0 Then DebugLog "remove: " + i\itemtemplate\name:RemoveItem(i):deletedItem=True
