@@ -162,7 +162,7 @@ Function GetINISectionLocation%(file$, section$)
 			strtemp$ = Lower(strtemp)
 			Temp = Instr(strtemp, section)
 			If Temp>0 Then
-				If Mid(strtemp, Temp-1, 1)="[" Or Mid(strtemp, Temp-1, 1)="|" Then
+				If (Mid(strtemp, Temp-1, 1)="[" Or Mid(strtemp, Temp-1, 1)="|") And (Mid(strtemp, Temp+Len(section), 1)="]" Or Mid(strtemp, Temp+Len(section), 1)="|") Then
 					CloseFile f
 					Return n
 				EndIf
