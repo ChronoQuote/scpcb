@@ -1711,11 +1711,9 @@ Function UpdateNPCs()
 									
 									If dist < 0.5 Then
 										If WearingHazmat>0 Then
-											TakeOffTimer = TakeOffTimer+FPSfactor*2.5
-											If TakeOffTimer>250 And TakeOffTimer-FPSfactor*2.5 <= 250 And n\PrevState<>3 Then
-												If n\SoundChn2 <> 0 Then StopChannel(n\SoundChn2)
+											TakeOffTimer = TakeOffTimer+FPSfactor*1.5
+											If TakeOffTimer>100 And TakeOffTimer-FPSfactor*1.5<=100 And (Not ChannelPlaying(n\SoundChn2)) Then
 												n\SoundChn2 = PlaySound_Strict(LoadTempSound("SFX\SCP\049\TakeOffHazmat.ogg"))
-												n\PrevState=3
 											ElseIf TakeOffTimer => 500
 												For i = 0 To MaxItemAmount-1
 													If Inventory(i)<>Null Then
@@ -1727,6 +1725,9 @@ Function UpdateNPCs()
 															Else
 																RemoveItem(Inventory(i))
 																WearingHazmat = False
+																PlaySound_Strict(PickSFX(2))
+																Msg = "The hazmat suit was destroyed." : MsgTimer = 70 * 7
+																TakeOffTimer = 0.0
 															EndIf
 															Exit
 														EndIf
@@ -1734,17 +1735,17 @@ Function UpdateNPCs()
 												Next
 											EndIf
 										ElseIf Wearing714 Then
-											TakeOffTimer = TakeOffTimer+FPSfactor*2.5
-											If TakeOffTimer>250 And TakeOffTimer-FPSfactor*2.5 <= 250 And n\PrevState<>3 Then
-												If n\SoundChn2 <> 0 Then StopChannel(n\SoundChn2)
+											TakeOffTimer = TakeOffTimer+FPSfactor*1.5
+											If TakeOffTimer>100 And TakeOffTimer-FPSfactor*1.5<=100 And (Not ChannelPlaying(n\SoundChn2)) Then
 												n\SoundChn2 = PlaySound_Strict(LoadTempSound("SFX\SCP\049\714Equipped.ogg"))
-												n\PrevState=3
 											ElseIf TakeOffTimer => 500
 												Wearing714=False
+												PlaySound_Strict(PickSFX(3))
+												Msg = "The ring was forcibly removed." : MsgTimer = 70 * 7
+												TakeOffTimer = 0.0
 											EndIf
 										Else
 											CurrCameraZoom = 20.0
-											TakeOffTimer = 500.0
 											
 											If (Not GodMode) Then
 												If PlayerRoom\RoomTemplate\Name$ = "room049"
@@ -1764,12 +1765,12 @@ Function UpdateNPCs()
 											EndIf										
 										EndIf
 									Else
-										If TakeOffTimer <> 0 Then TakeOffTimer = 0
+										If TakeOffTimer > 0.0 Then
+											TakeOffTimer = Max(TakeOffTimer - FPSFactor, 0)
+										EndIf
 										
 										n\CurrSpeed = CurveValue(n\Speed, n\CurrSpeed, 20.0)
-										MoveEntity n\Collider, 0, 0, n\CurrSpeed * FPSfactor	
-										
-										If n\PrevState = 3 Then n\PrevState = 2
+										MoveEntity n\Collider, 0, 0, n\CurrSpeed * FPSfactor
 										
 										If dist < 3.0 Then
 											AnimateNPC(n, Max(Min(AnimTime(n\obj),428.0),387), 463.0, n\CurrSpeed*38)
