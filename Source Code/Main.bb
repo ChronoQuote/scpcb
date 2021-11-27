@@ -3827,32 +3827,26 @@ Function MovePlayer()
 					If Sprint = 2.5 Then
 						PlayerSoundVolume = Max(4.0,PlayerSoundVolume)
 						tempchn% = PlaySound_Strict(StepSFX(temp, 0, Rand(0, 7)))
-						ChannelVolume tempchn, (1.0-(Crouch*0.6))*SFXVolume#
 					Else
 						PlayerSoundVolume = Max(2.5-(Crouch*0.6),PlayerSoundVolume)
 						tempchn% = PlaySound_Strict(StepSFX(temp, 1, Rand(0, 7)))
-						ChannelVolume tempchn, (1.0-(Crouch*0.6))*SFXVolume#
 					End If
 				ElseIf CurrStepSFX=1
 					tempchn% = PlaySound_Strict(Step2SFX(Rand(0, 2)))
-					ChannelVolume tempchn, (1.0-(Crouch*0.4))*SFXVolume#
 				ElseIf CurrStepSFX=2
 					tempchn% = PlaySound_Strict(Step2SFX(Rand(3,5)))
-					ChannelVolume tempchn, (1.0-(Crouch*0.4))*SFXVolume#
 				ElseIf CurrStepSFX=3
 					If Sprint = 2.5 Then
 						PlayerSoundVolume = Max(4.0,PlayerSoundVolume)
 						tempchn% = PlaySound_Strict(StepSFX(0, 0, Rand(0, 7)))
-						ChannelVolume tempchn, (1.0-(Crouch*0.6))*SFXVolume#
 					Else
 						PlayerSoundVolume = Max(2.5-(Crouch*0.6),PlayerSoundVolume)
 						tempchn% = PlaySound_Strict(StepSFX(0, 1, Rand(0, 7)))
-						ChannelVolume tempchn, (1.0-(Crouch*0.6))*SFXVolume#
 					End If
 				ElseIf CurrStepSFX=4
 					tempchn% = PlaySound_Strict(Step2SFX(Rand(6,7)))
-					ChannelVolume tempchn, (1.0-(Crouch*0.4))*SFXVolume#
 				EndIf
+				ChannelVolume tempchn, (1.0-(Crouch*0.6))*SFXVolume#
 			EndIf	
 		EndIf
 	Else ;noclip on
@@ -10547,5 +10541,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D5#1354#1AE0
+;~B#10CF#134E#1ADA
 ;~C#Blitz3D
