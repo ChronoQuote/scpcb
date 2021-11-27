@@ -4,7 +4,6 @@
 - Fixed MTF units not announcing the presence of SCP-049-2.
 - Fixed SCP-860-2 being able to spawn in view of the player.
 - Fixed text not having the right appearance in a few places.
-- Fixed messages being visible in the pause menu or console.
 - Both exit gates will now be unlocked if the electrical center failed to generate.
 - Added SCP-372 to the blue night vision goggles' interface.
 - Fixed SCP-1025's appendicitis messages not appearing.
@@ -25,6 +24,12 @@
 - The cell door in the intro now closes behind you, fixing a bug where the guards could get stuck inside.
 - Fixed SCP-966's walking animation not playing.
 - Fixed certain NPCs sometimes appearing on the navigator and the blue night vision goggles' interface when they're not supposed to.
+- Eyedrops are no longer memetic.
+- Fixed many of SCP-970's interactions with dropped items.
+- Optimized decals and made SCP-106's decals slow the player just like the sinkhole.
+- Added a fluid step sound for walking on liquids.
+- Fixed SCP-294 sometimes producing the wrong drink.
+- Improved SCP-049's interactions with a player wearing SCP-714 or the hazmat suit.
 - Many more optimizations and small fixes.
 
 ----------------------------------------------------------------------------------
