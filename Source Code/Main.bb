@@ -2951,7 +2951,7 @@ Repeat
 			EndIf
 			MsgTimer=MsgTimer-FPSfactor2 
 		Else
-			If MsgTimer =< 0 Then MsgTimer = 0 : Msg = ""
+			If MsgTimer <> 0 Then MsgTimer = 0 : Msg = ""
 		End If
 		
 		Color 255, 255, 255
