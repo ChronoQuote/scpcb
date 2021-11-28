@@ -166,14 +166,9 @@ Function CreateNPC.NPCs(NPCtype%, x#, y#, z#)
 			
 			MeshCullBox (n\obj, -MeshWidth(MTFObj), -MeshHeight(MTFObj), -MeshDepth(MTFObj), MeshWidth(MTFObj)*2, MeshHeight(MTFObj)*2, MeshDepth(MTFObj)*2) 
 			
-			If MTFSFX(0)=0 Then
-				MTFSFX(0)=LoadSound_Strict("SFX\Character\MTF\ClassD1.ogg")
-				MTFSFX(1)=LoadSound_Strict("SFX\Character\MTF\ClassD2.ogg")
-				MTFSFX(2)=LoadSound_Strict("SFX\Character\MTF\ClassD3.ogg")			
-				MTFSFX(3)=LoadSound_Strict("SFX\Character\MTF\ClassD4.ogg")
-				;MTFSFX(4)=LoadSound_Strict("SFX\Character\MTF\Tesla0.ogg")
-				MTFSFX(5)=LoadSound_Strict("SFX\Character\MTF\Beep.ogg")
-				MTFSFX(6)=LoadSound_Strict("SFX\Character\MTF\Breath.ogg")
+			If (Not MTFSFX[0]) Then
+				MTFSFX[0]=LoadSound_Strict("SFX\Character\MTF\Beep.ogg")
+				MTFSFX[1]=LoadSound_Strict("SFX\Character\MTF\Breath.ogg")
 			EndIf
 			;[End Block]
 		Case NPCtypeD
@@ -5224,52 +5219,6 @@ Function TeleportMTFGroup(n.NPCs)
 End Function
 
 Function UpdateMTFUnit(n.NPCs)
-	;[Block]
-	
-	If n\NPCtype<>NPCtypeMTF Then
-		Local realType$ = ""
-		Select n\NPCtype
-			Case NPCtype173
-                realType = "173"
-			Case NPCtypeOldMan
-                realType = "106"
-			Case NPCtypeGuard
-                realType = "guard"
-			Case NPCtypeD
-                realType = "d"
-			Case NPCtype372
-                realType = "372"
-			Case NPCtypeApache
-                realType = "apache"
-			Case NPCtype096
-                realType = "096"
-			Case NPCtype049
-                realType = "049"
-			Case NPCtypeZombie
-                realType = "zombie"
-			Case NPCtype5131
-                realType = "513-1"
-			Case NPCtypeTentacle
-                realType = "tentacle"
-			Case NPCtype860
-                realType = "860"
-			Case NPCtype939
-                realType = "939"
-			Case NPCtype066
-                realType = "066"
-			Case NPCtypePdPlane
-                realType = "PDPlane"
-			Case NPCtype966
-                realType = "966"
-			Case NPCtype1048a
-                realType = "1048-A"
-			Case NPCtype1499
-				realType = "1499-1"
-		End Select
-		RuntimeError "Called UpdateMTFUnit on "+realType
-	EndIf
-	;[End Block]
-	
 	Local x#,y#,z#
 	Local r.Rooms
 	Local prevDist#,newDist#
@@ -5308,13 +5257,14 @@ Function UpdateMTFUnit(n.NPCs)
 	
 	If Int(n\State) <> 1 Then n\PrevState = 0
 	
-	n\SoundChn2 = LoopSound2(MTFSFX(6),n\SoundChn2,Camera,n\Collider)
+	n\SoundChn2 = LoopSound2(MTFSFX[1],n\SoundChn2,Camera,n\Collider)
 	
 	If n\Idle>0.0 Then
 		FinishWalking(n,488,522,0.015*26)
 		n\Idle=n\Idle-FPSfactor
 		If n\Idle<=0.0 Then n\Idle = 0.0
 	Else
+		dist = EntityDistance(Collider, n\Collider)
 		Select Int(n\State) ;what is this MTF doing
 			Case 0 ;wandering around
                 ;[Block]
@@ -5458,7 +5408,7 @@ Function UpdateMTFUnit(n.NPCs)
 									Local sound = 0
 									If n\Path[n\PathLocation]\door\dir = 1 Then sound = 0 Else sound=Rand(0, 2)
 									PlaySound2(OpenDoorSFX(n\Path[n\PathLocation]\door\dir,sound),Camera,n\Path[n\PathLocation]\door\obj)
-									PlayMTFSound(MTFSFX(5),n)
+									PlayMTFSound(MTFSFX[0],n)
 								EndIf
 								n\Path[n\PathLocation]\door\open = True
 								If n\Path[n\PathLocation]\door\MTFClose
@@ -5535,10 +5485,9 @@ Function UpdateMTFUnit(n.NPCs)
 							n\Sound = LoadSound_Strict("SFX\Character\MTF\Stop"+Rand(1,6)+".ogg")
 							PlayMTFSound(n\Sound, n)
 						ElseIf temp = 2
-							;If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
-							;n\Sound = MTFSFX(Rand(0,3))
-							;PlayMTFSound(n\Sound, n)
-							PlayMTFSound(MTFSFX(Rand(0,3)),n)
+							If n\Sound <> 0 Then FreeSound_Strict n\Sound : n\Sound = 0
+							n\Sound = LoadSound_Strict("SFX\Character\MTF\ClassD"+Rand(1,4)+".ogg")
+							PlayMTFSound(n\Sound, n)
 						EndIf
 					EndIf
 					
@@ -5686,7 +5635,7 @@ Function UpdateMTFUnit(n.NPCs)
 						EndIf
 					EndIf
 				Next
-                ;[End Block]
+				;[End Block]
 			Case 1 ;searching for player
                 ;[Block]
                 n\Speed = 0.015
@@ -5694,7 +5643,7 @@ Function UpdateMTFUnit(n.NPCs)
                 If MeNPCSeesPlayer(n) = True Then
 					
 					;if close enough, start shooting at the player
-					If playerDist < 4.0 Then
+					If dist < 4.0 Then
 						
 						Local angle# = VectorYaw(EntityX(Collider)-EntityX(n\Collider),0,EntityZ(Collider)-EntityZ(n\Collider))
 						
@@ -5715,7 +5664,7 @@ Function UpdateMTFUnit(n.NPCs)
 									PositionEntity(pvt, EntityX(n\obj), EntityY(n\obj), EntityZ(n\obj))
 									MoveEntity (pvt,0.8*0.079, 10.75*0.079, 6.9*0.079)
 									
-									Shoot(EntityX(pvt),EntityY(pvt),EntityZ(pvt),5.0/playerDist, False)
+									Shoot(EntityX(pvt),EntityY(pvt),EntityZ(pvt),5.0/dist, False)
 									n\Reload = 7
 									
 									FreeEntity(pvt)
@@ -5844,7 +5793,7 @@ Function UpdateMTFUnit(n.NPCs)
 										sound = 0
 										If n\Path[n\PathLocation]\door\dir = 1 Then sound = 0 Else sound=Rand(0, 2)
 										PlaySound2(OpenDoorSFX(n\Path[n\PathLocation]\door\dir,sound),Camera,n\Path[n\PathLocation]\door\obj)
-										PlayMTFSound(MTFSFX(5),n)
+										PlayMTFSound(MTFSFX[0],n)
 									EndIf
 									n\Path[n\PathLocation]\door\open = True
 									If n\Path[n\PathLocation]\door\MTFClose
@@ -6131,7 +6080,7 @@ Function UpdateMTFUnit(n.NPCs)
 											sound = 0
 											If n\Path[n\PathLocation]\door\dir = 1 Then sound = 0 Else sound=Rand(0, 2)
 											PlaySound2(OpenDoorSFX(n\Path[n\PathLocation]\door\dir,sound),Camera,n\Path[n\PathLocation]\door\obj)
-											PlayMTFSound(MTFSFX(5),n)
+											PlayMTFSound(MTFSFX[0],n)
 										EndIf
 										n\Path[n\PathLocation]\door\open = True
 										If n\Path[n\PathLocation]\door\MTFClose
@@ -6180,7 +6129,7 @@ Function UpdateMTFUnit(n.NPCs)
 							If n\Path[n\PathLocation]\door\open = False Then
 								n\Path[n\PathLocation]\door\open = True
 								n\Path[n\PathLocation]\door\timerstate = 8.0*70.0
-								PlayMTFSound(MTFSFX(5),n)
+								PlayMTFSound(MTFSFX[0],n)
 							EndIf
 						EndIf
 						
@@ -6360,7 +6309,7 @@ Function UpdateMTFUnit(n.NPCs)
 										sound = 0
 										If n\Path[n\PathLocation]\door\dir = 1 Then sound = 0 Else sound=Rand(0, 2)
 										PlaySound2(OpenDoorSFX(n\Path[n\PathLocation]\door\dir,sound),Camera,n\Path[n\PathLocation]\door\obj)
-										PlayMTFSound(MTFSFX(5),n)
+										PlayMTFSound(MTFSFX[0],n)
 									EndIf
 									n\Path[n\PathLocation]\door\open = True
 									If n\Path[n\PathLocation]\door\MTFClose
@@ -6576,7 +6525,7 @@ Function UpdateMTFUnit(n.NPCs)
 									sound = 0
 									If n\Path[n\PathLocation]\door\dir = 1 Then sound = 0 Else sound=Rand(0, 2)
 									PlaySound2(OpenDoorSFX(n\Path[n\PathLocation]\door\dir,sound),Camera,n\Path[n\PathLocation]\door\obj)
-									PlayMTFSound(MTFSFX(5),n)
+									PlayMTFSound(MTFSFX[0],n)
 								EndIf
 								n\Path[n\PathLocation]\door\open = True
 								If n\Path[n\PathLocation]\door\MTFClose
@@ -6733,7 +6682,7 @@ Function UpdateMTFUnit(n.NPCs)
 										sound = 0
 										If n\Path[n\PathLocation]\door\dir = 1 Then sound = 0 Else sound=Rand(0, 2)
 										PlaySound2(OpenDoorSFX(n\Path[n\PathLocation]\door\dir,sound),Camera,n\Path[n\PathLocation]\door\obj)
-										PlayMTFSound(MTFSFX(5),n)
+										PlayMTFSound(MTFSFX[0],n)
 									EndIf
 									n\Path[n\PathLocation]\door\open = True
 									If n\Path[n\PathLocation]\door\MTFClose
@@ -7373,5 +7322,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#17E#128F#1329#13C2#157B#1686#1847#18A3
+;~B#179#128A#1324#13BD#1549#1653#1814#1870
 ;~C#Blitz3D

@@ -412,7 +412,7 @@ Function PlayMTFSound(sound%, n.NPCs)
 		If SelectedItem\state2 = 3 And SelectedItem\state > 0 Then 
 			Select SelectedItem\itemtemplate\tempname 
 				Case "radio","fineradio","18vradio"
-					If sound<>MTFSFX(5) Or (Not ChannelPlaying(RadioCHN(3)))
+					If sound<>MTFSFX[0] Or (Not ChannelPlaying(RadioCHN(3)))
 						If RadioCHN(3)<> 0 Then StopChannel RadioCHN(3)
 						RadioCHN(3) = PlaySound_Strict (sound)
 					EndIf

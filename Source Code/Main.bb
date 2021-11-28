@@ -1680,7 +1680,7 @@ Dim NeckSnapSFX(3)
 
 Dim DamageSFX%(9)
 
-Dim MTFSFX%(8)
+Global MTFSFX%[2]
 
 Dim CoughSFX%(3)
 Global CoughCHN%, VomitCHN%
