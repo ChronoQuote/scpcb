@@ -381,11 +381,6 @@ Function UpdateEvents()
 						If e\room\NPC[1] = Null Then
 							e\room\NPC[1] = CreateNPC(NPCtypeD, 0,0,0)
 							ChangeNPCTextureID(e\room\NPC[1],3)
-							;tex = LoadTexture_Strict("GFX\npcs\scientist2.jpg")
-							e\room\NPC[1]\texture = "GFX\npcs\scientist2.jpg"
-							;EntityTexture e\room\NPC[1]\obj, tex
-							;FreeTexture tex
-							ChangeNPCTextureID(e\room\NPC[1],3)
 						EndIf
 						PositionEntity e\room\NPC[1]\Collider, e\room\x, 0.5, e\room\z-1.0, True
 						ResetEntity e\room\NPC[1]\Collider
@@ -3199,10 +3194,7 @@ Function UpdateEvents()
 					n\State = 3
 					SetNPCFrame(n,40)
 					n\IsDead = True
-					n\texture = "GFX\npcs\body2.jpg"
-					tex = LoadTexture_Strict(n\texture)
-					EntityTexture(n\obj, tex)
-					FreeTexture tex
+					ChangeNPCTextureID(n, 9)
 					e\EventState3 = 1
 				EndIf
 				;[End Block]
@@ -4999,10 +4991,7 @@ Function UpdateEvents()
 							Case 25
 								e\room\NPC[0]=CreateNPC(NPCtypeD, EntityX(e\room\obj)+Cos(e\room\angle-90)*760*RoomScale, 0.35, EntityZ(e\room\obj)+Sin(e\room\angle-90)*760*RoomScale)
 								RotateEntity e\room\NPC[0]\Collider, 0, e\room\angle-200, 0, True
-								tex=LoadTexture("GFX\NPCs\corpse.jpg")
-								e\room\NPC[0]\texture = "GFX\NPCs\corpse.jpg"
-								EntityTexture e\room\NPC[0]\obj, tex
-								FreeTexture tex
+								ChangeNPCTextureID(n, 10)
 								SetAnimTime(e\room\NPC[0]\obj,80)
 								e\room\NPC[0]\State=10
 							Case 30
@@ -7940,10 +7929,7 @@ Function UpdateEvents()
 				;[Block]
 				If e\room\dist < 10.0 And e\room\dist > 0 Then
 					e\room\NPC[0]=CreateNPC(NPCtypeD, EntityX(e\room\obj,True)+1.0, 0.5, EntityZ(e\room\obj,True)+1.0)
-					e\room\NPC[0]\texture = "GFX\npcs\body1.jpg"
-					tex = LoadTexture_Strict(e\room\NPC[0]\texture)
-					EntityTexture(e\room\NPC[0]\obj, tex)
-					FreeTexture tex
+					ChangeNPCTextureID(n, 8)
 					;EntityTexture e\room\NPC[0]\obj,NTF_BodyTextures(0)
 					
 					RotateEntity e\room\NPC[0]\Collider, 0, EntityYaw(e\room\obj)-(Rand(20,60)),0, True	
@@ -8919,7 +8905,6 @@ Function UpdateEvents()
 							RotateEntity e\room\NPC[0]\Collider,0,e\room\angle+180,0
 							MoveEntity e\room\NPC[0]\Collider,0,0,-0.5
 							e\room\NPC[0]\State = 3
-							e\room\NPC[0]\texture = "GFX\npcs\035victim.jpg"
 							ChangeNPCTextureID(e\room\NPC[0],7)
 							SetNPCFrame(e\room\NPC[0],19)
 						EndIf
@@ -10467,5 +10452,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#124E#1ECA
+;~B#1246#1EBF
 ;~C#Blitz3D

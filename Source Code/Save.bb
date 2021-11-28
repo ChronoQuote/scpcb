@@ -193,7 +193,7 @@ Function SaveGame(file$)
 		WriteFloat f, n\ModelScaleY#
 		WriteFloat f, n\ModelScaleZ#
 		WriteByte f, n\HideFromNVG
-		WriteInt f, n\TextureID
+		WriteByte f, n\TextureID
 	Next
 	
 	WriteFloat f, MTFtimer
@@ -666,7 +666,7 @@ Function LoadGame(file$)
 			SetAnimTime n\obj,frame
 		EndIf
 		n\HideFromNVG = ReadByte(f)
-		n\TextureID = ReadInt(f)
+		n\TextureID = ReadByte(f)
 		If n\TextureID > 0
 			ChangeNPCTextureID(n.NPCs,n\TextureID-1)
 			SetAnimTime(n\obj,frame)
@@ -1510,7 +1510,7 @@ Function LoadGameQuick(file$)
 			SetAnimTime n\obj,frame
 		EndIf
 		n\HideFromNVG = ReadByte(f)
-		n\TextureID = ReadInt(f)
+		n\TextureID = ReadByte(f)
 		If n\TextureID > 0
 			ChangeNPCTextureID(n.NPCs,n\TextureID-1)
 			SetAnimTime(n\obj,frame)

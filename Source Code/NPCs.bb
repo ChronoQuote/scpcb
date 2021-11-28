@@ -7360,16 +7360,8 @@ Function ChangeNPCTextureID(n.NPCs,textureid%)
 		Return
 	EndIf
 	
-	n\TextureID = textureid%+1
-	FreeEntity n\obj
-	n\obj = CopyEntity(DTextures[textureid%+1])
-	
-	temp# = 0.5 / MeshWidth(n\obj)
-	ScaleEntity n\obj, temp, temp, temp
-	MeshCullBox (n\obj, -MeshWidth(ClassDObj), -MeshHeight(ClassDObj), -MeshDepth(ClassDObj), MeshWidth(ClassDObj)*2, MeshHeight(ClassDObj)*2, MeshDepth(ClassDObj)*2)
-	
-	SetNPCFrame(n,n\Frame)
-	
+	n\TextureID = textureid+1
+	EntityTexture(n\obj, DTextures[textureid])
 End Function
 
 

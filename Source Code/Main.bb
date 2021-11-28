@@ -1760,7 +1760,7 @@ Global LightConeModel
 
 Global ParticleEffect[10]
 
-Const MaxDTextures=8
+Const MaxDTextures=11
 Global DTextures[MaxDTextures]
 
 Global NPC049OBJ, NPC0492OBJ
@@ -7980,45 +7980,29 @@ Function LoadEntities()
 	
 	SetChunkDataValues()
 	
-	;NPCtypeD - different models with different textures (loaded using "CopyEntity") - ENDSHN
 	;[Block]
-	For i=1 To MaxDTextures
-		DTextures[i] = CopyEntity(ClassDObj)
-		HideEntity DTextures[i]
-	Next
 	;Gonzales
-	tex = LoadTexture_Strict("GFX\npcs\gonzales.jpg")
-	EntityTexture DTextures[1],tex
-	FreeTexture tex
+	DTextures[0] = LoadTexture_Strict("GFX\npcs\gonzales.jpg")
 	;SCP-970 corpse
-	tex = LoadTexture_Strict("GFX\npcs\corpse.jpg")
-	EntityTexture DTextures[2],tex
-	FreeTexture tex
+	DTextures[1] = LoadTexture_Strict("GFX\npcs\corpse.jpg")
 	;scientist 1
-	tex = LoadTexture_Strict("GFX\npcs\scientist.jpg")
-	EntityTexture DTextures[3],tex
-	FreeTexture tex
+	DTextures[2] = LoadTexture_Strict("GFX\npcs\scientist.jpg")
 	;scientist 2
-	tex = LoadTexture_Strict("GFX\npcs\scientist2.jpg")
-	EntityTexture DTextures[4],tex
-	FreeTexture tex
+	DTextures[3] = LoadTexture_Strict("GFX\npcs\scientist2.jpg")
 	;janitor
-	tex = LoadTexture_Strict("GFX\npcs\janitor.jpg")
-	EntityTexture DTextures[5],tex
-	FreeTexture tex
+	DTextures[4] = LoadTexture_Strict("GFX\npcs\janitor.jpg")
 	;106 Victim
-	tex = LoadTexture_Strict("GFX\npcs\106victim.jpg")
-	EntityTexture DTextures[6],tex
-	FreeTexture tex
+	DTextures[5] = LoadTexture_Strict("GFX\npcs\106victim.jpg")
 	;2nd ClassD
-	tex = LoadTexture_Strict("GFX\npcs\classd2.jpg")
-	EntityTexture DTextures[7],tex
-	FreeTexture tex
+	DTextures[6] = LoadTexture_Strict("GFX\npcs\classd2.jpg")
 	;035 victim
-	tex = LoadTexture_Strict("GFX\npcs\035victim.jpg")
-	EntityTexture DTextures[8],tex
-	FreeTexture tex
-	
+	DTextures[7] = LoadTexture_Strict("GFX\npcs\035victim.jpg")
+	;body 1
+	DTextures[8] = LoadTexture_Strict("GFX\npcs\body1.jpg")
+	;body 2
+	DTextures[9] = LoadTexture_Strict("GFX\npcs\body2.jpg")
+	;corpse
+	DTextures[10] = LoadTexture_Strict("GFX\npcs\corpse.jpg")
 	;[End Block]
 	
 	LoadMaterials("DATA\materials.ini")
