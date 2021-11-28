@@ -2950,6 +2950,8 @@ Repeat
 				AAText((GraphicWidth / 2), (GraphicHeight * 0.94), Msg, True, False, Min(MsgTimer / 2, 255)/255.0)
 			EndIf
 			MsgTimer=MsgTimer-FPSfactor2 
+		Else
+			If MsgTimer =< 0 Then MsgTimer = 0 : Msg = ""
 		End If
 		
 		Color 255, 255, 255
@@ -4721,9 +4723,9 @@ Function DrawGUI()
 			SelectedDoor = Null
 		EndIf
 	Else
-		KeypadInput = ""
-		KeypadTimer = 0
-		KeypadMSG = ""
+		If KeypadInput <> "" Then KeypadInput = ""
+		If KeypadTimer <> 0 Then KeypadTimer = 0
+		If KeypadMSG <> "" Then KeypadMSG = ""
 	EndIf
 	
 	If KeyHit(1) And EndingTimer=0 And (Not Using294) Then
@@ -10548,5 +10550,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D2#1351#1ADE
+;~B#10D4#1353#1AE0
 ;~C#Blitz3D

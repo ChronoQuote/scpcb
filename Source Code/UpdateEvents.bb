@@ -2885,10 +2885,10 @@ Function UpdateEvents()
 				Else
 					HideEntity e\room\obj
 					;CameraClsColor Camera, 0,0,0
-					e\EventState = 0
-					e\EventState2 = 0
-					e\EventState3 = 0
-					e\EventStr = Float(0)
+					If e\EventState <> 0 Then e\EventState = 0
+					If e\EventState2 <> 0 Then e\EventState2 = 0
+					If e\EventState3 <> 0 Then e\EventState3 = 0
+					If e\EventStr <> Float(0) Then e\EventStr = Float(0)
 				EndIf
 				;[End Block]
 			Case "room2cafeteria"
@@ -5261,15 +5261,19 @@ Function UpdateEvents()
 							EndIf
 						EndIf
 					Else
-						e\EventState = 0
-						If e\room\NPC[0]<>Null Then e\room\NPC[0]\State = 66
-						If e\room\NPC[1]<>Null Then e\room\NPC[1]\State = 66
-						If e\room\NPC[2]<>Null Then e\room\NPC[2]\State = 66
+						If e\EventState <> 0 Then e\EventState = 0
+						For i = 0 To 2
+							If e\room\NPC[i]<>Null Then
+								If e\room\NPC[i]\State <> 66 Then e\room\NPC[i]\State = 66
+							EndIf
+						Next
 					EndIf
 				Else
-					If e\room\NPC[0]<>Null Then e\room\NPC[0]\State = 66
-					If e\room\NPC[1]<>Null Then e\room\NPC[1]\State = 66
-					If e\room\NPC[2]<>Null Then e\room\NPC[2]\State = 66
+					For i = 0 To 2
+						If e\room\NPC[i]<>Null Then
+							If e\room\NPC[i]\State <> 66 Then e\room\NPC[i]\State = 66
+						EndIf
+					Next
 				EndIf 
 				;[End Block]
 			Case "room3tunnel"
@@ -6032,9 +6036,6 @@ Function UpdateEvents()
 							EndIf
 						EndIf
 					EndIf
-				Else
-					e\EventState2 = UpdateElevators(e\EventState2, e\room\RoomDoors[0], e\room\RoomDoors[1],e\room\Objects[0],e\room\Objects[1], e)
-					e\EventState3 = UpdateElevators(e\EventState3, e\room\RoomDoors[2], e\room\RoomDoors[3],e\room\Objects[2],e\room\Objects[3], e)
 				EndIf 
 				
 				If e\EventState < 0 Then
@@ -7575,7 +7576,7 @@ Function UpdateEvents()
 						If e\EventState2 = 2.0 Then MoveToPocketDimension()
 					EndIf
 				Else 
-					e\EventState2=0
+					If e\EventState2 <> 0 Then e\EventState2=0
 				EndIf
 				
 				;[End Block]
@@ -10452,5 +10453,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#1246#1EBF
+;~B#1246#1EC0
 ;~C#Blitz3D
