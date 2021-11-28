@@ -13,7 +13,7 @@ Include "Source Code\StrictLoads.bb"
 Include "Source Code\fullscreen_window_fix.bb"
 Include "Source Code\KeyName.bb"
 
-Global OptionFile$ = "options.ini"
+Const OptionFile$ = "options.ini"
 
 Include "Source Code\Blitz_Basic_Bank.bb"
 Include "Source Code\Blitz_File_FileName.bb"
@@ -1513,20 +1513,20 @@ Global BlurVolume#, BlurTimer#
 
 Global LightBlink#, LightFlash#
 
-Global BumpEnabled% = GetINIInt("options.ini", "options", "bump mapping enabled")
-Global HUDenabled% = GetINIInt("options.ini", "options", "HUD enabled")
+Global BumpEnabled% = GetINIInt(OptionFile, "options", "bump mapping enabled")
+Global HUDenabled% = GetINIInt(OptionFile, "options", "HUD enabled")
 
 Global Camera%, CameraShake#, CurrCameraZoom#
 
-Global Brightness% = GetINIFloat("options.ini", "options", "brightness")
-Global CameraFogNear# = GetINIFloat("options.ini", "options", "camera fog near")
-Global CameraFogFar# = GetINIFloat("options.ini", "options", "camera fog far")
+Global Brightness% = GetINIFloat(OptionFile, "options", "brightness")
+Global CameraFogNear# = GetINIFloat(OptionFile, "options", "camera fog near")
+Global CameraFogFar# = GetINIFloat(OptionFile, "options", "camera fog far")
 
 Global StoredCameraFogFar# = CameraFogFar
 
-Global MouseSens# = GetINIFloat("options.ini", "options", "mouse sensitivity")
+Global MouseSens# = GetINIFloat(OptionFile, "options", "mouse sensitivity")
 
-Global EnableVRam% = GetINIInt("options.ini", "options", "enable vram")
+Global EnableVRam% = GetINIInt(OptionFile, "options", "enable vram")
 
 Include "Source Code\Dreamfilter.bb"
 
@@ -7559,6 +7559,23 @@ Function LoadEntities()
 		TempSounds[i]=0
 	Next
 	
+	AchvLocked = LoadImage_Strict("GFX\menu\achievements\achvlocked.jpg")
+	AchvLocked = ResizeImage2(AchvLocked,ImageWidth(AchvLocked)*GraphicHeight/768.0,ImageHeight(AchvLocked)*GraphicHeight/768.0)
+	
+	For i = 0 To MAXACHIEVEMENTS-1
+		Local loc2% = GetINISectionLocation("Data\achievementstrings.ini", "s"+Str(i))
+		AchievementStrings(i) = GetINIString2("Data\achievementstrings.ini", loc2, "string1")
+		AchievementDescs(i) = GetINIString2("Data\achievementstrings.ini", loc2, "AchvDesc")
+		
+		Local image$ = GetINIString2("Data\achievementstrings.ini", loc2, "image") 
+		
+		AchvIMG(i) = LoadImage_Strict("GFX\menu\achievements\"+image+".jpg")
+		AchvIMG(i) = ResizeImage2(AchvIMG(i),ImageWidth(AchvIMG(i))*GraphicHeight/768.0,ImageHeight(AchvIMG(i))*GraphicHeight/768.0)
+	Next
+	
+	QuickLoadIcon% = LoadImage_Strict("GFX\menu\QuickLoading.png")
+	ResizeImage(QuickLoadIcon, ImageWidth(QuickLoadIcon) * MenuScale, ImageHeight(QuickLoadIcon) * MenuScale)
+	
 	PauseMenuIMG% = LoadImage_Strict("GFX\menu\pausemenu.jpg")
 	MaskImage PauseMenuIMG, 255,255,0
 	ScaleImage PauseMenuIMG,MenuScale,MenuScale
@@ -7578,9 +7595,9 @@ Function LoadEntities()
 	MaskImage(Panel294, 255,0,255)
 	
 	
-	Brightness% = GetINIFloat("options.ini", "options", "brightness")
-	CameraFogNear# = GetINIFloat("options.ini", "options", "camera fog near")
-	CameraFogFar# = GetINIFloat("options.ini", "options", "camera fog far")
+	Brightness% = GetINIFloat(OptionFile, "options", "brightness")
+	CameraFogNear# = GetINIFloat(OptionFile, "options", "camera fog near")
+	CameraFogFar# = GetINIFloat(OptionFile, "options", "camera fog far")
 	StoredCameraFogFar# = CameraFogFar
 	
 	;TextureLodBias
@@ -7600,7 +7617,7 @@ Function LoadEntities()
 	CameraRange(Camera, 0.05, CameraFogFar)
 	CameraFogMode (Camera, 1)
 	CameraFogRange (Camera, CameraFogNear, CameraFogFar)
-	CameraFogColor (Camera, GetINIInt("options.ini", "options", "fog r"), GetINIInt("options.ini", "options", "fog g"), GetINIInt("options.ini", "options", "fog b"))
+	CameraFogColor (Camera, 0, 0, 0)
 	AmbientLight Brightness, Brightness, Brightness
 	
 	ScreenTexs[0] = CreateTexture(512, 512, 1+256)
@@ -10398,7 +10415,7 @@ End Function
 
 Function PlayStartupVideos()
 	
-	If GetINIInt("options.ini","options","play startup video")=0 Then Return
+	If GetINIInt(OptionFile,"options","play startup video")=0 Then Return
 	
 	Local Cam = CreateCamera() 
 	CameraClsMode Cam, 0, 1

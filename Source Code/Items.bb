@@ -449,8 +449,8 @@ Function RemoveItem(i.Items)
 	Next
 	If SelectedItem = i Then
 		Select SelectedItem\itemtemplate\tempname 
-			Case "nvgoggles", "supernv"
-				WearingNightVision = False
+			Case "nvgoggles", "supernv", "finenvgoggles"
+				If WearingNightVision > 0 Then CameraFogFar = StoredCameraFogFar : WearingNightVision = False
 			Case "gasmask", "supergasmask", "gasmask2", "gasmask3"
 				WearingGasMask = False
 			Case "vest", "finevest", "veryfinevest"
@@ -767,16 +767,12 @@ Function DropItem(item.Items,playdropsound%=True)
 	Select item\itemtemplate\tempname
 		Case "gasmask", "supergasmask", "gasmask3"
 			WearingGasMask = False
-		Case "hazmatsuit",  "hazmatsuit2", "hazmatsuit3"
+		Case "hazmatsuit", "hazmatsuit2", "hazmatsuit3"
 			WearingHazmat = False
 		Case "vest", "finevest"
 			WearingVest = False
-		Case "nvgoggles"
-			If WearingNightVision = 1 Then CameraFogFar = StoredCameraFogFar : WearingNightVision = False
-		Case "supernv"
-			If WearingNightVision = 2 Then CameraFogFar = StoredCameraFogFar : WearingNightVision = False
-		Case "finenvgoggles"
-			If WearingNightVision = 3 Then CameraFogFar = StoredCameraFogFar : WearingNightVision = False
+		Case "nvgoggles", "supernv", "finenvgoggles"
+			If WearingNightVision > 0 Then CameraFogFar = StoredCameraFogFar : WearingNightVision = False
 		Case "scp714"
 			Wearing714 = False
 		Case "scp1499","super1499"

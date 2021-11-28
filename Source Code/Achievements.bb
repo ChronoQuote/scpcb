@@ -14,23 +14,12 @@ Const AchvKeter% = 36
 Global UsedConsole
 
 Global AchievementsMenu%
-Global AchvMSGenabled% = GetINIInt("options.ini", "options", "achievement popup enabled")
+Global AchvMSGenabled% = GetINIInt(OptionFile, "options", "achievement popup enabled")
 Dim AchievementStrings$(MAXACHIEVEMENTS)
 Dim AchievementDescs$(MAXACHIEVEMENTS)
 Dim AchvIMG%(MAXACHIEVEMENTS)
-For i = 0 To MAXACHIEVEMENTS-1
-	Local loc2% = GetINISectionLocation("Data\achievementstrings.ini", "s"+Str(i))
-	AchievementStrings(i) = GetINIString2("Data\achievementstrings.ini", loc2, "string1")
-	AchievementDescs(i) = GetINIString2("Data\achievementstrings.ini", loc2, "AchvDesc")
-	
-	Local image$ = GetINIString2("Data\achievementstrings.ini", loc2, "image") 
-	
-	AchvIMG(i) = LoadImage_Strict("GFX\menu\achievements\"+image+".jpg")
-	AchvIMG(i) = ResizeImage2(AchvIMG(i),ImageWidth(AchvIMG(i))*GraphicHeight/768.0,ImageHeight(AchvIMG(i))*GraphicHeight/768.0)
-Next
 
-Global AchvLocked = LoadImage_Strict("GFX\menu\achievements\achvlocked.jpg")
-AchvLocked = ResizeImage2(AchvLocked,ImageWidth(AchvLocked)*GraphicHeight/768.0,ImageHeight(AchvLocked)*GraphicHeight/768.0)
+Global AchvLocked%
 
 Function GiveAchievement(achvname%, showMessage%=True)
 	If Achievements(achvname)<>True Then
@@ -175,5 +164,4 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#31#48
 ;~C#Blitz3D
