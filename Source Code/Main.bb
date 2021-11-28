@@ -9916,12 +9916,14 @@ Function UpdateDecals()
 				d\lifetime=Max(d\lifetime-FPSfactor,5)
 			EndIf
 			
-			Local Dist# = EntityDistance(Collider, d\obj)
-			If (Dist < d\Size) And (EntityPitch(d\obj) = 90.0) Then
+			Local Dist# = Distance(EntityX(Collider), EntityZ(Collider), EntityX(d\obj, True), EntityZ(d\obj, True))
+			Local ActualSize# = d\Size * 0.8
+			If (Dist < ActualSize) And (Int(EntityPitch(d\obj, True)) = 90) And (Abs((EntityY(Collider) - 0.3) - EntityY(d\obj, True)) < 0.05) Then
 				Select d\ID
 					Case 0
 						CurrStepSFX = 1
-						CurrSpeed = CurveValue(0.0, CurrSpeed, Max(Dist * 50.0, 1.0))
+						CurrSpeed = CurveValue(0.0, CurrSpeed, Max(100.0 - (ActualSize - Dist) * 50, 1.0))
+						CrouchState = Max(CrouchState, (ActualSize - Dist) / 2.0)
 					Case 2, 3, 4, 5, 6, 7, 16, 17, 18
 						CurrStepSFX = 4
 				End Select

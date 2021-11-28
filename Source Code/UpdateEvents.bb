@@ -7564,30 +7564,26 @@ Function UpdateEvents()
 						e\SoundCHN = LoopSound2(e\Sound, e\SoundCHN, Camera, e\room\obj, 4.5, 1.5)
 					EndIf
 					dist = Distance(EntityX(Collider),EntityZ(Collider),EntityX(e\room\obj),EntityZ(e\room\obj))
-					If dist < 2.0 Then
-						CrouchState = (2.0-dist)/2.0
-						
-						If dist<0.5 Then
-							If e\EventState2 = 0 Then
-								PlaySound_Strict(LoadTempSound("SFX\Room\SinkholeFall.ogg"))
-							EndIf
-							
-							x = CurveValue(EntityX(e\room\obj),EntityX(Collider),10.0)
-							y = CurveValue(EntityY(e\room\obj)-e\EventState2,EntityY(Collider),25.0)
-							z = CurveValue(EntityZ(e\room\obj),EntityZ(Collider),10.0)
-							PositionEntity Collider, x, y, z, True
-							
-							DropSpeed = 0
-							
-							ResetEntity Collider
-							
-							e\EventState2=Min(e\EventState2+FPSfactor/200.0,2.0)
-							
-							LightBlink = Min(e\EventState2*5,10.0)
-							BlurTimer = e\EventState2*500
-							
-							If e\EventState2 = 2.0 Then MoveToPocketDimension()
+					If dist<0.5 Then
+						If e\EventState2 = 0 Then
+							PlaySound_Strict(LoadTempSound("SFX\Room\SinkholeFall.ogg"))
 						EndIf
+						
+						x = CurveValue(EntityX(e\room\obj),EntityX(Collider),10.0)
+						y = CurveValue(EntityY(e\room\obj)-e\EventState2,EntityY(Collider),25.0)
+						z = CurveValue(EntityZ(e\room\obj),EntityZ(Collider),10.0)
+						PositionEntity Collider, x, y, z, True
+						
+						DropSpeed = 0
+						
+						ResetEntity Collider
+						
+						e\EventState2=Min(e\EventState2+FPSfactor/200.0,2.0)
+						
+						LightBlink = Min(e\EventState2*5,10.0)
+						BlurTimer = e\EventState2*500
+						
+						If e\EventState2 = 2.0 Then MoveToPocketDimension()
 					EndIf
 				Else 
 					e\EventState2=0
