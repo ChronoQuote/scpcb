@@ -180,7 +180,7 @@ Function Rnd_Array#(numb1#,numb2#,Array1#,Array2#)
 End Function
 
 Function f2s$(n#, count%)
-	Return Left(n, Len(Int(n))+count+1)
+	Return Left(n, Len(Int(Str(n)))+count+1)
 End Function
 
 Function GetZone(y%)
