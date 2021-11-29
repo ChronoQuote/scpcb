@@ -1081,8 +1081,6 @@ Function UpdateEvents()
 								e\room\NPC[2] = CreateNPC(NPCtypeD, EntityX(e\room\Objects[2], True), 0.5, EntityZ(e\room\Objects[2], True))
 								PointEntity(e\room\NPC[2]\Collider, e\room\Objects[5])
 								ChangeNPCTextureID(e\room\NPC[2],6)
-								;EntityTexture e\room\NPC[2]\obj, DTextures[7]
-								;FreeTexture DTextures[7]
 								e\room\NPC[3]\State = 9								
 								
 								If e\room\NPC[7]\SoundChn<>0 Then
@@ -1302,15 +1300,9 @@ Function UpdateEvents()
 								e\room\NPC[5]\State = 7
 								e\room\NPC[5]\Sound2 = LoadSound_Strict("SFX\Room\Intro\Guard\PlayerEscape.ogg")
 								e\room\NPC[6] = CreateNPC(NPCtypeD, e\room\x-3712*RoomScale, -0.3, e\room\z-2208*RoomScale)
-								;tex = LoadTexture_Strict("GFX\npcs\scientist2.jpg")
-								;EntityTexture e\room\NPC[6]\obj, DTextures[4]
-								;FreeTexture tex
 								ChangeNPCTextureID(e\room\NPC[6],3)
 								e\room\NPC[7] = CreateNPC(NPCtypeD, e\room\x-3712*RoomScale, -0.3, e\room\z-2208*RoomScale)
-								;tex = LoadTexture_Strict("GFX\npcs\scientist.jpg")
 								e\room\NPC[7]\Sound = LoadSound_Strict("SFX\Room\Intro\Scientist\Conversation.ogg")
-								;EntityTexture e\room\NPC[7]\obj, DTextures[3]
-								;FreeTexture tex
 								ChangeNPCTextureID(e\room\NPC[7],2)
 								pvt = CreatePivot()
 								RotateEntity pvt,90,0,0
@@ -4991,7 +4983,7 @@ Function UpdateEvents()
 							Case 25
 								e\room\NPC[0]=CreateNPC(NPCtypeD, EntityX(e\room\obj)+Cos(e\room\angle-90)*760*RoomScale, 0.35, EntityZ(e\room\obj)+Sin(e\room\angle-90)*760*RoomScale)
 								RotateEntity e\room\NPC[0]\Collider, 0, e\room\angle-200, 0, True
-								ChangeNPCTextureID(n, 10)
+								ChangeNPCTextureID(e\room\NPC[0], 1)
 								SetAnimTime(e\room\NPC[0]\obj,80)
 								e\room\NPC[0]\State=10
 							Case 30
@@ -7930,7 +7922,7 @@ Function UpdateEvents()
 				;[Block]
 				If e\room\dist < 10.0 And e\room\dist > 0 Then
 					e\room\NPC[0]=CreateNPC(NPCtypeD, EntityX(e\room\obj,True)+1.0, 0.5, EntityZ(e\room\obj,True)+1.0)
-					ChangeNPCTextureID(n, 8)
+					ChangeNPCTextureID(e\room\NPC[0], 8)
 					;EntityTexture e\room\NPC[0]\obj,NTF_BodyTextures(0)
 					
 					RotateEntity e\room\NPC[0]\Collider, 0, EntityYaw(e\room\obj)-(Rand(20,60)),0, True	
@@ -10453,5 +10445,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#1246#1EC0
+;~B#123E#1EB8
 ;~C#Blitz3D

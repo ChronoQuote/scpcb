@@ -1763,7 +1763,7 @@ Global LightConeModel
 
 Global ParticleEffect[10]
 
-Const MaxDTextures=11
+Const MaxDTextures=10
 Global DTextures[MaxDTextures]
 
 Global NPC049OBJ, NPC0492OBJ
@@ -8006,8 +8006,6 @@ Function LoadEntities()
 	DTextures[8] = LoadTexture_Strict("GFX\npcs\body1.jpg")
 	;body 2
 	DTextures[9] = LoadTexture_Strict("GFX\npcs\body2.jpg")
-	;corpse
-	DTextures[10] = LoadTexture_Strict("GFX\npcs\corpse.jpg")
 	;[End Block]
 	
 	LoadMaterials("DATA\materials.ini")
