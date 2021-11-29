@@ -3468,7 +3468,7 @@ Function DrawEnding()
 					Next
 					
 					Local scpsEncountered=1
-					For i = 0 To 28
+					For i = 0 To 29
 						scpsEncountered = scpsEncountered+Achievements(i)
 					Next
 					
