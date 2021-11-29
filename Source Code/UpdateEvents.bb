@@ -7668,7 +7668,7 @@ Function UpdateEvents()
 							End If
 						End If
 					Else
-						GrabbedEntity = 0
+						If GrabbedEntity <> 0 Then GrabbedEntity = 0
 					End If
 					
 					Local setting$ = ""
@@ -7704,6 +7704,7 @@ Function UpdateEvents()
 							ElseIf EntityDistance(e\room\Objects[i], Camera) > 1.0
 								GrabbedEntity = 0
 							End If
+							Exit
 						End If
 					Next
 					
@@ -8003,8 +8004,7 @@ Function UpdateEvents()
 				;- 3.0 = player got a memorial item (to explain a bit D-9341's background)
 				;- 3.1 = player got a memorial item + injuries (because he didn't had any item in his inventory before)
 				If PlayerRoom = e\room
-					
-					GrabbedEntity = 0
+					If GrabbedEntity <> 0 Then GrabbedEntity = 0
 					
 					e\EventState = 0
 					
@@ -10445,5 +10445,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#123E#1EB8
+;~B#123E#1EB9
 ;~C#Blitz3D
