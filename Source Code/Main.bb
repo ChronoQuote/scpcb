@@ -39,7 +39,7 @@ Global ConsoleFont%
 Global VersionNumber$ = "1.3.11"
 Global CompatibleNumber$ = "1.3.11" ;Only change this if the version given isn't working with the current build version - ENDSHN
 
-Global MenuWhite%, MenuBlack%
+Global MenuWhite%, MenuGray%, MenuBlack%
 Global ButtonSFX% = LoadSound_Strict("SFX\Interact\Button.ogg")
 
 Global EnableSFXRelease% = GetINIInt(OptionFile, "audio", "sfx release")
@@ -1588,7 +1588,7 @@ Dim OpenDoorSFX%(3,3), CloseDoorSFX%(3,3)
 
 Global KeyCardSFX1 
 Global KeyCardSFX2 
-Global ButtonSFX2 
+Global ButtonSFX2% = LoadSound_Strict("SFX\Interact\Button2.ogg")
 Global ScannerSFX1
 Global ScannerSFX2 
 
@@ -2463,8 +2463,7 @@ End Type
 
 Global m.MEMORYSTATUS = New MEMORYSTATUS
 
-FlushKeys()
-FlushMouse()
+ResetInput()
 
 DrawLoading(100, True)
 
@@ -3658,7 +3657,8 @@ Function DrawCredits()
         MainMenuOpen = True
         MainMenuTab = 0
         CurrSave = ""
-        FlushKeys()
+        ResetInput()
+		Return
 	EndIf
     
 End Function
@@ -7333,7 +7333,8 @@ Function DrawMenu()
 						MainMenuOpen = True
 						MainMenuTab = 0
 						CurrSave = ""
-						FlushKeys()
+						ResetInput()
+						Return
 					EndIf
 				EndIf
 			EndIf
@@ -7344,7 +7345,8 @@ Function DrawMenu()
 				MainMenuOpen = True
 				MainMenuTab = 0
 				CurrSave = ""
-				FlushKeys()
+				ResetInput()
+				Return
 			EndIf
 			
 			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, "Back") Then
@@ -7422,8 +7424,6 @@ Function DrawMenu()
 							AASetFont Font1
 							HidePointer ()
 							
-							FlushKeys()
-							FlushMouse()
 							Playable=True
 							
 							UpdateRooms()
@@ -7451,12 +7451,10 @@ Function DrawMenu()
 							FPSfactor = 0
 							
 							ResetInput()
+							Return
 						EndIf
 					Else
-						DrawFrame(x,y,390*MenuScale, 60*MenuScale)
-						Color (100, 100, 100)
-						AASetFont Font2
-						AAText(x + (390*MenuScale) / 2, y + (60*MenuScale) / 2, "Load Game", True, True)
+						DrawButton(x,y,390*MenuScale, 60*MenuScale,"Load Game",True,False,True,True)
 					EndIf
 					y = y + 75*MenuScale
 			EndIf
@@ -7478,8 +7476,6 @@ Function DrawMenu()
 						AASetFont Font1
 						HidePointer ()
 						
-						FlushKeys()
-						FlushMouse()
 						Playable=True
 						
 						UpdateRooms()
@@ -7507,11 +7503,10 @@ Function DrawMenu()
 						FPSfactor = 0
 						
 						ResetInput()
+						Return
 					EndIf
 				Else
-					DrawButton(x, y, 390*MenuScale, 60*MenuScale, "")
-					Color 50,50,50
-					AAText(x + 185*MenuScale, y + 30*MenuScale, "Load Game", True, True)
+					DrawButton(x,y,390*MenuScale, 60*MenuScale,"Load Game",True,False,True,True)
 				EndIf
 				If DrawButton(x, y + 80*MenuScale, 390*MenuScale, 60*MenuScale, "Quit to Menu") Then
 					NullGame()
@@ -7519,7 +7514,8 @@ Function DrawMenu()
 					MainMenuOpen = True
 					MainMenuTab = 0
 					CurrSave = ""
-					FlushKeys()
+					ResetInput()
+					Return
 				EndIf
 				y= y + 80*MenuScale
 			EndIf
@@ -8256,7 +8252,6 @@ Function InitNewGame()
 	
 	For i% = 0 To 70
 		FPSfactor = 1.0
-		FlushKeys()
 		MovePlayer()
 		UpdateDoors()
 		UpdateNPCs()
@@ -8270,8 +8265,7 @@ Function InitNewGame()
 	FreeTextureCache
 	DrawLoading(100)
 	
-	FlushKeys
-	FlushMouse
+	ResetInput()
 	
 	DropSpeed = 0
 	

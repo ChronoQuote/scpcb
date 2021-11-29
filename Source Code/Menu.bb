@@ -2,6 +2,7 @@ Global MenuBack% = LoadImage_Strict("GFX\menu\back.jpg")
 Global MenuText% = LoadImage_Strict("GFX\menu\scptext.jpg")
 Global Menu173% = LoadImage_Strict("GFX\menu\173back.jpg")
 MenuWhite = LoadImage_Strict("GFX\menu\menuwhite.jpg")
+MenuGray = LoadImage_Strict("GFX\menu\menugray.jpg")
 MenuBlack = LoadImage_Strict("GFX\menu\menublack.jpg")
 MaskImage MenuBlack, 255,255,0
 Global QuickLoadIcon%
@@ -220,7 +221,10 @@ Function UpdateMainMenu()
 			;color 255, 255, 255	
 			;text(x + width / 2, y + height / 2, Str, True, True)
 		Next	
-		
+		If Opt_AntiAlias And (Not FullScreen) Then
+			Opt_AntiAlias = False
+			PutINIValue(OptionFile, "options", "antialias", Opt_AntiAlias)
+		EndIf
 	Else
 		
 		x = 159 * MenuScale
@@ -402,11 +406,10 @@ Function UpdateMainMenu()
 					LoadAllSounds()
 					InitNewGame()
 					MainMenuOpen = False
-					FlushKeys()
-					FlushMouse()
 					
 					PutINIValue(OptionFile, "options", "intro enabled", IntroEnabled%)
-					
+					ResetInput()
+					Return
 				EndIf
 				
 				;[End Block]
@@ -444,18 +447,14 @@ Function UpdateMainMenu()
 						CurrLoadGamePage = CurrLoadGamePage+1
 					EndIf
 				Else
-					DrawFrame(x+530*MenuScale, y + 510*MenuScale, 50*MenuScale, 55*MenuScale)
-					Color(100, 100, 100)
-					AAText(x+555*MenuScale, y + 537.5*MenuScale, ">", True, True)
+					DrawButton(x+530*MenuScale, y + 510*MenuScale, 50*MenuScale, 55*MenuScale, ">", True, False, True, True)
 				EndIf
 				If CurrLoadGamePage > 0 And SaveMSG = "" Then
 					If DrawButton(x, y + 510*MenuScale, 50*MenuScale, 55*MenuScale, "<") Then
 						CurrLoadGamePage = CurrLoadGamePage-1
 					EndIf
 				Else
-					DrawFrame(x, y + 510*MenuScale, 50*MenuScale, 55*MenuScale)
-					Color(100, 100, 100)
-					AAText(x+25*MenuScale, y + 537.5*MenuScale, "<", True, True)
+					DrawButton(x, y + 510*MenuScale, 50*MenuScale, 55*MenuScale, "<", True, False, True, True)
 				EndIf
 				
 				DrawFrame(x+50*MenuScale,y+510*MenuScale,width-100*MenuScale,55*MenuScale)
@@ -491,9 +490,7 @@ Function UpdateMainMenu()
 							
 							If SaveMSG = "" Then
 								If SaveGameVersion(i - 1) <> CompatibleNumber And SaveGameVersion(i - 1) <> "1.3.10" Then
-									DrawFrame(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale)
-									Color(255, 0, 0)
-									AAText(x + 330 * MenuScale, y + 34 * MenuScale, "Load", True, True)
+									DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False, False, True, True, 255, 0, 0)
 								Else
 									If DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False) Then
 										LoadEntities()
@@ -511,17 +508,12 @@ Function UpdateMainMenu()
 									Exit
 								EndIf
 							Else
-								DrawFrame(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale)
 								If SaveGameVersion(i - 1) <> CompatibleNumber And SaveGameVersion(i - 1) <> "1.3.10" Then
-									Color(255, 0, 0)
+									DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False, False, True, True, 255, 0, 0)
 								Else
-									Color(100, 100, 100)
+									DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False, False, True, True)
 								EndIf
-								AAText(x + 330 * MenuScale, y + 34 * MenuScale, "Load", True, True)
-								
-								DrawFrame(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale)
-								Color(100, 100, 100)
-								AAText(x + 450 * MenuScale, y + 34 * MenuScale, "Delete", True, True)
+								DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Delete", False, False, True, True)
 							EndIf
 							
 							y = y + 80 * MenuScale
@@ -631,7 +623,7 @@ Function UpdateMainMenu()
 					
 					Color 255,255,255
 					AAText(x + 20 * MenuScale, y, "Anti-aliasing:")
-					Opt_AntiAlias = DrawTick(x + 310 * MenuScale, y + MenuScale, Opt_AntiAlias%)
+					Opt_AntiAlias = DrawTick(x + 310 * MenuScale, y + MenuScale, Opt_AntiAlias%, (Not FullScreen))
 					;AAText(x + 20 * MenuScale, y + 15 * MenuScale, "(fullscreen mode only)")
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
 						DrawOptionsTooltip(tx,ty,tw,th,"antialias")
@@ -1056,18 +1048,14 @@ Function UpdateMainMenu()
 						CurrLoadGamePage = CurrLoadGamePage+1
 					EndIf
 				Else
-					DrawFrame(x+530*MenuScale, y + 510*MenuScale, 50*MenuScale, 55*MenuScale)
-					Color(100, 100, 100)
-					AAText(x+555*MenuScale, y + 537.5*MenuScale, ">", True, True)
+					DrawButton(x+530*MenuScale, y + 510*MenuScale, 50*MenuScale, 55*MenuScale, ">", True, False, True, True)
 				EndIf
 				If CurrLoadGamePage > 0 Then
 					If DrawButton(x, y + 510*MenuScale, 50*MenuScale, 55*MenuScale, "<") Then
 						CurrLoadGamePage = CurrLoadGamePage-1
 					EndIf
 				Else
-					DrawFrame(x, y + 510*MenuScale, 50*MenuScale, 55*MenuScale)
-					Color(100, 100, 100)
-					AAText(x+25*MenuScale, y + 537.5*MenuScale, "<", True, True)
+					DrawButton(x, y + 510*MenuScale, 50*MenuScale, 55*MenuScale, "<", True, False, True, True)
 				EndIf
 				
 				DrawFrame(x+50*MenuScale,y+510*MenuScale,width-100*MenuScale,55*MenuScale)
@@ -1091,22 +1079,50 @@ Function UpdateMainMenu()
 						If i <= SavedMapsAmount Then
 							DrawFrame(x,y,540* MenuScale, 70* MenuScale)
 							
-							AAText(x + 20 * MenuScale, y + 10 * MenuScale, SavedMaps(i - 1))
-							AAText(x + 20 * MenuScale, y + (10+27) * MenuScale, SavedMapsAuthor(i - 1))
-							
-							If DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False) Then
-								SelectedMap=SavedMaps(i - 1)
-								MainMenuTab = 1
+							If Len(SavedMaps(i - 1)) > 20 Then
+								AAText(x + 20 * MenuScale, y + 15 * MenuScale, Left(SavedMaps(i - 1), 19) + "...")
+							Else
+								AAText(x + 20 * MenuScale, y + 15 * MenuScale, SavedMaps(i - 1))
 							EndIf
-							If MouseOn(x + 400 * MenuScale, y + 20 * MenuScale, 100*MenuScale,30*MenuScale)
+							AAText(x + 20 * MenuScale, y + (10+27) * MenuScale, SavedMapsAuthor(i - 1))
+							If MouseOn(x + 280 * MenuScale, y + 20 * MenuScale, 100*MenuScale,30*MenuScale) Or MouseOn(x + 400 * MenuScale, y + 20 * MenuScale, 100*MenuScale,30*MenuScale)
 								DrawMapCreatorTooltip(tx,ty,tw,th,SavedMaps(i-1))
 							EndIf
-							
+							If SaveMSG = "" Then
+								If DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False) Then
+									SelectedMap=SavedMaps(i - 1)
+									MainMenuTab = 1
+								EndIf
+								If DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Delete", False) Then
+									SaveMSG = SavedMaps(i - 1)
+									Exit
+								EndIf
+							Else
+								DrawButton(x + 280 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Load", False, False, True, True)
+								DrawButton(x + 400 * MenuScale, y + 20 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Delete", False, False, True, True)
+							EndIf
 							y = y + 80 * MenuScale
 						Else
 							Exit
 						EndIf
 					Next
+					
+					If SaveMSG <> ""
+						x = 740 * MenuScale
+						y = 376 * MenuScale
+						DrawFrame(x, y, 420 * MenuScale, 200 * MenuScale)
+						RowText("Are you sure you want to delete this map?", x + 20 * MenuScale, y + 15 * MenuScale, 400 * MenuScale, 200 * MenuScale)
+						;AAText(x + 20 * MenuScale, y + 15 * MenuScale, "Are you sure you want to delete this map?")
+						If DrawButton(x + 50 * MenuScale, y + 150 * MenuScale, 100 * MenuScale, 30 * MenuScale, "Yes", False) Then
+							DeleteFile(CurrentDir() + "Map Creator\Maps\" + SaveMSG)
+							SaveMSG = ""
+							SelectedMap = ""
+							LoadSavedMaps()
+						EndIf
+						If DrawButton(x + 250 * MenuScale, y + 150 * MenuScale, 100 * MenuScale, 30 * MenuScale, "No", False) Then
+							SaveMSG = ""
+						EndIf
+					EndIf
 				EndIf
 				;[End Block]
 		End Select
@@ -1142,6 +1158,7 @@ Function UpdateLauncher()
 	Font1 = LoadFont_Strict("GFX\font\cour\Courier New.ttf", 18, 0,0,0)
 	SetFont Font1
 	MenuWhite = LoadImage_Strict("GFX\menu\menuwhite.jpg")
+	MenuGray = LoadImage_Strict("GFX\menu\menugray.jpg")
 	MenuBlack = LoadImage_Strict("GFX\menu\menublack.jpg")	
 	MaskImage MenuBlack, 255,255,0
 	LauncherIMG = LoadImage_Strict("GFX\menu\launcher.jpg")
@@ -1566,8 +1583,7 @@ Function DrawLoading(percent%, shortloading=False)
 			If firstloop And SelectedLoadingScreen\title <> "CWM" Then PlaySound_Strict LoadTempSound(("SFX\Horror\Horror8.ogg"))
 			AAText(GraphicWidth / 2, GraphicHeight - 50, "PRESS ANY KEY TO CONTINUE", True, True)
 		Else
-			FlushKeys()
-			FlushMouse()
+			ResetInput()
 		EndIf
 		
 		If BorderlessWindowed Then
@@ -1674,29 +1690,47 @@ Function InputBox$(x%, y%, width%, height%, Txt$, ID% = 0)
 	Return Txt
 End Function
 
-Function DrawFrame(x%, y%, width%, height%, xoffset%=0, yoffset%=0)
+Function DrawFrame(x%, y%, width%, height%, xoffset%=0, yoffset%=0, Locked% = False)
+	Local IMG%
 	Color 255, 255, 255
-	DrawTiledImageRect(MenuWhite, xoffset, (y Mod 256), 512, 512, x, y, width, height)
 	
+	If Locked Then
+		IMG = MenuGray
+	Else
+		IMG = MenuWhite
+	EndIf
+	DrawTiledImageRect(IMG, xoffset, (y Mod 256), 512, 512, x, y, width, height)
 	DrawTiledImageRect(MenuBlack, yoffset, (y Mod 256), 512, 512, x+3*MenuScale, y+3*MenuScale, width-6*MenuScale, height-6*MenuScale)	
 End Function
 
-Function DrawButton%(x%, y%, width%, height%, txt$, bigfont% = True, waitForMouseUp%=False, usingAA%=True)
+Function DrawButton%(x%, y%, width%, height%, txt$, bigfont% = True, waitForMouseUp%=False, usingAA%=True, Locked% = False, R% = 255, G% = 255, B% = 255)
 	Local clicked% = False
 	
-	DrawFrame (x, y, width, height)
+	DrawFrame (x, y, width, height, 0, 0, Locked)
 	If MouseOn(x, y, width, height) Then
 		Color(30, 30, 30)
 		If (MouseHit1 And (Not waitForMouseUp)) Or (MouseUp1 And waitForMouseUp) Then 
-			clicked = True
-			PlaySound_Strict(ButtonSFX)
+			If Locked Then
+				PlaySound_Strict(ButtonSFX2)
+			Else
+				clicked = True
+				PlaySound_Strict(ButtonSFX)
+			EndIf
 		EndIf
 		Rect(x + 4, y + 4, width - 8, height - 8)	
 	Else
 		Color(0, 0, 0)
 	EndIf
 	
-	Color (255, 255, 255)
+	If Locked Then
+		If R <> 255 Or G <> 255 Or B <> 255 Then
+			Color(R, G, B)
+		Else
+			Color(100, 100, 100)
+		EndIf
+	Else
+		Color(R, G, B)
+	EndIf
 	If usingAA Then
 		If bigfont Then AASetFont Font2 Else AASetFont Font1
 		AAText(x + width / 2, y + height / 2, txt, True, True)
@@ -1730,16 +1764,30 @@ End Function
 
 Function DrawTick%(x%, y%, selected%, locked% = False)
 	Local width% = 20 * MenuScale, height% = 20 * MenuScale
+	Local IMG%
+	
+	If locked Then
+		IMG = MenuGray
+	Else
+		IMG = MenuWhite
+	EndIf
 	
 	Color (255, 255, 255)
-	DrawTiledImageRect(MenuWhite, (x Mod 256), (y Mod 256), 512, 512, x, y, width, height)
+	DrawTiledImageRect(IMG, (x Mod 256), (y Mod 256), 512, 512, x, y, width, height)
 	;Rect(x, y, width, height)
 	
-	Local Highlight% = MouseOn(x, y, width, height) And (Not locked)
+	Local Highlight% = MouseOn(x, y, width, height)
 	
 	If Highlight Then
 		Color(50, 50, 50)
-		If MouseHit1 Then selected = (Not selected) : PlaySound_Strict (ButtonSFX)
+		If MouseHit1 Then
+			If locked Then
+				PlaySound_Strict (ButtonSFX2)
+			Else
+				PlaySound_Strict (ButtonSFX)
+				selected = (Not selected)
+			EndIf
+		EndIf
 	Else
 		Color(0, 0, 0)		
 	End If
@@ -1752,7 +1800,7 @@ Function DrawTick%(x%, y%, selected%, locked% = False)
 		Else
 			Color 200,200,200
 		EndIf
-		DrawTiledImageRect(MenuWhite, (x Mod 256), (y Mod 256), 512, 512, x + 4, y + 4, width - 8, height - 8)
+		DrawTiledImageRect(IMG, (x Mod 256), (y Mod 256), 512, 512, x + 4, y + 4, width - 8, height - 8)
 		;Rect(x + 4, y + 4, width - 8, height - 8)
 	EndIf
 	
