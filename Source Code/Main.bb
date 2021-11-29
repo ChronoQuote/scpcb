@@ -41,6 +41,7 @@ Global CompatibleNumber$ = "1.3.11" ;Only change this if the version given isn't
 
 Global MenuWhite%, MenuGray%, MenuBlack%
 Global ButtonSFX% = LoadSound_Strict("SFX\Interact\Button.ogg")
+Global ButtonSFX2% = LoadSound_Strict("SFX\Interact\Button2.ogg")
 
 Global EnableSFXRelease% = GetINIInt(OptionFile, "audio", "sfx release")
 Global EnableSFXRelease_Prev% = EnableSFXRelease%
@@ -1588,7 +1589,6 @@ Dim OpenDoorSFX%(3,3), CloseDoorSFX%(3,3)
 
 Global KeyCardSFX1 
 Global KeyCardSFX2 
-Global ButtonSFX2% = LoadSound_Strict("SFX\Interact\Button2.ogg")
 Global ScannerSFX1
 Global ScannerSFX2 
 
