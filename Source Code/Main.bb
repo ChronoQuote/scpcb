@@ -2540,7 +2540,9 @@ Repeat
 		
 		MouseHit2 = MouseHit(2)
 		
-		If (Not MouseDown1) And (Not MouseHit1) Then GrabbedEntity = 0
+		If (Not MouseDown1) And (Not MouseHit1) Then
+			If GrabbedEntity <> 0 Then GrabbedEntity = 0
+		EndIf
 	Else
 		Input_ResetTime = Max(Input_ResetTime-FPSfactor,0.0)
 	EndIf
@@ -3468,7 +3470,7 @@ Function DrawEnding()
 					Next
 					
 					Local scpsEncountered=1
-					For i = 0 To 29
+					For i = Achv008 To Achv1499
 						scpsEncountered = scpsEncountered+Achievements(i)
 					Next
 					
@@ -10542,5 +10544,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D4#1353#1AE0
+;~B#10D6#1355#1AE2
 ;~C#Blitz3D
