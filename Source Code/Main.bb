@@ -5772,10 +5772,10 @@ Function DrawGUI()
 						
 						DeathTimer=GetINIInt2(iniStr, loc, "deathtimer")*70
 						
-						BlinkEffect = Float(GetINIString2(iniStr, loc, "blink effect", 1.0))*x2
+						BlinkEffect = Float(GetINIString2(iniStr, loc, "blink effect", 1.0))^x2
 						BlinkEffectTimer = Float(GetINIString2(iniStr, loc, "blink effect timer", 1.0))*x2
 						
-						StaminaEffect = Float(GetINIString2(iniStr, loc, "stamina effect", 1.0))*x2
+						StaminaEffect = Float(GetINIString2(iniStr, loc, "stamina effect", 1.0))^x2
 						StaminaEffectTimer = Float(GetINIString2(iniStr, loc, "stamina effect timer", 1.0))*x2
 						
 						strtemp = GetINIString2(iniStr, loc, "refusemessage")
