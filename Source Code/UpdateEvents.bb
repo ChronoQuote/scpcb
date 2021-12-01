@@ -2877,10 +2877,10 @@ Function UpdateEvents()
 				Else
 					HideEntity e\room\obj
 					;CameraClsColor Camera, 0,0,0
-					If e\EventState <> 0 Then e\EventState = 0
-					If e\EventState2 <> 0 Then e\EventState2 = 0
-					If e\EventState3 <> 0 Then e\EventState3 = 0
-					If e\EventStr <> Float(0) Then e\EventStr = Float(0)
+					e\EventState = 0
+					e\EventState2 = 0
+					e\EventState3 = 0
+					e\EventStr = Float(0)
 				EndIf
 				;[End Block]
 			Case "room2cafeteria"
@@ -5252,19 +5252,19 @@ Function UpdateEvents()
 							EndIf
 						EndIf
 					Else
-						If e\EventState <> 0 Then e\EventState = 0
-						For i = 0 To 2
-							If e\room\NPC[i]<>Null Then
-								If e\room\NPC[i]\State <> 66 Then e\room\NPC[i]\State = 66
-							EndIf
-						Next
+						e\EventState = 0
+						If e\room\NPC[0]<>Null Then
+							For i = 0 To 2
+								e\room\NPC[i]\State = 66
+							Next
+						EndIf
 					EndIf
 				Else
-					For i = 0 To 2
-						If e\room\NPC[i]<>Null Then
-							If e\room\NPC[i]\State <> 66 Then e\room\NPC[i]\State = 66
-						EndIf
-					Next
+					If e\room\NPC[0]<>Null Then
+						For i = 0 To 2
+							e\room\NPC[i]\State = 66
+						Next
+					EndIf
 				EndIf 
 				;[End Block]
 			Case "room3tunnel"
@@ -7567,7 +7567,7 @@ Function UpdateEvents()
 						If e\EventState2 = 2.0 Then MoveToPocketDimension()
 					EndIf
 				Else 
-					If e\EventState2 <> 0 Then e\EventState2=0
+					e\EventState2=0
 				EndIf
 				
 				;[End Block]
@@ -7667,7 +7667,7 @@ Function UpdateEvents()
 							End If
 						End If
 					Else
-						If GrabbedEntity <> 0 Then GrabbedEntity = 0
+						GrabbedEntity = 0
 					End If
 					
 					Local setting$ = ""
@@ -8003,7 +8003,7 @@ Function UpdateEvents()
 				;- 3.0 = player got a memorial item (to explain a bit D-9341's background)
 				;- 3.1 = player got a memorial item + injuries (because he didn't had any item in his inventory before)
 				If PlayerRoom = e\room
-					If GrabbedEntity <> 0 Then GrabbedEntity = 0
+					GrabbedEntity = 0
 					
 					e\EventState = 0
 					

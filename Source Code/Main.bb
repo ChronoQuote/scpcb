@@ -2540,9 +2540,7 @@ Repeat
 		
 		MouseHit2 = MouseHit(2)
 		
-		If (Not MouseDown1) And (Not MouseHit1) Then
-			If GrabbedEntity <> 0 Then GrabbedEntity = 0
-		EndIf
+		If (Not MouseDown1) And (Not MouseHit1) Then GrabbedEntity = 0
 	Else
 		Input_ResetTime = Max(Input_ResetTime-FPSfactor,0.0)
 	EndIf
@@ -2762,7 +2760,7 @@ Repeat
 			If BlinkEffectTimer > 0 Then
 				BlinkEffectTimer = BlinkEffectTimer - (FPSfactor/70)
 			Else
-				If BlinkEffect <> 1.0 Then BlinkEffect = 1.0
+				BlinkEffect = 1.0
 			EndIf
 			
 			LightBlink = Max(LightBlink - (FPSfactor / 35.0), 0)
@@ -2952,7 +2950,7 @@ Repeat
 			EndIf
 			MsgTimer=MsgTimer-FPSfactor2 
 		Else
-			If MsgTimer <> 0 Then MsgTimer = 0 : Msg = ""
+			MsgTimer = 0 : Msg = ""
 		End If
 		
 		Color 255, 255, 255
@@ -3748,7 +3746,7 @@ Function MovePlayer()
 	If StaminaEffectTimer > 0 Then
 		StaminaEffectTimer = StaminaEffectTimer - (FPSfactor/70)
 	Else
-		If StaminaEffect <> 1.0 Then StaminaEffect = 1.0
+		StaminaEffect = 1.0
 	EndIf
 	
 	Local temp#
@@ -4725,9 +4723,9 @@ Function DrawGUI()
 			SelectedDoor = Null
 		EndIf
 	Else
-		If KeypadInput <> "" Then KeypadInput = ""
-		If KeypadTimer <> 0 Then KeypadTimer = 0
-		If KeypadMSG <> "" Then KeypadMSG = ""
+		KeypadInput = ""
+		KeypadTimer = 0
+		KeypadMSG = ""
 	EndIf
 	
 	If KeyHit(1) And EndingTimer=0 And (Not Using294) Then
@@ -10544,5 +10542,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D6#1355#1AE2
+;~B#10D4#1353#1AE0
 ;~C#Blitz3D
