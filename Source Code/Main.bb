@@ -2948,7 +2948,7 @@ Repeat
 				EndIf
 				AAText((GraphicWidth / 2), (GraphicHeight * 0.94), Msg, True, False, Min(MsgTimer / 2, 255)/255.0)
 			EndIf
-			MsgTimer=MsgTimer-FPSfactor2 
+			MsgTimer=MsgTimer-FPSfactor
 		Else
 			MsgTimer = 0 : Msg = ""
 		End If
