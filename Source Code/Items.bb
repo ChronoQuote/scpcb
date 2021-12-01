@@ -720,7 +720,13 @@ Function PickItem(item.Items)
 				item\Picked = True
 				item\Dropped = -1
 				
-				item\itemtemplate\found=True
+				item\itemtemplate\found = True
+				If item\invSlots > 0 Then
+					For z% = 0 To item\invSlots - 1
+						If item\SecondInv[z] <> Null Then item\SecondInv[z]\itemtemplate\found = True
+					Next
+				EndIf
+				
 				ItemAmount = ItemAmount + 1
 				
 				Inventory(n) = item
