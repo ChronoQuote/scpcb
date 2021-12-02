@@ -1838,7 +1838,7 @@ End Type
 Dim BigDoorOBJ(2), HeavyDoorObj(2)
 Dim OBJTunnel(7)
 
-Function CreateDoor.Doors(x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% = False, keycard% = False, code$="", useCollisionMesh% = False)
+Function CreateDoor.Doors(x#, y#, z#, angle#, room.Rooms, dopen% = False, big% = 0, keycard% = 0, code$="", useCollisionMesh% = False)
 	Local d.Doors, parent, i%
 	If room <> Null Then parent = room\obj
 	
@@ -1892,10 +1892,8 @@ Function CreateDoor.Doors(x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% 
 	
 	;scaleentity(d\obj, 0.1, 0.1, 0.1)
 	PositionEntity d\frameobj, x, y, z	
-	ScaleEntity(d\frameobj, (8.0 / 2048.0), (8.0 / 2048.0), (8.0 / 2048.0))
+	ScaleEntity(d\frameobj, RoomScale, RoomScale, RoomScale)
 	EntityPickMode d\frameobj,2
-	EntityType d\obj, HIT_MAP
-	EntityType d\obj2, HIT_MAP
 	
 	d\ID = DoorTempID
 	DoorTempID=DoorTempID+1
@@ -1918,50 +1916,31 @@ Function CreateDoor.Doors(x#, y#, z#, angle#, room.Rooms, dopen% = False,  big% 
 		EndIf
 		
 		ScaleEntity(d\buttons[i], 0.03, 0.03, 0.03)
+		PositionEntity(d\buttons[i], x + ((big <> 1) * (0.6 + (i * (-1.2)))) + ((big = 1) * ((-432.0 + (i * 864.0)) * RoomScale)), y + 0.7, z + ((big <> 1) * ((-0.1) + (i * 0.2))) + ((big = 1) * ((192.0 + (i * (-384.0)))) * RoomScale))
+		RotateEntity(d\buttons[i], 0, ((big <> 1) * (i * 180)) + ((big = 1) * (90 + (i * 180))), 0)
+		EntityParent(d\buttons[i], d\frameobj)
+		EntityPickMode(d\buttons[i], 2)
 	Next
 	
-	If big=1 Then
-		PositionEntity d\buttons[0], x - 432.0 * RoomScale, y + 0.7, z + 192.0 * RoomScale
-		PositionEntity d\buttons[1], x + 432.0 * RoomScale, y + 0.7, z - 192.0 * RoomScale
-		RotateEntity d\buttons[0], 0, 90, 0
-		RotateEntity d\buttons[1], 0, 270, 0
-	Else
-		PositionEntity d\buttons[0], x + 0.6, y + 0.7, z - 0.1
-		PositionEntity d\buttons[1], x - 0.6, y + 0.7, z + 0.1
-		RotateEntity d\buttons[1], 0, 180, 0		
-	End If
-	EntityParent(d\buttons[0], d\frameobj)
-	EntityParent(d\buttons[1], d\frameobj)
-	EntityPickMode(d\buttons[0], 2)
-	EntityPickMode(d\buttons[1], 2)
-	
 	PositionEntity d\obj, x, y, z
-	
 	RotateEntity d\obj, 0, angle, 0
-	RotateEntity d\frameobj, 0, angle, 0
+	EntityType d\obj, HIT_MAP
+	EntityPickMode(d\obj, 2)
+	EntityParent(d\obj, parent)
 	
 	If d\obj2 <> 0 Then
 		PositionEntity d\obj2, x, y, z
-		If big=1 Then
-			RotateEntity(d\obj2, 0, angle, 0)
-		Else
-			RotateEntity(d\obj2, 0, angle + 180, 0)
-		EndIf
+		RotateEntity d\obj2, 0, angle + ((big <> 1) * 180), 0
+		EntityType d\obj2, HIT_MAP
+		EntityPickMode(d\obj2, 2)
 		EntityParent(d\obj2, parent)
 	EndIf
 	
+	RotateEntity d\frameobj, 0, angle, 0
 	EntityParent(d\frameobj, parent)
-	EntityParent(d\obj, parent)
 	
 	d\angle = angle
 	d\open = dopen		
-	
-	EntityPickMode(d\obj, 2)
-	If d\obj2 <> 0 Then
-		EntityPickMode(d\obj2, 2)
-	EndIf
-	
-	EntityPickMode d\frameobj,2
 	
 	If d\open And big = False And Rand(8) = 1 Then d\AutoClose = True
 	d\dir=big
@@ -10536,5 +10515,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10D4#1353#1AE0
+;~B#10BF#133E#1ACB
 ;~C#Blitz3D
