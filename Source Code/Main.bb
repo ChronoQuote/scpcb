@@ -3488,7 +3488,7 @@ Function DrawEnding()
 					x = x+width/2
 					y = y+height-100*MenuScale
 					
-					If DrawButton(x-145*MenuScale,y-200*MenuScale,390*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then
+					If DrawButton(x-145*MenuScale,y-200*MenuScale,430*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then
 						AchievementsMenu = 1
 					EndIf
 					
@@ -3504,7 +3504,7 @@ Function DrawEnding()
 ;						FlushKeys()
 ;					EndIf
 					
-					If DrawButton(x-145*MenuScale,y-100*MenuScale,390*MenuScale,60*MenuScale,"MAIN MENU", True)
+					If DrawButton(x-145*MenuScale,y-100*MenuScale,430*MenuScale,60*MenuScale,"MAIN MENU", True)
 						ShouldPlay = 24
 						NowPlaying = ShouldPlay
 						For i=0 To 9
@@ -6933,7 +6933,7 @@ Function DrawMenu()
 			AAText x, y+20*MenuScale, "Save: "+CurrSave
 			AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
 		ElseIf AchievementsMenu <= 0 And OptionsMenu > 0 And QuitMSG <= 0 And KillTimer >= 0
-			If DrawButton(x + 101 * MenuScale, y + 390 * MenuScale, 230 * MenuScale, 60 * MenuScale, "Back") Then
+			If DrawButton(x + 101 * MenuScale, y + 430 * MenuScale, 230 * MenuScale, 60 * MenuScale, "Back") Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
 				QuitMSG = 0
@@ -7317,15 +7317,15 @@ Function DrawMenu()
 					;[End Block]
 			End Select
 		ElseIf AchievementsMenu <= 0 And OptionsMenu <= 0 And QuitMSG > 0 And KillTimer >= 0
-			Local QuitButton% = 60 
+			Local QuitButton% = 85 
 			If SelectedDifficulty\saveType = SAVEONQUIT Or SelectedDifficulty\saveType = SAVEANYWHERE Then
 				Local RN$ = PlayerRoom\RoomTemplate\Name$
 				Local AbleToSave% = True
 				If RN$ = "173" Or RN$ = "exit1" Or RN$ = "gatea" Then AbleToSave = False
 				If (Not CanSave) Then AbleToSave = False
 				If AbleToSave
-					QuitButton = 140
-					If DrawButton(x, y + 60*MenuScale, 390*MenuScale, 60*MenuScale, "Save & Quit") Then
+					QuitButton = 160
+					If DrawButton(x, y + 85*MenuScale, 430*MenuScale, 60*MenuScale, "Save & Quit") Then
 						DropSpeed = 0
 						SaveGame(SavePath + CurrSave + "\")
 						NullGame()
@@ -7339,7 +7339,7 @@ Function DrawMenu()
 				EndIf
 			EndIf
 			
-			If DrawButton(x, y + QuitButton*MenuScale, 390*MenuScale, 60*MenuScale, "Quit") Then
+			If DrawButton(x, y + QuitButton*MenuScale, 430*MenuScale, 60*MenuScale, "Quit") Then
 				NullGame()
 				MenuOpen = False
 				MainMenuOpen = True
@@ -7349,7 +7349,7 @@ Function DrawMenu()
 				Return
 			EndIf
 			
-			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, "Back") Then
+			If DrawButton(x+101*MenuScale, y + 385*MenuScale, 230*MenuScale, 60*MenuScale, "Back") Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
 				QuitMSG = 0
@@ -7398,14 +7398,14 @@ Function DrawMenu()
 			EndIf
 		EndIf
 		
-		y = y+10
+		y = y+10*MenuScale
 		
 		If AchievementsMenu<=0 And OptionsMenu<=0 And QuitMSG<=0 Then
 			If KillTimer >= 0 Then	
 				
-				y = y+ 72*MenuScale
+				y = y + 75*MenuScale
 				
-				If DrawButton(x, y, 390*MenuScale, 60*MenuScale, "Resume", True, True) Then
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Resume", True, True) Then
 					MenuOpen = False
 					ResumeSounds()
 					MouseXSpeed() : MouseYSpeed() : MouseZSpeed() : mouse_x_speed_1#=0.0 : mouse_y_speed_1#=0.0
@@ -7414,7 +7414,7 @@ Function DrawMenu()
 				y = y + 75*MenuScale
 				If (Not SelectedDifficulty\permaDeath) Then
 					If GameSaved Then
-						If DrawButton(x, y, 390*MenuScale, 60*MenuScale, "Load Game") Then
+						If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Load Game") Then
 							DrawLoading(0)
 							
 							MenuOpen = False
@@ -7454,19 +7454,19 @@ Function DrawMenu()
 							Return
 						EndIf
 					Else
-						DrawButton(x,y,390*MenuScale, 60*MenuScale,"Load Game",True,False,True,True)
+						DrawButton(x,y,430*MenuScale, 60*MenuScale,"Load Game",True,False,True,True)
 					EndIf
 					y = y + 75*MenuScale
-			EndIf
-				
-				If DrawButton(x, y, 390*MenuScale, 60*MenuScale, "Achievements") Then AchievementsMenu = 1
+				EndIf
+			
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Achievements") Then AchievementsMenu = 1
 				y = y + 75*MenuScale
-				If DrawButton(x, y, 390*MenuScale, 60*MenuScale, "Options") Then OptionsMenu = 1
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Options") Then OptionsMenu = 1
 				y = y + 75*MenuScale
 			Else
-				y = y+104*MenuScale
+				y = y+75*MenuScale
 				If GameSaved And (Not SelectedDifficulty\permaDeath) Then
-					If DrawButton(x, y, 390*MenuScale, 60*MenuScale, "Load Game") Then
+					If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Load Game") Then
 						DrawLoading(0)
 						
 						MenuOpen = False
@@ -7506,9 +7506,9 @@ Function DrawMenu()
 						Return
 					EndIf
 				Else
-					DrawButton(x,y,390*MenuScale, 60*MenuScale,"Load Game",True,False,True,True)
+					DrawButton(x,y,430*MenuScale, 60*MenuScale,"Load Game",True,False,True,True)
 				EndIf
-				If DrawButton(x, y + 80*MenuScale, 390*MenuScale, 60*MenuScale, "Quit to Menu") Then
+				If DrawButton(x, y + 75*MenuScale, 430*MenuScale, 60*MenuScale, "Quit to Menu") Then
 					NullGame()
 					MenuOpen = False
 					MainMenuOpen = True
@@ -7517,21 +7517,18 @@ Function DrawMenu()
 					ResetInput()
 					Return
 				EndIf
-				y= y + 80*MenuScale
+				y = y + 75*MenuScale
 			EndIf
-			
 			If KillTimer >= 0 And (Not MainMenuOpen)
-				If DrawButton(x, y, 390*MenuScale, 60*MenuScale, "Quit") Then
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Quit") Then
 					QuitMSG = 1
 				EndIf
 			EndIf
 			
 			AASetFont Font1
-			If KillTimer < 0 Then RowText(DeathMSG$, x, y + 80*MenuScale, 390*MenuScale, 600*MenuScale)
+			If KillTimer < 0 Then RowText(DeathMSG$, x, y + 75*MenuScale, 390*MenuScale, 600*MenuScale)
 		EndIf
-		
 		If Fullscreen Then DrawImage CursorIMG, ScaledMouseX(),ScaledMouseY()
-		
 	End If
 	
 	AASetFont Font1
