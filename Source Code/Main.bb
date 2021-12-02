@@ -1716,7 +1716,7 @@ Global PlayerDetected%
 Global PrevInjuries#,PrevBloodloss#
 Global NoTarget% = False
 
-Global NVGImages = LoadAnimImage("GFX\battery.png",64,64,0,2)
+Global NVGImages = LoadImage_Strict("GFX\battery.png")
 MaskImage NVGImages,255,0,255
 
 Global Wearing1499% = False
@@ -10076,7 +10076,7 @@ Function RenderWorld2()
 			For l=0 To Floor((power%+50)*0.01)
 				Rect 45,GraphicHeight*0.5-(l*20),54,10,True
 			Next
-			DrawImage NVGImages,40,GraphicHeight*0.5+30,1
+			DrawImage NVGImages,40,GraphicHeight*0.5+30
 			
 			Color 255,255,255
 		ElseIf WearingNightVision=1 And hasBattery<>0
@@ -10088,7 +10088,7 @@ Function RenderWorld2()
 			For l=0 To Floor((power%+50)*0.01)
 				Rect 45,GraphicHeight*0.5-(l*20),54,10,True
 			Next
-			DrawImage NVGImages,40,GraphicHeight*0.5+30,0
+			DrawImage NVGImages,40,GraphicHeight*0.5+30
 		EndIf
 	EndIf
 	
