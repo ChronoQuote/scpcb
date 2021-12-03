@@ -393,6 +393,8 @@ Function CreateItem.Items(name$, tempname$, x#, y#, z#, r%=0,g%=0,b%=0,a#=1.0,in
 	i\DropSpeed = 0.0
 	
 	If tempname = "cup" Then
+		i\state = 1.0
+		
 		i\r=r
 		i\g=g
 		i\b=b
@@ -410,7 +412,6 @@ Function CreateItem.Items(name$, tempname$, x#, y#, z#, r%=0,g%=0,b%=0,a#=1.0,in
 		Else
 			EntityAlpha liquid, Abs(a)
 		EndIf
-		
 		
 		EntityShininess liquid, 1.0
 	EndIf
@@ -819,7 +820,7 @@ Function Update294()
 	CatchErrors("Uncaught (Update294)")
 	
 	If CameraShakeTimer > 0 Then
-		CameraShakeTimer = CameraShakeTimer - (FPSfactor/70)
+		CameraShakeTimer = Max(CameraShakeTimer - (FPSfactor/70), 0)
 		CameraShake = 2
 	EndIf
 	
