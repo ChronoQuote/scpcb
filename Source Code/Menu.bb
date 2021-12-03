@@ -691,7 +691,11 @@ Function UpdateMainMenu()
 					;[End Block]
 				ElseIf MainMenuTab = 5 ;Audio
 					;[Block]
-					height = 220 * MenuScale
+					If EnableUserTracks Then
+						height = 220 * MenuScale
+					Else
+						height = 160 * MenuScale
+					EndIf
 					DrawFrame(x, y, width, height)	
 					
 					y = y + 20*MenuScale
@@ -1008,7 +1012,7 @@ Function UpdateMainMenu()
 						AATextEnable_Prev% = AATextEnable
 					EndIf
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_antialiastext)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_AntialiasText)
 					EndIf
 					;[End Block]
 				EndIf
