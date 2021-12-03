@@ -9023,7 +9023,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "S-NAV 300 Navigator", "S-NAV 310 Navigator", "S-NAV Navigator", "S-NAV Navigator Ultimate"
 			Select setting
 				Case "rough", "coarse"
-					it2 = CreateItem("Electronical components", "misc", x, y, z)
+					it2 = CreateItem("Electronical Components", "misc", x, y, z)
 				Case "1:1"
 					it2 = CreateItem("S-NAV Navigator", "nav", x, y, z)
 					it2\state = 100
@@ -9039,7 +9039,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Radio Transceiver"
 			Select setting
 				Case "rough", "coarse"
-					it2 = CreateItem("Electronical components", "misc", x, y, z)
+					it2 = CreateItem("Electronical Components", "misc", x, y, z)
 				Case "1:1"
 					it2 = CreateItem("Radio Transceiver", "18vradio", x, y, z)
 					it2\state = 100
@@ -9155,7 +9155,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case "veryfinesyringe"
 					Select setting
 						Case "rough", "coarse", "1:1", "fine"
-							it2 = CreateItem("Electronical components", "misc", x, y, z)	
+							it2 = CreateItem("Electronical Components", "misc", x, y, z)	
 						Case "very fine"
 							n.NPCs = CreateNPC(NPCtype008,x,y,z)
 							n\State = 2
@@ -9164,7 +9164,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			
 			RemoveItem(item)
 			
-		Case "SCP-500-01", "Upgraded pill", "Pill"
+		Case "SCP-500-01", "Upgraded Pill", "Pill"
 			Select setting
 				Case "rough", "coarse"
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
@@ -9183,11 +9183,11 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					If (Not no427Spawn) Then
 						it2 = CreateItem("SCP-427", "scp427", x, y, z)
 					Else
-						it2 = CreateItem("Upgraded pill", "scp500death", x, y, z)
+						it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					EndIf
 					RemoveItem(item)
 				Case "very fine"
-					it2 = CreateItem("Upgraded pill", "scp500death", x, y, z)
+					it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					RemoveItem(item)
 			End Select
 			
@@ -9356,7 +9356,7 @@ Function Use294()
 				EndIf
 				
 				If Input294<>""
-					Local loc% = GetINISectionLocation("DATA\SCP-294.ini",Input294)
+					Local loc% = GetINISectionLocation("DATA\SCP-294.ini",Input294,True)
 				EndIf
 				
 				If loc > 0 Then
