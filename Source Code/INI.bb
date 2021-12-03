@@ -148,7 +148,7 @@ Function GetINIInt2%(file$, start%, parameter$, defaultvalue$="")
 	EndIf
 End Function
 
-Function GetINISectionLocation%(file$, section$)
+Function GetINISectionLocation%(file$, section$, setinput294%=False)
 	Local Temp%
 	Local f% = ReadFile(file)
 	
@@ -159,14 +159,15 @@ Function GetINISectionLocation%(file$, section$)
 		Local strtemp$ = ReadLine(f)
 		n=n+1
 		If Left(strtemp,1) = "[" Then
-			strtemp$ = Lower(strtemp)
-			Temp = Instr(strtemp, section)
-			If Temp>0 Then
+			Temp = Instr(Lower(strtemp), section)
+			While Temp>0
 				If (Mid(strtemp, Temp-1, 1)="[" Or Mid(strtemp, Temp-1, 1)="|") And (Mid(strtemp, Temp+Len(section), 1)="]" Or Mid(strtemp, Temp+Len(section), 1)="|") Then
 					CloseFile f
+					If setinput294 Then Input294 = Mid(strtemp, Temp, Len(section))
 					Return n
 				EndIf
-			EndIf
+				Temp = Instr(Lower(strtemp), section, Temp+Len(section)+1)
+			Wend
 		EndIf
 	Wend
 	

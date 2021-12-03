@@ -3422,7 +3422,7 @@ Function DrawEnding()
 				
 				Color(255, 255, 255)
 				AASetFont Font2
-				AAText(x + width / 2 + 40*MenuScale, y + 20*MenuScale, "THE END", True)
+				AAText(x + width / 2 + 40*MenuScale, y + 17*MenuScale, "THE END", True)
 				AASetFont Font1
 				
 				If AchievementsMenu=0 Then 
@@ -3467,7 +3467,7 @@ Function DrawEnding()
 					x = x+width/2
 					y = y+height-100*MenuScale
 					
-					If DrawButton(x-145*MenuScale,y-200*MenuScale,430*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then
+					If DrawButton(x-170*MenuScale,y-273*MenuScale,430*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then
 						AchievementsMenu = 1
 					EndIf
 					
@@ -3483,7 +3483,7 @@ Function DrawEnding()
 ;						FlushKeys()
 ;					EndIf
 					
-					If DrawButton(x-145*MenuScale,y-100*MenuScale,430*MenuScale,60*MenuScale,"MAIN MENU", True)
+					If DrawButton(x-170*MenuScale,y-173*MenuScale,430*MenuScale,60*MenuScale,"MAIN MENU", True)
 						ShouldPlay = 24
 						NowPlaying = ShouldPlay
 						For i=0 To 9
@@ -5715,19 +5715,16 @@ Function DrawGUI()
 				Case "cup"
 					;[Block]
 					If CanUseItem(False,False,True)
-						SelectedItem\name = Trim(Lower(SelectedItem\name))
-						If Left(SelectedItem\name, Min(6,Len(SelectedItem\name))) = "cup of" Then
-							SelectedItem\name = Right(SelectedItem\name, Len(SelectedItem\name)-7)
-						ElseIf Left(SelectedItem\name, Min(8,Len(SelectedItem\name))) = "a cup of" 
-							SelectedItem\name = Right(SelectedItem\name, Len(SelectedItem\name)-9)
+						strtemp = Trim(Lower(SelectedItem\name))
+						If Left(strtemp, 6) = "cup of" Then
+							strtemp = Right(strtemp, Len(strtemp)-7)
+						ElseIf Left(strtemp, 8) = "a cup of" 
+							strtemp = Right(strtemp, Len(strtemp)-9)
 						EndIf
-						
-						;the multiplier for refined items is more than 1.0 (fine setting increases it by 1, very fine doubles it)
-						x2 = (SelectedItem\state+1.0)
 						
 						Local iniStr$ = "DATA\SCP-294.ini"
 						
-						Local loc% = GetINISectionLocation(iniStr, SelectedItem\name)
+						Local loc% = GetINISectionLocation(iniStr, strtemp)
 						
 						;Stop
 						
@@ -5738,24 +5735,44 @@ Function DrawGUI()
 							DeathMSG = GetINIString2(iniStr, loc, "deathmessage")
 							If GetINIInt2(iniStr, loc, "lethal") Then Kill()
 						EndIf
-						BlurTimer = GetINIInt2(iniStr, loc, "blur")*70;*temp
-						If VomitTimer = 0 Then VomitTimer = GetINIInt2(iniStr, loc, "vomit")
-						CameraShakeTimer = GetINIString2(iniStr, loc, "camerashake")
+						BlurTimer = Max(BlurTimer + GetINIInt2(iniStr, loc, "blur")*70,0);*temp
+						If VomitTimer = 0 Then
+							VomitTimer = GetINIInt2(iniStr, loc, "vomit")
+						Else
+							VomitTimer = Min(VomitTimer, GetINIInt2(iniStr, loc, "vomit"))
+						EndIf
+						CameraShakeTimer = Max(CameraShakeTimer + GetINIString2(iniStr, loc, "camerashake"),0)
 						Injuries = Max(Injuries + GetINIInt2(iniStr, loc, "damage"),0);*temp
 						Bloodloss = Max(Bloodloss + GetINIInt2(iniStr, loc, "blood loss"),0);*temp
-						strtemp =  GetINIString2(iniStr, loc, "sound")
-						If strtemp<>"" Then
+						strtemp = GetINIString2(iniStr, loc, "sound")
+						If strtemp <> "" Then
 							PlaySound_Strict LoadTempSound(strtemp)
 						EndIf
 						If GetINIInt2(iniStr, loc, "stomachache") Then SCP1025state[3]=1
 						
-						DeathTimer=GetINIInt2(iniStr, loc, "deathtimer")*70
+						If DeathTimer = 0 Then
+							DeathTimer = GetINIInt2(iniStr, loc, "deathtimer")*70
+						Else
+							DeathTimer = Min(DeathTimer, GetINIInt2(iniStr, loc, "deathtimer")*70)
+						EndIf
 						
-						BlinkEffect = Float(GetINIString2(iniStr, loc, "blink effect", 1.0))^x2
-						BlinkEffectTimer = Float(GetINIString2(iniStr, loc, "blink effect timer", 1.0))*x2
-						
-						StaminaEffect = Float(GetINIString2(iniStr, loc, "stamina effect", 1.0))^x2
-						StaminaEffectTimer = Float(GetINIString2(iniStr, loc, "stamina effect timer", 1.0))*x2
+						;the state of refined drinks is more than 1.0 (fine setting increases it by 1, very fine doubles it)
+						strtemp = GetINIString2(iniStr, loc, "blink effect")
+						If strtemp <> "" Then
+							BlinkEffect = Float(strtemp)^SelectedItem\state
+						EndIf
+						strtemp = GetINIString2(iniStr, loc, "blink effect timer")
+						If strtemp <> "" Then
+							BlinkEffectTimer = Float(strtemp)*SelectedItem\state
+						EndIf
+						strtemp = GetINIString2(iniStr, loc, "stamina effect")
+						If strtemp <> "" Then
+							StaminaEffect = Float(strtemp)^SelectedItem\state
+						EndIf
+						strtemp = GetINIString2(iniStr, loc, "stamina effect timer")
+						If strtemp <> "" Then
+							StaminaEffectTimer = Float(strtemp)*SelectedItem\state
+						EndIf
 						
 						strtemp = GetINIString2(iniStr, loc, "refusemessage")
 						If strtemp <> "" Then
@@ -9006,7 +9023,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "S-NAV 300 Navigator", "S-NAV 310 Navigator", "S-NAV Navigator", "S-NAV Navigator Ultimate"
 			Select setting
 				Case "rough", "coarse"
-					it2 = CreateItem("Electronical components", "misc", x, y, z)
+					it2 = CreateItem("Electronical Components", "misc", x, y, z)
 				Case "1:1"
 					it2 = CreateItem("S-NAV Navigator", "nav", x, y, z)
 					it2\state = 100
@@ -9022,7 +9039,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 		Case "Radio Transceiver"
 			Select setting
 				Case "rough", "coarse"
-					it2 = CreateItem("Electronical components", "misc", x, y, z)
+					it2 = CreateItem("Electronical Components", "misc", x, y, z)
 				Case "1:1"
 					it2 = CreateItem("Radio Transceiver", "18vradio", x, y, z)
 					it2\state = 100
@@ -9138,7 +9155,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case "veryfinesyringe"
 					Select setting
 						Case "rough", "coarse", "1:1", "fine"
-							it2 = CreateItem("Electronical components", "misc", x, y, z)	
+							it2 = CreateItem("Electronical Components", "misc", x, y, z)	
 						Case "very fine"
 							n.NPCs = CreateNPC(NPCtype008,x,y,z)
 							n\State = 2
@@ -9147,7 +9164,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			
 			RemoveItem(item)
 			
-		Case "SCP-500-01", "Upgraded pill", "Pill"
+		Case "SCP-500-01", "Upgraded Pill", "Pill"
 			Select setting
 				Case "rough", "coarse"
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
@@ -9166,11 +9183,11 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					If (Not no427Spawn) Then
 						it2 = CreateItem("SCP-427", "scp427", x, y, z)
 					Else
-						it2 = CreateItem("Upgraded pill", "scp500death", x, y, z)
+						it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					EndIf
 					RemoveItem(item)
 				Case "very fine"
-					it2 = CreateItem("Upgraded pill", "scp500death", x, y, z)
+					it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					RemoveItem(item)
 			End Select
 			
@@ -9193,7 +9210,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						Case "very fine"
 							it2 = CreateItem("cup", "cup", x,y,z, Min(item\r*Rnd(0.5,1.5),255),Min(item\g*Rnd(0.5,1.5),255),Min(item\b*Rnd(0.5,1.5),255),item\a)
 							it2\name = item\name
-							it2\state = item\state*2+1.0
+							it2\state = item\state*2
 							If Rand(5)=1 Then
 								ExplosionTimer = 135
 							EndIf
@@ -9235,20 +9252,20 @@ Function Use294()
 	temp = True
 	If PlayerRoom\SoundCHN<>0 Then temp = False
 	
-	AAText x+907, y+185, Input294, True,True
+	AAText x+905, y+185, Right(Input294,13), True,True
 	
 	If temp Then
 		If MouseHit1 Then
 			xtemp = Floor((ScaledMouseX()-x-228) / 35.5)
 			ytemp = Floor((ScaledMouseY()-y-342) / 36.5)
 			
+			temp = False
+			
 			If ytemp => 0 And ytemp < 5 Then
 				If xtemp => 0 And xtemp < 10 Then
 					PlaySound_Strict ButtonSFX
 					
 					strtemp = ""
-					
-					temp = False
 					
 					Select ytemp
 						Case 0
@@ -9330,8 +9347,6 @@ Function Use294()
 			
 			Input294 = Input294 + strtemp
 			
-			Input294 = Left(Input294, Min(Len(Input294),15))
-			
 			If temp And Input294<>"" Then ;dispense
 				Input294 = Trim(Lower(Input294))
 				If Left(Input294, Min(7,Len(Input294))) = "cup of " Then
@@ -9341,7 +9356,7 @@ Function Use294()
 				EndIf
 				
 				If Input294<>""
-					Local loc% = GetINISectionLocation("DATA\SCP-294.ini",Input294)
+					Local loc% = GetINISectionLocation("DATA\SCP-294.ini",Input294,True)
 				EndIf
 				
 				If loc > 0 Then

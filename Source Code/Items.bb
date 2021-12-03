@@ -227,7 +227,7 @@ Function InitItemTemplates()
 	
 	it = CreateItemTemplate("Origami", "misc", "GFX\items\origami.b3d", "GFX\items\INVorigami.jpg", "", 0.003) : it\sound = 0
 	
-	CreateItemTemplate("Electronical components", "misc", "GFX\items\electronics.x", "GFX\items\INVelectronics.jpg", "", 0.0011)
+	CreateItemTemplate("Electronical Components", "misc", "GFX\items\electronics.x", "GFX\items\INVelectronics.jpg", "", 0.0011)
 	
 	it = CreateItemTemplate("Metal Panel", "scp148", "GFX\items\metalpanel.x", "GFX\items\INVmetalpanel.jpg", "", RoomScale) : it\sound = 2
 	it = CreateItemTemplate("SCP-148 Ingot", "scp148ingot", "GFX\items\scp148.x", "GFX\items\INVscp148.jpg", "", RoomScale) : it\sound = 2
@@ -302,7 +302,7 @@ Function InitItemTemplates()
 	it = CreateItemTemplate("Wallet","wallet", "GFX\items\wallet.b3d", "GFX\items\INVwallet.jpg", "", 0.0005,"","",1) : it\sound = 2
 	
 	CreateItemTemplate("SCP-427","scp427","GFX\items\427.b3d","GFX\items\INVscp427.jpg", "", 0.001)
-	it = CreateItemTemplate("Upgraded pill", "scp500death", "GFX\items\pill.b3d", "GFX\items\INVpill.jpg", "", 0.0001) : it\sound = 2
+	it = CreateItemTemplate("Upgraded Pill", "scp500death", "GFX\items\pill.b3d", "GFX\items\INVpill.jpg", "", 0.0001) : it\sound = 2
 	EntityColor it\obj,255,0,0
 	it = CreateItemTemplate("Pill", "pill", "GFX\items\pill.b3d", "GFX\items\INVpillwhite.jpg", "", 0.0001) : it\sound = 2
 	EntityColor it\obj,255,255,255
@@ -393,6 +393,8 @@ Function CreateItem.Items(name$, tempname$, x#, y#, z#, r%=0,g%=0,b%=0,a#=1.0,in
 	i\DropSpeed = 0.0
 	
 	If tempname = "cup" Then
+		i\state = 1.0
+		
 		i\r=r
 		i\g=g
 		i\b=b
@@ -410,7 +412,6 @@ Function CreateItem.Items(name$, tempname$, x#, y#, z#, r%=0,g%=0,b%=0,a#=1.0,in
 		Else
 			EntityAlpha liquid, Abs(a)
 		EndIf
-		
 		
 		EntityShininess liquid, 1.0
 	EndIf
@@ -819,7 +820,7 @@ Function Update294()
 	CatchErrors("Uncaught (Update294)")
 	
 	If CameraShakeTimer > 0 Then
-		CameraShakeTimer = CameraShakeTimer - (FPSfactor/70)
+		CameraShakeTimer = Max(CameraShakeTimer - (FPSfactor/70), 0)
 		CameraShake = 2
 	EndIf
 	
