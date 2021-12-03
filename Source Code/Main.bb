@@ -9235,20 +9235,20 @@ Function Use294()
 	temp = True
 	If PlayerRoom\SoundCHN<>0 Then temp = False
 	
-	AAText x+907, y+185, Input294, True,True
+	AAText x+905, y+185, Right(Input294,13), True,True
 	
 	If temp Then
 		If MouseHit1 Then
 			xtemp = Floor((ScaledMouseX()-x-228) / 35.5)
 			ytemp = Floor((ScaledMouseY()-y-342) / 36.5)
 			
+			temp = False
+			
 			If ytemp => 0 And ytemp < 5 Then
 				If xtemp => 0 And xtemp < 10 Then
 					PlaySound_Strict ButtonSFX
 					
 					strtemp = ""
-					
-					temp = False
 					
 					Select ytemp
 						Case 0
@@ -9329,8 +9329,6 @@ Function Use294()
 			EndIf
 			
 			Input294 = Input294 + strtemp
-			
-			Input294 = Left(Input294, Min(Len(Input294),15))
 			
 			If temp And Input294<>"" Then ;dispense
 				Input294 = Trim(Lower(Input294))
