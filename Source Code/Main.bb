@@ -36,7 +36,7 @@ Global UpdaterFont%
 Global Font1%, Font2%, Font3%, Font4%, Font5%
 Global ConsoleFont%
 
-Global VersionNumber$ = "1.3.11"
+Const VersionNumber$ = "1.3.11"
 Global CompatibleNumber$ = "1.3.11" ;Only change this if the version given isn't working with the current build version - ENDSHN
 
 Global MenuWhite%, MenuGray%, MenuBlack%
@@ -6972,7 +6972,7 @@ Function DrawMenu()
 					AAText(x, y, "Enable bump mapping:")	
 					BumpEnabled = DrawTick(x + 270 * MenuScale, y + MenuScale, BumpEnabled, True)
 					If MouseOn(x + 270 * MenuScale, y + MenuScale, 20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"bump")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Bump)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -6981,7 +6981,7 @@ Function DrawMenu()
 					AAText(x, y, "VSync:")
 					Vsync% = DrawTick(x + 270 * MenuScale, y + MenuScale, Vsync%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"vsync")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_VSync)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -6990,7 +6990,7 @@ Function DrawMenu()
 					AAText(x, y, "Anti-aliasing:")
 					Opt_AntiAlias = DrawTick(x + 270 * MenuScale, y + MenuScale, Opt_AntiAlias%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"antialias")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Antialias)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -6999,7 +6999,7 @@ Function DrawMenu()
 					AAText(x, y, "Enable room lights:")
 					EnableRoomLights = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableRoomLights)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"roomlights")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_RoomLights)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -7008,7 +7008,7 @@ Function DrawMenu()
 					Color 255,255,255
 					AAText(x, y, "Screen gamma")
 					If MouseOn(x+270*MenuScale,y+6*MenuScale,100*MenuScale+14,20) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"gamma",ScreenGamma)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Gamma,ScreenGamma)
 					EndIf
 					
 					;y = y + 50*MenuScale
@@ -7019,7 +7019,7 @@ Function DrawMenu()
 					AAText(x, y, "Particle amount:")
 					ParticleAmount = Slider3(x+270*MenuScale,y+6*MenuScale,100*MenuScale,ParticleAmount,2,"MINIMAL","REDUCED","FULL")
 					If (MouseOn(x + 270 * MenuScale, y-6*MenuScale, 100*MenuScale+14, 20) And OnSliderID=0) Or OnSliderID=2
-						DrawOptionsTooltip(tx,ty,tw,th,"particleamount",ParticleAmount)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ParticleAmount,ParticleAmount)
 					EndIf
 					
 					y=y+50*MenuScale
@@ -7041,7 +7041,7 @@ Function DrawMenu()
 					End Select
 					TextureLodBias TextureFloat
 					If (MouseOn(x+270*MenuScale,y-6*MenuScale,100*MenuScale+14,20) And OnSliderID=0) Or OnSliderID=3
-						DrawOptionsTooltip(tx,ty,tw,th+100*MenuScale,"texquality")
+						DrawOptionsTooltip(tx,ty,tw,th+100*MenuScale,Tooltip_TexQuality)
 					EndIf
 					
 					y=y+50*MenuScale
@@ -7049,7 +7049,7 @@ Function DrawMenu()
 					AAText(x, y, "Save textures in the VRAM:")	
 					EnableVRam = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableVRam, True)
 					If MouseOn(x + 270 * MenuScale, y + MenuScale, 20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"vram")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_VRAM)
 					EndIf
 					
 					;[End Block]
@@ -7062,7 +7062,7 @@ Function DrawMenu()
 					Color 255,255,255
 					AAText(x, y, "Music volume:")
 					If MouseOn(x+250*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"musicvol",MusicVolume)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MusicVol,MusicVolume)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7072,7 +7072,7 @@ Function DrawMenu()
 					Color 255,255,255
 					AAText(x, y, "Sound volume:")
 					If MouseOn(x+250*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"soundvol",PrevSFXVolume)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_SoundVol,PrevSFXVolume)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7081,7 +7081,7 @@ Function DrawMenu()
 					AAText x, y, "Sound auto-release:"
 					EnableSFXRelease = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableSFXRelease,True)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th+220*MenuScale,"sfxautorelease")
+						DrawOptionsTooltip(tx,ty,tw,th+220*MenuScale,Tooltip_SFXAutoRelease)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7090,7 +7090,7 @@ Function DrawMenu()
 					AAText x, y, "Enable user tracks:"
 					EnableUserTracks = DrawTick(x + 270 * MenuScale, y + MenuScale, EnableUserTracks,True)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"usertrack")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrack)
 					EndIf
 					
 					If EnableUserTracks
@@ -7104,11 +7104,11 @@ Function DrawMenu()
 							AAText x, y + 20 * MenuScale, "Random"
 						EndIf
 						If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-							DrawOptionsTooltip(tx,ty,tw,th,"usertrackmode")
+							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrackMode)
 						EndIf
 						;DrawButton(x, y + 30 * MenuScale, 190 * MenuScale, 25 * MenuScale, "Scan for User Tracks",False)
 						;If MouseOn(x,y+30*MenuScale,190*MenuScale,25*MenuScale)
-						;	DrawOptionsTooltip(tx,ty,tw,th,"usertrackscan")
+						;	DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrackScan)
 						;EndIf
 					EndIf
 					;[End Block]
@@ -7121,7 +7121,7 @@ Function DrawMenu()
 					Color(255, 255, 255)
 					AAText(x, y, "Mouse sensitivity:")
 					If MouseOn(x+270*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"mousesensitivity",MouseSens)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MouseSensitivity,MouseSens)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7130,7 +7130,7 @@ Function DrawMenu()
 					AAText(x, y, "Invert mouse Y-axis:")
 					InvertMouse = DrawTick(x + 270 * MenuScale, y + MenuScale, InvertMouse)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"mouseinvert")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MouseInvert)
 					EndIf
 					
 					y = y + 40*MenuScale
@@ -7139,7 +7139,7 @@ Function DrawMenu()
 					Color(255, 255, 255)
 					AAText(x, y, "Mouse smoothing:")
 					If MouseOn(x+270*MenuScale,y-4*MenuScale,100*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"mousesmoothing",MouseSmooth)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MouseSmoothing,MouseSmooth)
 					EndIf
 					
 					Color(255, 255, 255)
@@ -7171,7 +7171,7 @@ Function DrawMenu()
 					InputBox(x + 200 * MenuScale, y + 200 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CONSOLE,210)),12)
 					
 					If MouseOn(x,y,300*MenuScale,220*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"controls")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Controls)
 					EndIf
 					
 					For i = 0 To 227
@@ -7212,7 +7212,7 @@ Function DrawMenu()
 					AAText(x, y, "Show HUD:")	
 					HUDenabled = DrawTick(x + 270 * MenuScale, y + MenuScale, HUDenabled)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"hud")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_HUD)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7221,7 +7221,7 @@ Function DrawMenu()
 					AAText(x, y, "Enable console:")
 					CanOpenConsole = DrawTick(x +270 * MenuScale, y + MenuScale, CanOpenConsole)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"consoleenable")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ConsoleEnable)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7230,7 +7230,7 @@ Function DrawMenu()
 					AAText(x, y, "Open console on error:")
 					ConsoleOpening = DrawTick(x + 270 * MenuScale, y + MenuScale, ConsoleOpening)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"consoleerror")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ConsoleError)
 					EndIf
 					
 					y = y + 50*MenuScale
@@ -7239,7 +7239,7 @@ Function DrawMenu()
 					AAText(x, y, "Achievement popups:")
 					AchvMSGenabled% = DrawTick(x + 270 * MenuScale, y, AchvMSGenabled%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"achpopup")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_AchPopup)
 					EndIf
 					
 					y = y + 50*MenuScale
@@ -7248,7 +7248,7 @@ Function DrawMenu()
 					AAText(x, y, "Show FPS:")
 					ShowFPS% = DrawTick(x + 270 * MenuScale, y, ShowFPS%)
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"showfps")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ShowFPS)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -7267,14 +7267,14 @@ Function DrawMenu()
 						Color 255,255,0
 						AAText(x + 5 * MenuScale, y + 25 * MenuScale, Framelimit%+" FPS")
 						If MouseOn(x+150*MenuScale,y+30*MenuScale,100*MenuScale+14,20)
-							DrawOptionsTooltip(tx,ty,tw,th,"framelimit",Framelimit)
+							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_FrameLimit,Framelimit)
 						EndIf
 					Else
 						CurrFrameLimit# = 0.0
 						Framelimit = 0
 					EndIf
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"framelimit",Framelimit)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_FrameLimit,Framelimit)
 					EndIf
 					
 					y = y + 80*MenuScale
@@ -7308,7 +7308,7 @@ Function DrawMenu()
 						AATextEnable_Prev% = AATextEnable
 					EndIf
 					If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"antialiastext")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_AntialiasText)
 					EndIf
 					;[End Block]
 			End Select
@@ -8649,6 +8649,12 @@ Function UpdateGameTimer%()
 	EndIf
 End Function
 
+Const ROUGH% = -2
+Const COARSE% = -1
+Const ONE_TO_ONE% = 0
+Const FINE% = 1
+Const VERY_FINE% = 2
+
 Function Use914(item.Items, setting$, x#, y#, z#)
 	
 	RefinedItems = RefinedItems+1
@@ -8657,30 +8663,30 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 	Select item\itemtemplate\name
 		Case "Gas Mask", "Heavy Gas Mask"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
-				Case "1:1"
+				Case ONE_TO_ONE
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
-				Case "fine", "very fine"
+				Case FINE, VERY_FINE
 					it2 = CreateItem("Gas Mask", "supergasmask", x, y, z)
 					RemoveItem(item)
 			End Select
 		Case "SCP-1499"
-				Select setting
-				Case "rough", "coarse"
+			Select setting
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Gas Mask", "gasmask", x, y, z)
 					RemoveItem(item)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("SCP-1499", "super1499", x, y, z)
 					RemoveItem(item)
-				Case "very fine"
+				Case VERY_FINE
 					n.NPCs = CreateNPC(NPCtype1499,x,y,z)
 					n\State = 1
 					n\Sound = LoadSound_Strict("SFX\SCP\1499\Triggered.ogg")
@@ -8690,23 +8696,23 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			End Select
 		Case "Ballistic Vest"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
-				Case "1:1"
+				Case ONE_TO_ONE
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Heavy Ballistic Vest", "finevest", x, y, z)
 					RemoveItem(item)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Bulky Ballistic Vest", "veryfinevest", x, y, z)
 					RemoveItem(item)
 			End Select
 		Case "Clipboard"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(17, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
 					For i% = 0 To 19
@@ -8714,51 +8720,51 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						item\SecondInv[i]=Null
 					Next
 					RemoveItem(item)
-				Case "1:1"
+				Case ONE_TO_ONE
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
-				Case "fine"
+				Case FINE
 					item\invSlots = Max(item\invSlots,15)
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
-				Case "very fine"
+				Case VERY_FINE
 					item\invSlots = Max(item\invSlots,20)
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
 			End Select
 		Case "Cowbell"
 			Select setting
-				Case "rough","coarse"
+				Case ROUGH,COARSE
 					d.Decals = CreateDecal(0, x, 8*RoomScale+0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
-				Case "1:1","fine","very fine"
+				Case ONE_TO_ONE,FINE,VERY_FINE
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
 			End Select
 		Case "Night Vision Goggles"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
 					RemoveItem(item)
-				Case "1:1"
+				Case ONE_TO_ONE
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Night Vision Goggles", "finenvgoggles", x, y, z)
 					RemoveItem(item)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Night Vision Goggles", "supernv", x, y, z)
 					it2\state = 1000
 					RemoveItem(item)
 			End Select
 		Case "Metal Panel", "SCP-148 Ingot"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					it2 = CreateItem("SCP-148 Ingot", "scp148ingot", x, y, z)
 					RemoveItem(item)
-				Case "1:1", "fine", "very fine"
+				Case ONE_TO_ONE, FINE, VERY_FINE
 					it2 = Null
 					For it.Items = Each Items
 						If it<>item And it\collider <> 0 And it\Picked = False Then
@@ -8800,10 +8806,10 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			End Select
 		Case "Severed Hand", "Black Severed Hand"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1", "fine", "very fine"
+				Case ONE_TO_ONE, FINE, VERY_FINE
 					If (item\itemtemplate\name = "Severed Hand")
 						it2 = CreateItem("Black Severed Hand", "hand2", x, y, z)
 					Else
@@ -8813,29 +8819,29 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			RemoveItem(item)
 		Case "First Aid Kit", "Blue First Aid Kit"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
-				If Rand(2)=1 Then
-					it2 = CreateItem("Blue First Aid Kit", "firstaid2", x, y, z)
-				Else
-				    it2 = CreateItem("First Aid Kit", "firstaid", x, y, z)
-				EndIf
-				Case "fine"
+				Case ONE_TO_ONE
+					If Rand(2)=1 Then
+						it2 = CreateItem("Blue First Aid Kit", "firstaid2", x, y, z)
+					Else
+						it2 = CreateItem("First Aid Kit", "firstaid", x, y, z)
+					EndIf
+				Case FINE
 					it2 = CreateItem("Small First Aid Kit", "finefirstaid", x, y, z)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Strange Bottle", "veryfinefirstaid", x, y, z)
 			End Select
 			RemoveItem(item)
 		Case "Level 1 Key Card", "Level 2 Key Card", "Level 3 Key Card", "Level 4 Key Card", "Level 5 Key Card", "Key Card"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Playing Card", "misc", x, y, z)
-				Case "fine"
+				Case FINE
 					Select item\itemtemplate\name
 						Case "Level 1 Key Card"
 							Select SelectedDifficulty\otherFactors
@@ -8940,7 +8946,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 									EndIf
 							End Select		
 					End Select
-				Case "very fine"
+				Case VERY_FINE
 					CurrAchvAmount%=0
 					For i = 0 To MAXACHIEVEMENTS-1
 						If Achievements(i)=True
@@ -8975,37 +8981,37 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			RemoveItem(item)
 		Case "Key Card Omni"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					If Rand(2)=1 Then
 						it2 = CreateItem("Mastercard", "misc", x, y, z)
 					Else
 						it2 = CreateItem("Playing Card", "misc", x, y, z)			
 					EndIf	
-				Case "fine", "very fine"
+				Case FINE, VERY_FINE
 					it2 = CreateItem("Key Card Omni", "key6", x, y, z)
 			End Select			
 			
 			RemoveItem(item)
 		Case "Playing Card", "Coin", "Quarter"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Level 1 Key Card", "key1", x, y, z)	
-			    Case "fine", "very fine"
+			    Case FINE, VERY_FINE
 					it2 = CreateItem("Level 2 Key Card", "key2", x, y, z)
 			End Select
 			RemoveItem(item)
 		Case "Mastercard"
 			Select setting
-				Case "rough"
+				Case ROUGH
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "coarse"
+				Case COARSE
 					it2 = CreateItem("Quarter", "25ct", x, y, z)
 					Local it3.Items,it4.Items,it5.Items
 					it3 = CreateItem("Quarter", "25ct", x, y, z)
@@ -9014,23 +9020,23 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					EntityType (it3\collider, HIT_ITEM)
 					EntityType (it4\collider, HIT_ITEM)
 					EntityType (it5\collider, HIT_ITEM)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Level 1 Key Card", "key1", x, y, z)	
-			    Case "fine", "very fine"
+			    Case FINE, VERY_FINE
 					it2 = CreateItem("Level 2 Key Card", "key2", x, y, z)
 			End Select
 			RemoveItem(item)
 		Case "S-NAV 300 Navigator", "S-NAV 310 Navigator", "S-NAV Navigator", "S-NAV Navigator Ultimate"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					it2 = CreateItem("Electronical Components", "misc", x, y, z)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("S-NAV Navigator", "nav", x, y, z)
 					it2\state = 100
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("S-NAV 310 Navigator", "nav", x, y, z)
 					it2\state = 100
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("S-NAV Navigator Ultimate", "nav", x, y, z)
 					it2\state = 101
 			End Select
@@ -9038,15 +9044,15 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			RemoveItem(item)
 		Case "Radio Transceiver"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					it2 = CreateItem("Electronical Components", "misc", x, y, z)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Radio Transceiver", "18vradio", x, y, z)
 					it2\state = 100
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Radio Transceiver", "fineradio", x, y, z)
 					it2\state = 101
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Radio Transceiver", "veryfineradio", x, y, z)
 					it2\state = 101
 			End Select
@@ -9054,14 +9060,14 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			RemoveItem(item)
 		Case "SCP-513"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					PlaySound_Strict LoadTempSound("SFX\SCP\513\914Refine.ogg")
 					For n.npcs = Each NPCs
 						If n\npctype = NPCtype5131 Then RemoveNPC(n)
 					Next
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1", "fine", "very fine"
+				Case ONE_TO_ONE, FINE, VERY_FINE
 					it2 = CreateItem("SCP-513", "scp513", x, y, z)
 					
 			End Select
@@ -9069,56 +9075,56 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			RemoveItem(item)
 		Case "Some SCP-420-J", "Cigarette"
 			Select setting
-				Case "rough", "coarse"			
+				Case ROUGH, COARSE			
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Cigarette", "cigarette", x + 1.5, y + 0.5, z + 1.0)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Joint", "420s", x + 1.5, y + 0.5, z + 1.0)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Smelly Joint", "420s", x + 1.5, y + 0.5, z + 1.0)
 			End Select
 			
 			RemoveItem(item)
 		Case "9V Battery", "18V Battery", "Strange Battery"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("18V Battery", "18vbat", x, y, z)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Strange Battery", "killbat", x, y, z)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Strange Battery", "killbat", x, y, z)
 			End Select
 			
 			RemoveItem(item)
 		Case "ReVision Eyedrops", "RedVision Eyedrops", "Eyedrops"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("RedVision Eyedrops", "eyedrops", x,y,z)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Eyedrops", "fineeyedrops", x,y,z)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Eyedrops", "supereyedrops", x,y,z)
 			End Select
 			
 			RemoveItem(item)		
 		Case "Hazmat Suit"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Hazmat Suit", "hazmatsuit", x,y,z)
-				Case "fine"
+				Case FINE
 					it2 = CreateItem("Hazmat Suit", "hazmatsuit2", x,y,z)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Hazmat Suit", "hazmatsuit2", x,y,z)
 			End Select
 			
@@ -9128,35 +9134,35 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			Select item\itemtemplate\tempname
 				Case "syringe"
 					Select setting
-						Case "rough", "coarse"
+						Case ROUGH, COARSE
 							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 							EntityParent(d\obj, PlayerRoom\obj)
-						Case "1:1"
+						Case ONE_TO_ONE
 							it2 = CreateItem("Small First Aid Kit", "finefirstaid", x, y, z)	
-						Case "fine"
+						Case FINE
 							it2 = CreateItem("Syringe", "finesyringe", x, y, z)
-						Case "very fine"
+						Case VERY_FINE
 							it2 = CreateItem("Syringe", "veryfinesyringe", x, y, z)
 					End Select
 					
 				Case "finesyringe"
 					Select setting
-						Case "rough"
+						Case ROUGH
 							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 							EntityParent(d\obj, PlayerRoom\obj)
-						Case "coarse"
+						Case COARSE
 							it2 = CreateItem("First Aid Kit", "firstaid", x, y, z)
-						Case "1:1"
+						Case ONE_TO_ONE
 							it2 = CreateItem("Blue First Aid Kit", "firstaid2", x, y, z)	
-						Case "fine", "very fine"
+						Case FINE, VERY_FINE
 							it2 = CreateItem("Syringe", "veryfinesyringe", x, y, z)
 					End Select
 					
 				Case "veryfinesyringe"
 					Select setting
-						Case "rough", "coarse", "1:1", "fine"
+						Case ROUGH, COARSE, ONE_TO_ONE, FINE
 							it2 = CreateItem("Electronical Components", "misc", x, y, z)	
-						Case "very fine"
+						Case VERY_FINE
 							n.NPCs = CreateNPC(NPCtype008,x,y,z)
 							n\State = 2
 					End Select
@@ -9166,13 +9172,13 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			
 		Case "SCP-500-01", "Upgraded Pill", "Pill"
 			Select setting
-				Case "rough", "coarse"
+				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-				Case "1:1"
+				Case ONE_TO_ONE
 					it2 = CreateItem("Pill", "pill", x, y, z)
 					RemoveItem(item)
-				Case "fine"
+				Case FINE
 					Local no427Spawn% = False
 					For it3.Items = Each Items
 						If it3\itemtemplate\tempname = "scp427" Then
@@ -9186,7 +9192,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					EndIf
 					RemoveItem(item)
-				Case "very fine"
+				Case VERY_FINE
 					it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					RemoveItem(item)
 			End Select
@@ -9196,18 +9202,18 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			Select item\itemtemplate\tempname
 				Case "cup"
 					Select setting
-						Case "rough", "coarse"
+						Case ROUGH, COARSE
 							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 							EntityParent(d\obj, PlayerRoom\obj)
-						Case "1:1"
+						Case ONE_TO_ONE
 							it2 = CreateItem("cup", "cup", x,y,z, 255-item\r,255-item\g,255-item\b,item\a)
 							it2\name = item\name
 							it2\state = item\state
-						Case "fine"
+						Case FINE
 							it2 = CreateItem("cup", "cup", x,y,z, Min(item\r*Rnd(0.9,1.1),255),Min(item\g*Rnd(0.9,1.1),255),Min(item\b*Rnd(0.9,1.1),255),item\a)
 							it2\name = item\name
 							it2\state = item\state+1.0
-						Case "very fine"
+						Case VERY_FINE
 							it2 = CreateItem("cup", "cup", x,y,z, Min(item\r*Rnd(0.5,1.5),255),Min(item\g*Rnd(0.5,1.5),255),Min(item\b*Rnd(0.5,1.5),255),item\a)
 							it2\name = item\name
 							it2\state = item\state*2
@@ -9219,12 +9225,12 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					RemoveItem(item)
 				Case "paper"
 					Select setting
-						Case "rough", "coarse"
+						Case ROUGH, COARSE
 							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 							EntityParent(d\obj, PlayerRoom\obj)
-						Case "1:1"
+						Case ONE_TO_ONE
 							it2 = CreateItem("Document SCP-" + GetRandDocument(), "paper", x, y, z)
-						Case "fine", "very fine"
+						Case FINE, VERY_FINE
 							it2 = CreateItem("Origami", "misc", x, y, z)
 					End Select
 					

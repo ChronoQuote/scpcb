@@ -607,7 +607,7 @@ Function UpdateMainMenu()
 					BumpEnabled = DrawTick(x + 310 * MenuScale, y + MenuScale, BumpEnabled)
 					If MouseOn(x + 310 * MenuScale, y + MenuScale, 20*MenuScale,20*MenuScale) And OnSliderID=0
 						;DrawTooltip("Not available in this version")
-						DrawOptionsTooltip(tx,ty,tw,th,"bump")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Bump)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -616,7 +616,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "VSync:")
 					Vsync% = DrawTick(x + 310 * MenuScale, y + MenuScale, Vsync%)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"vsync")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_VSync)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -626,7 +626,7 @@ Function UpdateMainMenu()
 					Opt_AntiAlias = DrawTick(x + 310 * MenuScale, y + MenuScale, Opt_AntiAlias%, (Not FullScreen))
 					;AAText(x + 20 * MenuScale, y + 15 * MenuScale, "(fullscreen mode only)")
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"antialias")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Antialias)
 					EndIf
 					
 					y=y+30*MenuScale ;40
@@ -635,7 +635,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Enable room lights:")
 					EnableRoomLights = DrawTick(x + 310 * MenuScale, y + MenuScale, EnableRoomLights)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"roomlights")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_RoomLights)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -645,7 +645,7 @@ Function UpdateMainMenu()
 					Color 255,255,255
 					AAText(x + 20 * MenuScale, y, "Screen gamma")
 					If MouseOn(x+310*MenuScale,y+6*MenuScale,150*MenuScale+14,20) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"gamma",ScreenGamma)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Gamma,ScreenGamma)
 					EndIf
 					
 					y=y+50*MenuScale
@@ -654,7 +654,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Particle amount:")
 					ParticleAmount = Slider3(x+310*MenuScale,y+6*MenuScale,150*MenuScale,ParticleAmount,2,"MINIMAL","REDUCED","FULL")
 					If (MouseOn(x + 310 * MenuScale, y-6*MenuScale, 150*MenuScale+14, 20) And OnSliderID=0) Or OnSliderID=2
-						DrawOptionsTooltip(tx,ty,tw,th,"particleamount",ParticleAmount)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ParticleAmount,ParticleAmount)
 					EndIf
 					
 					y=y+50*MenuScale
@@ -676,7 +676,7 @@ Function UpdateMainMenu()
 					End Select
 					TextureLodBias TextureFloat
 					If (MouseOn(x+310*MenuScale,y-6*MenuScale,150*MenuScale+14,20) And OnSliderID=0) Or OnSliderID=3
-						DrawOptionsTooltip(tx,ty,tw,th+100*MenuScale,"texquality")
+						DrawOptionsTooltip(tx,ty,tw,th+100*MenuScale,Tooltip_TexQuality)
 					EndIf
 					
 					y=y+50*MenuScale
@@ -685,7 +685,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Save textures in the VRAM:")
 					EnableVRam = DrawTick(x + 310 * MenuScale, y + MenuScale, EnableVRam)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale) And OnSliderID=0
-						DrawOptionsTooltip(tx,ty,tw,th,"vram")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_VRAM)
 					EndIf
 					
 					;[End Block]
@@ -700,7 +700,7 @@ Function UpdateMainMenu()
 					Color 255,255,255
 					AAText(x + 20 * MenuScale, y, "Music volume:")
 					If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"musicvol",MusicVolume)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MusicVol,MusicVolume)
 					EndIf
 					
 					y = y + 40*MenuScale
@@ -711,7 +711,7 @@ Function UpdateMainMenu()
 					Color 255,255,255
 					AAText(x + 20 * MenuScale, y, "Sound volume:")
 					If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"soundvol",PrevSFXVolume)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_SoundVol,PrevSFXVolume)
 					EndIf
 					;If MouseDown1 Then
 					;	If MouseX() >= x And MouseX() <= x + width + 14 And MouseY() >= y And MouseY() <= y + 20 Then
@@ -752,7 +752,7 @@ Function UpdateMainMenu()
 						EnableSFXRelease_Prev% = EnableSFXRelease
 					EndIf
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th+220*MenuScale,"sfxautorelease")
+						DrawOptionsTooltip(tx,ty,tw,th+220*MenuScale,Tooltip_SFXAutoRelease)
 					EndIf
 					y = y + 30*MenuScale
 					
@@ -760,7 +760,7 @@ Function UpdateMainMenu()
 					AAText x + 20 * MenuScale, y, "Enable user tracks:"
 					EnableUserTracks = DrawTick(x + 310 * MenuScale, y + MenuScale, EnableUserTracks)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"usertrack")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrack)
 					EndIf
 					
 					If EnableUserTracks
@@ -774,7 +774,7 @@ Function UpdateMainMenu()
 							AAText x + 350 * MenuScale, y + MenuScale, "Random"
 						EndIf
 						If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-							DrawOptionsTooltip(tx,ty,tw,th,"usertrackmode")
+							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrackMode)
 						EndIf
 						If DrawButton(x + 20 * MenuScale, y + 30 * MenuScale, 190 * MenuScale, 25 * MenuScale, "Scan for User Tracks",False)
 							DebugLog "User Tracks Check Started"
@@ -800,7 +800,7 @@ Function UpdateMainMenu()
 							DebugLog "User Tracks Check Ended"
 						EndIf
 						If MouseOn(x+20*MenuScale,y+30*MenuScale,190*MenuScale,25*MenuScale)
-							DrawOptionsTooltip(tx,ty,tw,th,"usertrackscan")
+							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrackScan)
 						EndIf
 						If UserTrackCheck%>0
 							AAText x + 20 * MenuScale, y + 100 * MenuScale, "User tracks found ("+UserTrackCheck2+"/"+UserTrackCheck+" successfully loaded)"
@@ -820,7 +820,7 @@ Function UpdateMainMenu()
 					Color(255, 255, 255)
 					AAText(x + 20 * MenuScale, y, "Mouse sensitivity:")
 					If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"mousesensitivity",MouseSens)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MouseSensitivity,MouseSens)
 					EndIf
 					
 					y = y + 40*MenuScale
@@ -829,7 +829,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Invert mouse Y-axis:")
 					InvertMouse = DrawTick(x + 310 * MenuScale, y + MenuScale, InvertMouse)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"mouseinvert")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MouseInvert)
 					EndIf
 					
 					y = y + 40*MenuScale
@@ -838,7 +838,7 @@ Function UpdateMainMenu()
 					Color(255, 255, 255)
 					AAText(x + 20 * MenuScale, y, "Mouse smoothing:")
 					If MouseOn(x+310*MenuScale,y-4*MenuScale,150*MenuScale+14,20)
-						DrawOptionsTooltip(tx,ty,tw,th,"mousesmoothing",MouseSmooth)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_MouseSmoothing,MouseSmooth)
 					EndIf
 					
 					Color(255, 255, 255)
@@ -870,7 +870,7 @@ Function UpdateMainMenu()
 					InputBox(x + 470 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CONSOLE,210)),12)
 					
 					If MouseOn(x+20*MenuScale,y,width-40*MenuScale,120*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"controls")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Controls)
 					EndIf
 					
 					For i = 0 To 227
@@ -913,7 +913,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Show HUD:")	
 					HUDenabled = DrawTick(x + 310 * MenuScale, y + MenuScale, HUDenabled)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"hud")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_HUD)
 					EndIf
 					
 					y=y+30*MenuScale
@@ -922,7 +922,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Enable console:")
 					CanOpenConsole = DrawTick(x + 310 * MenuScale, y + MenuScale, CanOpenConsole)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"consoleenable")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ConsoleEnable)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -931,7 +931,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Open console on error:")
 					ConsoleOpening = DrawTick(x + 310 * MenuScale, y + MenuScale, ConsoleOpening)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"consoleerror")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ConsoleError)
 					EndIf
 					
 					y = y + 50*MenuScale
@@ -940,7 +940,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Achievement popups:")
 					AchvMSGenabled% = DrawTick(x + 310 * MenuScale, y + MenuScale, AchvMSGenabled%)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"achpopup")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_AchPopup)
 					EndIf
 					
 					y = y + 50*MenuScale
@@ -949,7 +949,7 @@ Function UpdateMainMenu()
 					AAText(x + 20 * MenuScale, y, "Show FPS:")
 					ShowFPS% = DrawTick(x + 310 * MenuScale, y + MenuScale, ShowFPS%)
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"showfps")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_ShowFPS)
 					EndIf
 					
 					y = y + 30*MenuScale
@@ -967,14 +967,14 @@ Function UpdateMainMenu()
 						Color 255,255,0
 						AAText(x + 25 * MenuScale, y + 25 * MenuScale, Framelimit%+" FPS")
 						If MouseOn(x+150*MenuScale,y+30*MenuScale,100*MenuScale+14,20)
-							DrawOptionsTooltip(tx,ty,tw,th,"framelimit",Framelimit)
+							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_FrameLimit,Framelimit)
 						EndIf
 					Else
 						CurrFrameLimit# = 0.0
 						Framelimit = 0
 					EndIf
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"framelimit",Framelimit)
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_FrameLimit,Framelimit)
 					EndIf
 					
 					y = y + 80*MenuScale
@@ -1008,7 +1008,7 @@ Function UpdateMainMenu()
 						AATextEnable_Prev% = AATextEnable
 					EndIf
 					If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
-						DrawOptionsTooltip(tx,ty,tw,th,"antialiastext")
+						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_antialiastext)
 					EndIf
 					;[End Block]
 				EndIf
@@ -2077,7 +2077,33 @@ Function DrawQuickLoading()
 	
 End Function
 
-Function DrawOptionsTooltip(x%,y%,width%,height%,option$,value#=0,ingame%=False)
+Const Tooltip_Bump% = 0
+Const Tooltip_VSync% = 1
+Const Tooltip_Antialias% = 2
+Const Tooltip_RoomLights% = 3
+Const Tooltip_Gamma% = 4
+Const Tooltip_TexQuality% = 5
+Const Tooltip_ParticleAmount% = 6
+Const Tooltip_VRAM% = 7
+Const Tooltip_MusicVol% = 8
+Const Tooltip_SoundVol% = 9
+Const Tooltip_SFXAutoRelease% = 10
+Const Tooltip_UserTrack% = 11
+Const Tooltip_UserTrackMode% = 12
+Const Tooltip_UserTrackScan% = 13
+Const Tooltip_MouseSensitivity% = 14
+Const Tooltip_MouseInvert% = 15
+Const Tooltip_MouseSmoothing% = 16
+Const Tooltip_Controls% = 17
+Const Tooltip_HUD% = 18
+Const Tooltip_ConsoleEnable% = 19
+Const Tooltip_ConsoleError% = 20
+Const Tooltip_AchPopup% = 21
+Const Tooltip_ShowFPS% = 22
+Const Tooltip_FrameLimit% = 23
+Const Tooltip_AntialiasText% = 24
+
+Function DrawOptionsTooltip(x%,y%,width%,height%,option%,value#=0,ingame%=False)
 	Local fx# = x+6*MenuScale
 	Local fy# = y+6*MenuScale
 	Local fw# = width-12*MenuScale
@@ -2089,32 +2115,32 @@ Function DrawOptionsTooltip(x%,y%,width%,height%,option$,value#=0,ingame%=False)
 	
 	AASetFont Font1
 	Color 255,255,255
-	Select Lower(option$)
+	Select option
 		;Graphic options
 			;[Block]
-		Case "bump"
+		Case Tooltip_Bump
 			txt = Chr(34)+"Bump mapping"+Chr(34)+" is used to simulate bumps and dents by distorting the lightmaps."
 			txt2 = "This option cannot be changed in-game."
 			R = 255
-		Case "vsync"
+		Case Tooltip_VSync
 			txt = Chr(34)+"Vertical sync"+Chr(34)+" waits for the display to finish its current refresh cycle before calculating the next frame, preventing issues such as "
 			txt = txt + "screen tearing. This ties the game's frame rate to your display's refresh rate and may cause some input lag."
-		Case "antialias"
+		Case Tooltip_Antialias
 			txt = Chr(34)+"Anti-Aliasing"+Chr(34)+" is used to smooth the rendered image before displaying in order to reduce aliasing around the edges of models."
 			txt2 = "This option only takes effect in fullscreen."
 			R = 255
-		Case "roomlights"
+		Case Tooltip_RoomLights
 			txt = "Toggles the artificial lens flare effect generated over specific light sources."
-		Case "gamma"
+		Case Tooltip_Gamma
 			txt = Chr(34)+"Gamma correction"+Chr(34)+" is used to achieve a good brightness factor to balance out your display's gamma if the game appears either too dark or bright. "
 			txt = txt + "Setting it too high or low can cause the graphics to look less detailed."
 			R = 255
 			G = 255
 			B = 255
 			txt2 = "Current value: "+Int(value*100)+"% (default is 100%)"
-		Case "texquality"
+		Case Tooltip_TexQuality
 			txt = Chr(34)+"Texture LOD Bias"+Chr(34)+" affects the distance at which texture detail will change to prevent aliasing. Change this option if textures flicker or look too blurry."
-		Case "particleamount"
+		Case Tooltip_ParticleAmount
 			txt = "Determines the amount of particles that can be rendered per tick."
 			Select value
 				Case 0
@@ -2128,82 +2154,82 @@ Function DrawOptionsTooltip(x%,y%,width%,height%,option$,value#=0,ingame%=False)
 					G = 255
 					txt2 = "All particles are rendered."
 			End Select
-		Case "vram"
+		Case Tooltip_VRAM
 			txt = "Textures that are stored in the Video-RAM will load faster, but this also has negative effects on the texture quality as well."
 			txt2 = "This option cannot be changed in-game."
 			R = 255
 			;[End Block]
 		;Sound options
 			;[Block]
-		Case "musicvol"
+		Case Tooltip_MusicVol
 			txt = "Adjusts the volume of background music. Sliding the bar fully to the left will mute all music."
 			R = 255
 			G = 255
 			B = 255
 			txt2 = "Current value: "+Int(value*100)+"% (default is 50%)"
-		Case "soundvol"
+		Case Tooltip_SoundVol
 			txt = "Adjusts the volume of sound effects. Sliding the bar fully to the left will mute all sounds."
 			R = 255
 			G = 255
 			B = 255
 			txt2 = "Current value: "+Int(value*100)+"% (default is 100%)"
-		Case "sfxautorelease"
+		Case Tooltip_SFXAutoRelease
 			txt = Chr(34)+"Sound auto-release"+Chr(34)+" will free a sound from memory if it not used after 5 seconds. Prevents memory allocation issues."
 			R = 255
 			txt2 = "This option cannot be changed in-game."
-		Case "usertrack"
+		Case Tooltip_UserTrack
 			txt = "Toggles the ability to play custom tracks over channel 1 of the radio. These tracks are loaded from the " + Chr(34) + "SFX\Radio\UserTracks\" + Chr(34)
 			txt = txt + " directory. Press " + Chr(34) + "1" + Chr(34) + " when the radio is selected to change track."
 			R = 255
 			txt2 = "This option cannot be changed in-game."
-		Case "usertrackmode"
+		Case Tooltip_UserTrackMode
 			txt = "Sets the playing mode for the custom tracks. "+Chr(34)+"Repeat"+Chr(34)+" plays every file in alphabetical order. "+Chr(34)+"Random"+Chr(34)+" chooses the "
 			txt = txt + "next track at random."
 			R = 255
 			G = 255
 			txt2 = "Note that the random mode does not prevent previously played tracks from repeating."
-		Case "usertrackscan"
+		Case Tooltip_UserTrackScan
 			txt = "Re-checks the user tracks directory for any new or removed sound files."
 			;[End Block]
 		;Control options	
 			;[Block]
-		Case "mousesensitivity"
+		Case Tooltip_MouseSensitivity
 			txt = "Adjusts the speed of the mouse pointer."
 			R = 255
 			G = 255
 			B = 255
 			txt2 = "Current value: "+Int((0.5+value)*100)+"% (default is 50%)"
-		Case "mouseinvert"
+		Case Tooltip_MouseInvert
 			txt = Chr(34)+"Invert mouse Y-axis"+Chr(34)+" is self-explanatory."
-		Case "mousesmoothing"
+		Case Tooltip_MouseSmoothing
 			txt = "Adjusts the amount of smoothing of the mouse pointer."
 			R = 255
 			G = 255
 			B = 255
 			txt2 = "Current value: "+Int(value*100)+"% (default is 100%)"
-		Case "controls"
+		Case Tooltip_Controls
 			txt = "Configure the in-game control scheme."
 			;[End Block]
 		;Advanced options	
 			;[Block]
-		Case "hud"
+		Case Tooltip_HUD
 			txt = "Display the blink and stamina meters."
-		Case "consoleenable"
+		Case Tooltip_ConsoleEnable
 			txt = "Toggles the use of the developer console. Can be used in-game by pressing " + KeyName(KEY_CONSOLE) + "."
-		Case "consoleerror"
+		Case Tooltip_ConsoleError
 			txt = Chr(34)+"Open console on error"+Chr(34)+" is self-explanatory."
-		Case "achpopup"
+		Case Tooltip_AchPopup
 			txt = "Displays a pop-up notification when an achievement is unlocked."
-		Case "showfps"
+		Case Tooltip_ShowFPS
 			txt = "Displays the frames per second counter at the top left-hand corner."
-		Case "framelimit"
+		Case Tooltip_FrameLimit
 			txt = "Limits the frame rate that the game can run at to a desired value."
 			If value > 0 And value < 60
 				R = 255
 				G = 255
 				txt2 = "Usually, 60 FPS or higher is preferred. If you are noticing excessive stuttering at this setting, try lowering it to make your framerate more consistent."
 			EndIf
-		Case "antialiastext"
+		Case Tooltip_AntialiasText
 			txt = Chr(34)+"Antialiased text"+Chr(34)+" smooths out the text before displaying. Makes text easier to read at high resolutions."
 			;[End Block]
 	End Select

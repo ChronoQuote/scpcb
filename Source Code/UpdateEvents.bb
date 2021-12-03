@@ -7670,28 +7670,28 @@ Function UpdateEvents()
 						GrabbedEntity = 0
 					End If
 					
-					Local setting$ = ""
+					Local setting%
 					
 					If GrabbedEntity <> e\room\Objects[1] Then
 						angle# = WrapAngle(EntityRoll(e\room\Objects[1]))
 						If angle < 22.5 Then
 							angle = 0
-							setting = "1:1"
+							setting = ONE_TO_ONE
 						ElseIf angle < 67.5
 							angle = 40
-							setting = "coarse"
+							setting = COARSE
 						ElseIf angle < 180
 							angle = 90
-							setting = "rough"
+							setting = ROUGH
 						ElseIf angle > 337.5
 							angle = 359 - 360
-							setting = "1:1"
+							setting = ONE_TO_ONE
 						ElseIf angle > 292.5
 							angle = 320 - 360
-							setting = "fine"
+							setting = FINE
 						Else
 							angle = 270 - 360
-							setting = "very fine"
+							setting = VERY_FINE
 						End If
 						RotateEntity(e\room\Objects[1], 0, 0, CurveValue(angle, EntityRoll(e\room\Objects[1]), 20))
 					EndIf
@@ -7722,26 +7722,26 @@ Function UpdateEvents()
 						
 						If Distance(EntityX(Collider), EntityZ(Collider), EntityX(e\room\Objects[2], True), EntityZ(e\room\Objects[2], True)) < (170.0 * RoomScale) Then
 							
-							If setting = "rough" Or setting = "coarse" Then
+							If setting = ROUGH Or setting = COARSE Then
 								If e\EventState > 70 * 2.6 And e\EventState - FPSfactor2 < 70 * 2.6 Then PlaySound_Strict Death914SFX
 							EndIf
 							
 							If e\EventState > 70 * 3 Then
 								Select setting
-									Case "rough"
+									Case ROUGH
 										KillTimer = Min(-1, KillTimer)
 										BlinkTimer = -10
 										If e\SoundCHN <> 0 Then StopChannel e\SoundCHN
 										DeathMSG = Chr(34)+"A heavily mutilated corpse found inside the output booth of SCP-914. DNA testing identified the corpse as Class D Subject D-9341. "
 										DeathMSG = DeathMSG + "The subject had obviously been "+Chr(34)+"refined"+Chr(34)+" by SCP-914 on the "+Chr(34)+"Rough"+Chr(34)+" setting, but we are still confused as to how he "
 										DeathMSG = DeathMSG + "ended up inside the intake booth and who or what wound the key."+Chr(34)
-									Case "coarse"
+									Case COARSE
 										BlinkTimer = -10
 										If e\EventState - FPSfactor2 < 70 * 3 Then PlaySound_Strict Use914SFX
-									Case "1:1"
+									Case ONE_TO_ONE
 										BlinkTimer = -10
 										If e\EventState - FPSfactor2 < 70 * 3 Then PlaySound_Strict Use914SFX
-									Case "fine", "very fine"
+									Case FINE, VERY_FINE
 										BlinkTimer = -10
 										If e\EventState - FPSfactor2 < 70 * 3 Then PlaySound_Strict Use914SFX	
 								End Select
@@ -7766,13 +7766,13 @@ Function UpdateEvents()
 							
 							If Distance(EntityX(Collider), EntityZ(Collider), EntityX(e\room\Objects[2], True), EntityZ(e\room\Objects[2], True)) < (160.0 * RoomScale) Then
 								Select setting
-									Case "coarse"
+									Case COARSE
 										Injuries = 4.0
 										Msg = "You notice countless small incisions all around your body. They are bleeding heavily."
 										MsgTimer = 70*8
-									Case "1:1"
+									Case ONE_TO_ONE
 										InvertMouse = (Not InvertMouse)
-									Case "fine", "very fine"
+									Case FINE, VERY_FINE
 										SuperMan = True
 								End Select
 								BlurTimer = 1000
