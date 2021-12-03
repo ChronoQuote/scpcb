@@ -3422,7 +3422,7 @@ Function DrawEnding()
 				
 				Color(255, 255, 255)
 				AASetFont Font2
-				AAText(x + width / 2 + 40*MenuScale, y + 20*MenuScale, "THE END", True)
+				AAText(x + width / 2 + 40*MenuScale, y + 17*MenuScale, "THE END", True)
 				AASetFont Font1
 				
 				If AchievementsMenu=0 Then 
@@ -3467,7 +3467,7 @@ Function DrawEnding()
 					x = x+width/2
 					y = y+height-100*MenuScale
 					
-					If DrawButton(x-145*MenuScale,y-200*MenuScale,430*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then
+					If DrawButton(x-170*MenuScale,y-273*MenuScale,430*MenuScale,60*MenuScale,"ACHIEVEMENTS", True) Then
 						AchievementsMenu = 1
 					EndIf
 					
@@ -3483,7 +3483,7 @@ Function DrawEnding()
 ;						FlushKeys()
 ;					EndIf
 					
-					If DrawButton(x-145*MenuScale,y-100*MenuScale,430*MenuScale,60*MenuScale,"MAIN MENU", True)
+					If DrawButton(x-170*MenuScale,y-173*MenuScale,430*MenuScale,60*MenuScale,"MAIN MENU", True)
 						ShouldPlay = 24
 						NowPlaying = ShouldPlay
 						For i=0 To 9
