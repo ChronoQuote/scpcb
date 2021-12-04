@@ -74,7 +74,7 @@ Function SaveGame(file$)
 	WriteFloat f, Infect
 	
 	For i = 0 To CUSTOM
-		If (SelectedDifficulty = difficulties(i)) Then
+		If (SelectedDifficulty = difficulties[i]) Then
 			WriteByte f, i
 			
 			If (i = CUSTOM) Then
@@ -123,14 +123,14 @@ Function SaveGame(file$)
 	WriteByte f, Contained106
 	
 	For i = 0 To MAXACHIEVEMENTS-1
-		WriteByte f, Achievements(i)
+		WriteByte f, Achievements[i]
 	Next
 	WriteInt f, RefinedItems
 	
 	For x = 0 To MapGridSize
 		For y = 0 To MapGridSize
-			WriteByte f, MapTemp(x, y)
-			WriteByte f, MapFound(x, y)
+			WriteByte f, CurrMapGrid\Grid[x + (y * MapGridSize)]
+			WriteByte f, CurrMapGrid\RoomFound[x + (y * MapGridSize)]
 		Next
 	Next
 	
@@ -393,7 +393,7 @@ Function SaveGame(file$)
 		If SelectedItem = it Then WriteByte f, 1 Else WriteByte f, 0
 		Local ItemFound% = False
 		For i = 0 To MaxItemAmount - 1
-			If Inventory(i) = it Then ItemFound = True : Exit
+			If Inventory[i] = it Then ItemFound = True : Exit
 		Next
 		If ItemFound Then WriteByte f, i Else WriteByte f, 66
 		
@@ -538,7 +538,7 @@ Function LoadGame(file$)
 	Infect = ReadFloat(f)
 	
 	Local difficultyIndex = ReadByte(f)
-	SelectedDifficulty = difficulties(difficultyIndex)
+	SelectedDifficulty = difficulties[difficultyIndex]
 	If (difficultyIndex = CUSTOM) Then
 		SelectedDifficulty\aggressiveNPCs = ReadByte(f)
 		SelectedDifficulty\permaDeath = ReadByte(f)
@@ -578,14 +578,15 @@ Function LoadGame(file$)
 	Contained106 = ReadByte(f)	
 	
 	For i = 0 To MAXACHIEVEMENTS-1
-		Achievements(i)=ReadByte(f)
+		Achievements[i]=ReadByte(f)
 	Next
 	RefinedItems = ReadInt(f)
 	
+	CurrMapGrid = New MapGrid
 	For x = 0 To MapGridSize 
 		For y = 0 To MapGridSize
-			MapTemp( x, y) = ReadByte(f)
-			MapFound(x, y) = ReadByte(f)
+			CurrMapGrid\Grid[x + (y * MapGridSize)] = ReadByte(f)
+			CurrMapGrid\RoomFound[x + (y * MapGridSize)] = ReadByte(f)
 		Next
 	Next
 	
@@ -832,7 +833,7 @@ Function LoadGame(file$)
 		EndIf
 		
 		For x = MapGridSize To 0 Step -1
-			If MapTemp(x,y) > 0 Then
+			If CurrMapGrid\Grid[x + (y * MapGridSize)] > 0 Then
 				If zone = 2 Then temp=2 Else temp=0
                 
                 For r.Rooms = Each Rooms
@@ -861,7 +862,7 @@ Function LoadGame(file$)
 						End Select
 						If shouldSpawnDoor
 							If (x+1)<(MapGridSize+1)
-								If MapTemp(x + 1, y) > 0 Then
+								If CurrMapGrid\Grid[(x + 1) + (y * MapGridSize)] > 0 Then
 									do.Doors = CreateDoor(Float(x) * spacing + spacing / 2.0, 0, Float(y) * spacing, 90, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[0] = do
 								EndIf
@@ -891,7 +892,7 @@ Function LoadGame(file$)
 						End Select
 						If shouldSpawnDoor
 							If (y+1)<(MapGridSize+1)
-								If MapTemp(x, y + 1) > 0 Then
+								If CurrMapGrid\Grid[x + ((y + 1) * MapGridSize)] > 0 Then
 									do.Doors = CreateDoor(Float(x) * spacing, 0, Float(y) * spacing + spacing / 2.0, 0, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[3] = do
 								EndIf
@@ -1104,7 +1105,7 @@ Function LoadGame(file$)
 		
 		nt = ReadByte(f)
 		If nt < 66
-			Inventory(nt) = it
+			Inventory[nt] = it
 			ItemAmount = ItemAmount + 1
 		EndIf
 		
@@ -1380,7 +1381,7 @@ Function LoadGameQuick(file$)
 	Infect = ReadFloat(f)
 	
 	Local difficultyIndex = ReadByte(f)
-	SelectedDifficulty = difficulties(difficultyIndex)
+	SelectedDifficulty = difficulties[difficultyIndex]
 	If (difficultyIndex = CUSTOM) Then
 		SelectedDifficulty\aggressiveNPCs = ReadByte(f)
 		SelectedDifficulty\permaDeath = ReadByte(f)
@@ -1420,14 +1421,14 @@ Function LoadGameQuick(file$)
 	Contained106 = ReadByte(f)	
 	
 	For i = 0 To MAXACHIEVEMENTS-1
-		Achievements(i)=ReadByte(f)
+		Achievements[i]=ReadByte(f)
 	Next
 	RefinedItems = ReadInt(f)
 	
 	For x = 0 To MapGridSize
 		For y = 0 To MapGridSize
-			MapTemp(x, y) = ReadByte(f)
-			MapFound(x, y) = ReadByte(f)
+			CurrMapGrid\Grid[x + (y * MapGridSize)] = ReadByte(f)
+			CurrMapGrid\RoomFound[x + (y * MapGridSize)] = ReadByte(f)
 		Next
 	Next
 	
@@ -1824,7 +1825,7 @@ Function LoadGameQuick(file$)
 		
 		nt = ReadByte(f)
 		If nt < 66
-			Inventory(nt) = it
+			Inventory[nt] = it
 			ItemAmount = ItemAmount + 1
 		EndIf
 		
@@ -2134,16 +2135,12 @@ Function LoadMap(file$)
 	f% = ReadFile(file)
 	DebugLog file
 	
-	Dim MapTemp%(MapGridSize+1, MapGridSize+1)
-	Dim MapFound%(MapGridSize+1, MapGridSize+1)
-	CoffinDistance = 100
+	If CurrMapGrid <> Null Then
+		Delete(CurrMapGrid) : CurrMapGrid = Null
+	EndIf
+	CurrMapGrid = New MapGrid
 	
-	For x = 0 To MapGridSize+1
-		For y = 0 To MapGridSize+1
-			MapTemp(x,y)=False
-			MapFound(x,y)=False
-		Next
-	Next
+	CoffinDistance = 100
 	
 	If Right(file,6)="cbmap2" Then
 		ReadLine(f)
@@ -2186,7 +2183,7 @@ Function LoadMap(file$)
 					
 					TurnEntity(r\obj, 0, r\angle, 0)
 					
-					MapTemp(MapGridSize-x,y)=True
+					CurrMapGrid\Grid[(MapGridSize - x) + (y * MapGridSize)]=1
 					
 					Exit
 				EndIf
@@ -2362,7 +2359,7 @@ Function LoadMap(file$)
 					
 					TurnEntity(r\obj, 0, r\angle, 0)
 					
-					MapTemp(MapGridSize-x,y)=True
+					CurrMapGrid\Grid[(MapGridSize - x) + (y * MapGridSize)]=1
 					
 					Exit
 				EndIf
@@ -2405,7 +2402,7 @@ Function LoadMap(file$)
 		EndIf
 		
 		For x = MapGridSize To 0 Step -1
-			If MapTemp(x,y) > 0 Then
+			If CurrMapGrid\Grid[x + (y * MapGridSize)] > 0 Then
 				If zone = 2 Then temp=2 Else temp=0
                 
                 For r.Rooms = Each Rooms
@@ -2434,7 +2431,7 @@ Function LoadMap(file$)
 						End Select
 						If shouldSpawnDoor
 							If (x+1)<(MapGridSize+1)
-								If MapTemp(x + 1, y) > 0 Then
+								If CurrMapGrid\Grid[(x + 1) + (y * MapGridSize)] > 0 Then
 									d.Doors = CreateDoor(Float(x) * spacing + spacing / 2.0, 0, Float(y) * spacing, 90, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[0] = d
 								EndIf
@@ -2464,7 +2461,7 @@ Function LoadMap(file$)
 						End Select
 						If shouldSpawnDoor
 							If (y+1)<(MapGridSize+1)
-								If MapTemp(x, y + 1) > 0 Then
+								If CurrMapGrid\Grid[x + ((y + 1) * MapGridSize)] > 0 Then
 									d.Doors = CreateDoor(Float(x) * spacing, 0, Float(y) * spacing + spacing / 2.0, 0, r, Max(Rand(-3, 1), 0), temp)
 									r\AdjDoor[3] = d
 								EndIf
@@ -2524,7 +2521,7 @@ Function LoadMap(file$)
 	
 	For x = 0 To MapGridSize+1
 		For y = 0 To MapGridSize+1
-			If MapTemp(x,y)>0 Then
+			If CurrMapGrid\Grid[x + (y * MapGridSize)]>0 Then
 				DebugLog "MapTemp("+x+","+y+") = True"
 			Else
 				DebugLog "MapTemp("+x+","+y+") = False"

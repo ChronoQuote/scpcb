@@ -1,7 +1,7 @@
 ;achievement menu & messages by InnocentSam
 
 Const MAXACHIEVEMENTS=38
-Dim Achievements%(MAXACHIEVEMENTS)
+Global Achievements%[MAXACHIEVEMENTS]
 
 Const Achv008%=0, Achv012%=1, Achv035%=2, Achv049%=3, Achv055%=4, Achv066%=5, Achv079%=6, Achv096%=7, Achv106%=8, Achv148%=9
 Const Achv205%=10, Achv294%=11, Achv372%=12, Achv420%=13, Achv427%=14, Achv500%=15, Achv513%=16, Achv714%=17, Achv789%=18, Achv860%=19
@@ -15,15 +15,15 @@ Global UsedConsole
 
 Global AchievementsMenu%
 Global AchvMSGenabled% = GetINIInt(OptionFile, "options", "achievement popup enabled")
-Dim AchievementStrings$(MAXACHIEVEMENTS)
-Dim AchievementDescs$(MAXACHIEVEMENTS)
-Dim AchvIMG%(MAXACHIEVEMENTS)
+Global AchievementStrings$[MAXACHIEVEMENTS]
+Global AchievementDescs$[MAXACHIEVEMENTS]
+Global AchvIMG%[MAXACHIEVEMENTS]
 
 Global AchvLocked%
 
 Function GiveAchievement(achvname%, showMessage%=True)
-	If Achievements(achvname)<>True Then
-		Achievements(achvname)=True
+	If Achievements[achvname]<>True Then
+		Achievements[achvname]=True
 		If AchvMSGenabled And showMessage Then
 			Local loc2% = GetINISectionLocation("Data\achievementstrings.ini", "s"+achvname)
 			Local AchievementName$ = GetINIString2("Data\achievementstrings.ini", loc2, "string1")
@@ -38,10 +38,10 @@ Function AchievementTooltip(achvno%)
     Local scale# = GraphicHeight/768.0
     
     AASetFont Font3
-    Local width = AAStringWidth(AchievementStrings(achvno))
+    Local width = AAStringWidth(AchievementStrings[achvno])
     AASetFont Font1
-    If (AAStringWidth(AchievementDescs(achvno))>width) Then
-        width = AAStringWidth(AchievementDescs(achvno))
+    If (AAStringWidth(AchievementDescs[achvno])>width) Then
+        width = AAStringWidth(AchievementDescs[achvno])
     EndIf
     width = width+20*MenuScale
     
@@ -52,9 +52,9 @@ Function AchievementTooltip(achvno%)
     Color 150,150,150
     Rect(ScaledMouseX()+(20*MenuScale),ScaledMouseY()+(20*MenuScale),width,height,False)
     AASetFont Font3
-    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(35*MenuScale), AchievementStrings(achvno), True, True)
+    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(35*MenuScale), AchievementStrings[achvno], True, True)
     AASetFont Font1
-    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(55*MenuScale), AchievementDescs(achvno), True, True)
+    AAText(ScaledMouseX()+(20*MenuScale)+(width/2),ScaledMouseY()+(55*MenuScale), AchievementDescs[achvno], True, True)
 End Function
 
 Function DrawAchvIMG(x%, y%, achvno%)
@@ -79,8 +79,8 @@ Function DrawAchvIMG(x%, y%, achvno%)
 	row = achvno Mod 4
 	Color 0,0,0
 	Rect((x+((row)*SeparationConst2)), y, 64*scale, 64*scale, True)
-	If Achievements(achvno) = True Then
-		DrawImage(AchvIMG(achvno),(x+(row*SeparationConst2)),y)
+	If Achievements[achvno] = True Then
+		DrawImage(AchvIMG[achvno],(x+(row*SeparationConst2)),y)
 	Else
 		DrawImage(AchvLocked,(x+(row*SeparationConst2)),y)
 	EndIf
@@ -133,7 +133,7 @@ Function UpdateAchievementMsg()
 			DrawFrame(x,y,width,height)
 			Color 0,0,0
 			Rect(x+10*scale,y+10*scale,64*scale,64*scale,True)
-			DrawImage(AchvIMG(amsg\achvID),x+10*scale,y+10*scale)
+			DrawImage(AchvIMG[amsg\achvID],x+10*scale,y+10*scale)
 			Color 50,50,50
 			Rect(x+10*scale,y+10*scale,64*scale,64*scale,False)
 			Color 255,255,255

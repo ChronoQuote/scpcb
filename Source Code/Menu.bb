@@ -13,9 +13,9 @@ ResizeImage(Menu173, ImageWidth(Menu173) * MenuScale, ImageHeight(Menu173) * Men
 
 
 For i = 0 To 3
-	ArrowIMG(i) = LoadImage_Strict("GFX\menu\arrow.png")
-	RotateImage(ArrowIMG(i), 90 * i)
-	HandleImage(ArrowIMG(i), 0, 0)
+	ArrowIMG[i] = LoadImage_Strict("GFX\menu\arrow.png")
+	RotateImage(ArrowIMG[i], 90 * i)
+	HandleImage(ArrowIMG[i], 0, 0)
 Next
 
 Global RandomSeed$
@@ -326,9 +326,9 @@ Function UpdateMainMenu()
 				;Local modeName$, modeDescription$, selectedDescription$
 				AAText (x + 20 * MenuScale, y + 150 * MenuScale, "Difficulty:")				
 				For i = SAFE To CUSTOM
-					If DrawTick(x + 20 * MenuScale, y + (180+30*i) * MenuScale, (SelectedDifficulty = difficulties(i))) Then SelectedDifficulty = difficulties(i)
-					Color(difficulties(i)\r,difficulties(i)\g,difficulties(i)\b)
-					AAText(x + 60 * MenuScale, y + (180+30*i) * MenuScale, difficulties(i)\name)
+					If DrawTick(x + 20 * MenuScale, y + (180+30*i) * MenuScale, (SelectedDifficulty = difficulties[i])) Then SelectedDifficulty = difficulties[i]
+					Color(difficulties[i]\r,difficulties[i]\g,difficulties[i]\b)
+					AAText(x + 60 * MenuScale, y + (180+30*i) * MenuScale, difficulties[i]\name)
 				Next
 				
 				Color(255, 255, 255)
@@ -351,9 +351,9 @@ Function UpdateMainMenu()
 					
 					;Other factor's difficulty
 					Color 255,255,255
-					DrawImage ArrowIMG(1),x + 155 * MenuScale, y+251*MenuScale
+					DrawImage ArrowIMG[1],x + 155 * MenuScale, y+251*MenuScale
 					If MouseHit1
-						If ImageRectOverlap(ArrowIMG(1),x + 155 * MenuScale, y+251*MenuScale, ScaledMouseX(),ScaledMouseY(),0,0)
+						If ImageRectOverlap(ArrowIMG[1],x + 155 * MenuScale, y+251*MenuScale, ScaledMouseX(),ScaledMouseY(),0,0)
 							If SelectedDifficulty\otherFactors < HARD
 								SelectedDifficulty\otherFactors = SelectedDifficulty\otherFactors + 1
 							Else
@@ -1170,9 +1170,9 @@ Function UpdateLauncher()
 	Local i%	
 	
 	For i = 0 To 3
-		ArrowIMG(i) = LoadImage_Strict("GFX\menu\arrow.png")
-		RotateImage(ArrowIMG(i), 90 * i)
-		HandleImage(ArrowIMG(i), 0, 0)
+		ArrowIMG[i] = LoadImage_Strict("GFX\menu\arrow.png")
+		RotateImage(ArrowIMG[i], 90 * i)
+		HandleImage(ArrowIMG[i], 0, 0)
 	Next
 	
 	For i% = 1 To TotalGFXModes

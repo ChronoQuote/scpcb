@@ -75,7 +75,7 @@ Function UpdateMusic()
 		
 		If NowPlaying < 66
 			If CurrMusic = 0
-				MusicCHN = StreamSound_Strict("SFX\Music\"+Music(NowPlaying)+".ogg",0.0,Mode)
+				MusicCHN = StreamSound_Strict("SFX\Music\"+Music[NowPlaying]+".ogg",0.0,Mode)
 				CurrMusic = 1
 			EndIf
 			SetStreamVolume_Strict(MusicCHN,CurrMusicVolume)
@@ -412,9 +412,9 @@ Function PlayMTFSound(sound%, n.NPCs)
 		If SelectedItem\state2 = 3 And SelectedItem\state > 0 Then 
 			Select SelectedItem\itemtemplate\tempname 
 				Case "radio","fineradio","18vradio"
-					If sound<>MTFSFX[0] Or (Not ChannelPlaying(RadioCHN(3)))
-						If RadioCHN(3)<> 0 Then StopChannel RadioCHN(3)
-						RadioCHN(3) = PlaySound_Strict (sound)
+					If sound<>MTFSFX[0] Or (Not ChannelPlaying(RadioCHN[3]))
+						If RadioCHN[3]<> 0 Then StopChannel RadioCHN[3]
+						RadioCHN[3] = PlaySound_Strict (sound)
 					EndIf
 			End Select
 		EndIf

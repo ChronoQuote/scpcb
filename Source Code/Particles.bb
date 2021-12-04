@@ -1,6 +1,4 @@
-
-
-Dim ParticleTextures%(9)
+Global ParticleTextures%[9]
 
 Type Particles
 	Field obj%, pvt%
@@ -20,7 +18,7 @@ Function CreateParticle.Particles(x#, y#, z#, image%, size#, gravity# = 1.0, lif
 	
 	p\obj = CreateSprite()
 	PositionEntity(p\obj, x, y, z, True)
-	EntityTexture(p\obj, ParticleTextures(image))
+	EntityTexture(p\obj, ParticleTextures[image])
 	RotateEntity(p\obj, 0, 0, Rnd(360))
 	EntityFX(p\obj, 1 + 8)
 	
@@ -145,9 +143,9 @@ Function UpdateEmitters()
 		If KillTimer => 0 Then 
 			If Rand(150) = 1 Then
 				If CoughCHN = 0 Then
-					CoughCHN = PlaySound_Strict(CoughSFX(Rand(0, 2)))
+					CoughCHN = PlaySound_Strict(CoughSFX[Rand(0, 2)])
 				Else
-					If Not ChannelPlaying(CoughCHN) Then CoughCHN = PlaySound_Strict(CoughSFX(Rand(0, 2)))
+					If Not ChannelPlaying(CoughCHN) Then CoughCHN = PlaySound_Strict(CoughSFX[Rand(0, 2)])
 				End If
 			EndIf
 		EndIf
@@ -260,9 +258,9 @@ Function UpdateDevilEmitters()
 		If KillTimer => 0 Then 
 			If Rand(150) = 1 Then
 				If CoughCHN = 0 Then
-					CoughCHN = PlaySound_Strict(CoughSFX(Rand(0, 2)))
+					CoughCHN = PlaySound_Strict(CoughSFX[Rand(0, 2)])
 				Else
-					If Not ChannelPlaying(CoughCHN) Then CoughCHN = PlaySound_Strict(CoughSFX(Rand(0, 2)))
+					If Not ChannelPlaying(CoughCHN) Then CoughCHN = PlaySound_Strict(CoughSFX[Rand(0, 2)])
 				End If
 			EndIf
 		EndIf
@@ -284,5 +282,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~F#2E#4A#53#C4#CF
+;~F#2C#48#51#C2#CD
 ;~C#Blitz3D
