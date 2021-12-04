@@ -89,7 +89,7 @@ Next
 
  ;AmbientSFXCHN% 
 ;CurrAmbientSFX%
-;Global AmbientSFXAmount[6)
+;Global AmbientSFXAmount[6]
 ;0 = light containment, 1 = heavy containment, 2 = entrance
 AmbientSFXAmount[0]=11 : AmbientSFXAmount[1]=11 : AmbientSFXAmount[2]=12
 ;3 = general, 4 = pre-breach

@@ -2477,8 +2477,6 @@ Global I_Zone.MapZones = New MapZones
 
 Repeat
 	
-	Local Time% = MilliSecs()
-	
 	Cls
 	
 	CurTime = MilliSecs2()
@@ -3003,9 +3001,6 @@ Repeat
 	Else 
 		Flip 1
 	EndIf
-	
-	Msg = Str(MilliSecs() - Time)
-	MsgTimer = 70 * 5
 Forever
 
 ;----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -10535,5 +10530,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C3#1342#1ACF
+;~B#10BE#133D#1ACA
 ;~C#Blitz3D
