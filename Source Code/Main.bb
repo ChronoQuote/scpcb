@@ -7432,7 +7432,15 @@ Function DrawMenu()
 			AASetFont Font1
 			AAText x, y, "Difficulty: "+SelectedDifficulty\name
 			AAText x, y+20*MenuScale, "Save: "+CurrSave
-			AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
+			If SelectedMap = "" Then
+				AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
+			Else
+				If Len(SelectedMap)>15 Then
+					AAText x, y+40*MenuScale, "Selected map: "+Left(SelectedMap,14)+"..."
+				Else
+					AAText x, y+40*MenuScale, "Selected map: "+SelectedMap
+				EndIf
+			EndIf
 			
 			y = y+10*MenuScale
 			

@@ -303,10 +303,7 @@ Function UpdateMainMenu()
 					RandomSeed = Left(InputBox(x+150*MenuScale, y+55*MenuScale, 200*MenuScale, 30*MenuScale, RandomSeed, 3),15)	
 				Else
 					AAText (x + 20 * MenuScale, y + 60 * MenuScale, "Selected map:")
-					Color (255, 255, 255)
-					Rect(x+150*MenuScale, y+55*MenuScale, 200*MenuScale, 30*MenuScale)
-					Color (0, 0, 0)
-					Rect(x+150*MenuScale+2, y+55*MenuScale+2, 200*MenuScale-4, 30*MenuScale-4)
+					DrawFrame(x+150*MenuScale, y+55*MenuScale, 200*MenuScale, 30*MenuScale,0,0,True)
 					
 					Color (255, 0,0)
 					If Len(SelectedMap)>15 Then
