@@ -4735,7 +4735,7 @@ Function DrawGUI()
 	
 	Local spacing%
 	Local PrevOtherOpen.Items
-	
+	Local PrevItem.Items
 	Local OtherSize%,OtherAmount%
 	
 	Local isEmpty%
@@ -4788,11 +4788,7 @@ Function DrawGUI()
 		ItemAmount = 0
 		For  n% = 0 To OtherSize - 1
 			isMouseOn% = False
-			If ScaledMouseX() > x And ScaledMouseX() < x + width Then
-				If ScaledMouseY() > y And ScaledMouseY() < y + height Then
-					isMouseOn = True
-				EndIf
-			EndIf
+			If MouseOn(x, y, width, height) Then isMouseOn = True
 			
 			If isMouseOn Then
 				MouseSlot = n
@@ -4954,10 +4950,18 @@ Function DrawGUI()
 						PrevOtherOpen\SecondInv[MouseSlot] = SelectedItem
 						SelectedItem = Null
 					ElseIf PrevOtherOpen\SecondInv[MouseSlot] <> SelectedItem
+						PrevItem = PrevOtherOpen\SecondInv[MouseSlot]
+						
 						Select SelectedItem\itemtemplate\tempname
 							Default
-								Msg = "You cannot combine these two items."
-								MsgTimer = 70 * 5
+								For z = 0 To OtherSize - 1
+									If PrevOtherOpen\SecondInv[z] = SelectedItem Then
+										PrevOtherOpen\SecondInv[z] = PrevItem
+										Exit
+									EndIf
+								Next
+								PrevOtherOpen\SecondInv[MouseSlot] = SelectedItem
+								SelectedItem = Null
 						End Select					
 					EndIf
 					
@@ -5002,11 +5006,7 @@ Function DrawGUI()
 		ItemAmount = 0
 		For  n% = 0 To MaxItemAmount - 1
 			isMouseOn% = False
-			If ScaledMouseX() > x And ScaledMouseX() < x + width Then
-				If ScaledMouseY() > y And ScaledMouseY() < y + height Then
-					isMouseOn = True
-				End If
-			EndIf
+			If MouseOn(x, y, width, height) Then isMouseOn = True
 			
 			If Inventory[n] <> Null Then
 				Color 200, 200, 200
@@ -5159,6 +5159,8 @@ Function DrawGUI()
 						Inventory[MouseSlot] = SelectedItem
 						SelectedItem = Null
 					ElseIf Inventory[MouseSlot] <> SelectedItem
+						PrevItem = Inventory[MouseSlot]
+						
 						Select SelectedItem\itemtemplate\tempname
 							Case "paper","key1","key2","key3","key4","key5","key6","misc","oldpaper","badge","ticket","25ct","coin","key","scp860"
 								;[Block]
@@ -5202,8 +5204,14 @@ Function DrawGUI()
 										EndIf
 										MsgTimer = 70 * 5
 									Else
-										Msg = "You cannot combine these two items."
-										MsgTimer = 70 * 5
+										For z = 0 To MaxItemAmount - 1
+											If Inventory[z] = SelectedItem Then
+												Inventory[z] = PrevItem
+												Exit
+											EndIf
+										Next
+										Inventory[MouseSlot] = SelectedItem
+										SelectedItem = Null
 									EndIf
 								ElseIf Inventory[MouseSlot]\itemtemplate\tempname = "wallet" Then
 									;Add an item to wallet
@@ -5241,12 +5249,24 @@ Function DrawGUI()
 										
 										MsgTimer = 70 * 5
 									Else
-										Msg = "You cannot combine these two items."
-										MsgTimer = 70 * 5
+										For z = 0 To MaxItemAmount - 1
+											If Inventory[z] = SelectedItem Then
+												Inventory[z] = PrevItem
+												Exit
+											EndIf
+										Next
+										Inventory[MouseSlot] = SelectedItem
+										SelectedItem = Null
 									EndIf
 								Else
-									Msg = "You cannot combine these two items."
-									MsgTimer = 70 * 5
+									For z = 0 To MaxItemAmount - 1
+										If Inventory[z] = SelectedItem Then
+											Inventory[z] = PrevItem
+											Exit
+										EndIf
+									Next
+									Inventory[MouseSlot] = SelectedItem
+									SelectedItem = Null
 								EndIf
 								SelectedItem = Null
 								
@@ -5294,8 +5314,14 @@ Function DrawGUI()
 											MsgTimer = 70 * 5
 										EndIf
 									Default
-										Msg = "You cannot combine these two items."
-										MsgTimer = 70 * 5	
+										For z = 0 To MaxItemAmount - 1
+											If Inventory[z] = SelectedItem Then
+												Inventory[z] = PrevItem
+												Exit
+											EndIf
+										Next
+										Inventory[MouseSlot] = SelectedItem
+										SelectedItem = Null
 								End Select
 								;[End Block]
 							Case "18vbat"
@@ -5321,14 +5347,26 @@ Function DrawGUI()
 												MsgTimer = 70 * 5
 										End Select 
 									Default
-										Msg = "You cannot combine these two items."
-										MsgTimer = 70 * 5	
+										For z = 0 To MaxItemAmount - 1
+											If Inventory[z] = SelectedItem Then
+												Inventory[z] = PrevItem
+												Exit
+											EndIf
+										Next
+										Inventory[MouseSlot] = SelectedItem
+										SelectedItem = Null
 								End Select
 								;[End Block]
 							Default
 								;[Block]
-								Msg = "You cannot combine these two items."
-								MsgTimer = 70 * 5
+								For z = 0 To MaxItemAmount - 1
+									If Inventory[z] = SelectedItem Then
+										Inventory[z] = PrevItem
+										Exit
+									EndIf
+								Next
+								Inventory[MouseSlot] = SelectedItem
+								SelectedItem = Null
 								;[End Block]
 						End Select					
 					End If
@@ -10525,5 +10563,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10BE#133D#1ACA
+;~B#10BE#1339#1AF0
 ;~C#Blitz3D
