@@ -2783,7 +2783,7 @@ Repeat
 		
 		;[End block]
 		
-		If KeyHit(KEY_INV) And VomitTimer >= 0 Then
+		If KeyHit(KEY_INV) And VomitTimer >= 0 And KillTimer >= 0 Then
 			If (Not UnableToMove) And (Not IsZombie) And (Not Using294) Then
 				Local W$ = ""
 				Local V# = 0
@@ -3424,7 +3424,7 @@ Function DrawEnding()
 				AAText(x + width / 2 + 40*MenuScale, y + 17*MenuScale, "THE END", True)
 				AASetFont Font1
 				
-				If AchievementsMenu=0 Then 
+				If AchievementsMenu<=0 Then 
 					x = x+132*MenuScale
 					y = y+122*MenuScale
 					
@@ -4706,7 +4706,7 @@ Function DrawGUI()
 		KeypadMSG = ""
 	EndIf
 	
-	If KeyHit(1) And EndingTimer=0 And (Not Using294) Then
+	If KeyHit(1) And EndingTimer=0 And (Not Using294) And KillTimer>=-360 Then
 		If MenuOpen Or InvOpen Then
 			ResumeSounds()
 			If OptionsMenu <> 0 Then SaveOptionsINI()
@@ -6907,7 +6907,7 @@ Function DrawMenu()
 			AASetFont Font2
 			AAText(x, y-(122-45)*MenuScale, "QUIT?",False,True)
 			AASetFont Font1
-		ElseIf KillTimer >= 0 Then
+		ElseIf KillTimer >= 0 Or SelectedEnding <> "" Then
 			AASetFont Font2
 			AAText(x, y-(122-45)*MenuScale, "PAUSED",False,True)
 			AASetFont Font1
@@ -6922,12 +6922,7 @@ Function DrawMenu()
 		Local SeparationConst% = 76*scale
 		Local imgsize% = 64
 		
-		If AchievementsMenu <= 0 And OptionsMenu <= 0 And QuitMSG <= 0
-			AASetFont Font1
-			AAText x, y, "Difficulty: "+SelectedDifficulty\name
-			AAText x, y+20*MenuScale, "Save: "+CurrSave
-			AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
-		ElseIf AchievementsMenu <= 0 And OptionsMenu > 0 And QuitMSG <= 0 And KillTimer >= 0
+		If AchievementsMenu <= 0 And OptionsMenu > 0 And QuitMSG <= 0
 			If DrawButton(x + 101 * MenuScale, y + 430 * MenuScale, 230 * MenuScale, 60 * MenuScale, "Back") Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
@@ -7311,7 +7306,7 @@ Function DrawMenu()
 					EndIf
 					;[End Block]
 			End Select
-		ElseIf AchievementsMenu <= 0 And OptionsMenu <= 0 And QuitMSG > 0 And KillTimer >= 0
+		ElseIf AchievementsMenu <= 0 And OptionsMenu <= 0 And QuitMSG > 0
 			Local QuitButton% = 85 
 			If SelectedDifficulty\saveType = SAVEONQUIT Or SelectedDifficulty\saveType = SAVEANYWHERE Then
 				Local RN$ = PlayerRoom\RoomTemplate\Name$
@@ -7350,7 +7345,7 @@ Function DrawMenu()
 				QuitMSG = 0
 				MouseHit1 = False
 			EndIf
-		Else
+		ElseIf AchievementsMenu > 0 And OptionsMenu <= 0 And QuitMSG <= 0
 			If DrawButton(x+101*MenuScale, y + 344*MenuScale, 230*MenuScale, 60*MenuScale, "Back") Then
 				AchievementsMenu = 0
 				OptionsMenu = 0
@@ -7391,12 +7386,15 @@ Function DrawMenu()
 				Next
 				
 			EndIf
-		EndIf
-		
-		y = y+10*MenuScale
-		
-		If AchievementsMenu<=0 And OptionsMenu<=0 And QuitMSG<=0 Then
-			If KillTimer >= 0 Then	
+		Else
+			AASetFont Font1
+			AAText x, y, "Difficulty: "+SelectedDifficulty\name
+			AAText x, y+20*MenuScale, "Save: "+CurrSave
+			AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
+			
+			y = y+10*MenuScale
+			
+			If KillTimer >= 0 Or SelectedEnding <> "" Then	
 				
 				y = y + 75*MenuScale
 				
@@ -7458,6 +7456,7 @@ Function DrawMenu()
 				y = y + 75*MenuScale
 				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Options") Then OptionsMenu = 1
 				y = y + 75*MenuScale
+				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Quit") Then QuitMSG = 1
 			Else
 				y = y+75*MenuScale
 				If GameSaved And (Not SelectedDifficulty\permaDeath) Then
@@ -7513,17 +7512,13 @@ Function DrawMenu()
 					Return
 				EndIf
 				y = y + 75*MenuScale
+				AASetFont Font1
+				RowText(DeathMSG$, x, y + 75*MenuScale, 390*MenuScale, 600*MenuScale)
 			EndIf
-			If KillTimer >= 0 And (Not MainMenuOpen)
-				If DrawButton(x, y, 430*MenuScale, 60*MenuScale, "Quit") Then
-					QuitMSG = 1
-				EndIf
-			EndIf
-			
-			AASetFont Font1
-			If KillTimer < 0 Then RowText(DeathMSG$, x, y + 75*MenuScale, 390*MenuScale, 600*MenuScale)
 		EndIf
+		
 		If Fullscreen Then DrawImage CursorIMG, ScaledMouseX(),ScaledMouseY()
+		
 	End If
 	
 	AASetFont Font1
