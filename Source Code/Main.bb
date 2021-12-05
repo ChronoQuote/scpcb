@@ -2632,6 +2632,7 @@ Repeat
 			MovePlayer()
 			InFacility = CheckForPlayerInFacility()
 			UpdateGameTimer()
+			CurrStepSFX = 0
 			If PlayerRoom\RoomTemplate\Name = "dimension1499"
 				If QuickLoadPercent = -1 Or QuickLoadPercent = 100
 					UpdateDimension1499()
@@ -10565,5 +10566,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C0#133B#1AF2
+;~B#10C1#133C#1AF3
 ;~C#Blitz3D

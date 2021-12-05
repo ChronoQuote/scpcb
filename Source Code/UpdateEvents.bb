@@ -263,8 +263,6 @@ Function UpdateEvents()
 	
 	Local angle#
 	
-	CurrStepSFX = 0
-	
 	UpdateRooms()
 	
 	For e.Events = Each Events
@@ -10444,5 +10442,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#123E#1EB9
+;~B#123C#1EB7
 ;~C#Blitz3D
