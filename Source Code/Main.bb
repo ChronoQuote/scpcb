@@ -3991,6 +3991,7 @@ Function MovePlayer()
 			TurnEntity pvt, 90, 0, 0
 			EntityPick(pvt,0.3)
 			de.decals = CreateDecal(Rand(15,16), PickedX(), PickedY()+0.005, PickedZ(), 90, Rand(360), 0, Rnd(0.03, 0.08) * Min(Injuries, 3.0))
+			de\SizeChange = Rnd(0.001, 0.0015) : de\MaxSize = de\Size + Rnd(0.008, 0.009)
 			EntityParent(de\obj, PlayerRoom\obj)
 			tempchn% = PlaySound_Strict (DripSFX[Rand(0,3)])
 			ChannelVolume tempchn, Rnd(0.0,0.8)*SFXVolume
@@ -10566,5 +10567,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C1#133C#1AF3
+;~B#10C2#133D#1AF4
 ;~C#Blitz3D
