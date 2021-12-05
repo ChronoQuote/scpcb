@@ -3618,7 +3618,9 @@ Function DrawCredits()
 		Next
 	EndIf
 	
-	If GetKey() Then CreditsTimer=-1
+	Flip False
+	
+	If GetKey() Or MouseHit(1) Then CreditsTimer=-1
 	
 	If CreditsTimer=-1
 		FreeFont CreditsFont
@@ -10563,5 +10565,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10BE#1339#1AF0
+;~B#10C0#133B#1AF2
 ;~C#Blitz3D
