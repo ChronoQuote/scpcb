@@ -613,7 +613,6 @@ Function UpdateConsole()
 							CreateConsoleMsg("- scp-420-j")
 							CreateConsoleMsg("- godmode")
 							CreateConsoleMsg("- revive")
-							CreateConsoleMsg("- noclip")
 							CreateConsoleMsg("- showfps")
 							CreateConsoleMsg("- 096state")
 							CreateConsoleMsg("- debughud")
@@ -10575,5 +10574,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C2#133D#1AF4
+;~B#10C1#133C#1AF3
 ;~C#Blitz3D
