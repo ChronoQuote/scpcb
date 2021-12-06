@@ -3732,7 +3732,7 @@ Function MovePlayer()
 	Local temp#
 	
 	If PlayerRoom\RoomTemplate\Name<>"pocketdimension" Then 
-		If KeyDown(KEY_SPRINT) Then
+		If KeyDown(KEY_SPRINT) And (Not NoClip) Then
 			If Stamina < 5 Then
 				temp = 0
 				If WearingGasMask>0 Or Wearing1499>0 Then temp=1
