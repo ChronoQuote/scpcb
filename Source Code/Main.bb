@@ -3731,25 +3731,23 @@ Function MovePlayer()
 	
 	Local temp#
 	
-	If PlayerRoom\RoomTemplate\Name<>"pocketdimension" Then 
-		If KeyDown(KEY_SPRINT) And (Not NoClip) Then
-			If Stamina < 5 Then
+	If KillTimer >= 0 Then And PlayerRoom\RoomTemplate\Name<>"pocketdimension" And KeyDown(KEY_SPRINT) And (Not NoClip) Then
+		If Stamina < 5 Then
+			temp = 0
+			If WearingGasMask>0 Or Wearing1499>0 Then temp=1
+			If ChannelPlaying(BreathCHN)=False Then BreathCHN = PlaySound_Strict(BreathSFX((temp), 0))
+		ElseIf Stamina < 50
+			If BreathCHN=0 Then
 				temp = 0
 				If WearingGasMask>0 Or Wearing1499>0 Then temp=1
-				If ChannelPlaying(BreathCHN)=False Then BreathCHN = PlaySound_Strict(BreathSFX((temp), 0))
-			ElseIf Stamina < 50
-				If BreathCHN=0 Then
+				BreathCHN = PlaySound_Strict(BreathSFX((temp), Rand(1,3)))
+				ChannelVolume BreathCHN, Min((70.0-Stamina)/70.0,1.0)*SFXVolume
+			Else
+				If ChannelPlaying(BreathCHN)=False Then
 					temp = 0
 					If WearingGasMask>0 Or Wearing1499>0 Then temp=1
 					BreathCHN = PlaySound_Strict(BreathSFX((temp), Rand(1,3)))
-					ChannelVolume BreathCHN, Min((70.0-Stamina)/70.0,1.0)*SFXVolume
-				Else
-					If ChannelPlaying(BreathCHN)=False Then
-						temp = 0
-						If WearingGasMask>0 Or Wearing1499>0 Then temp=1
-						BreathCHN = PlaySound_Strict(BreathSFX((temp), Rand(1,3)))
-						ChannelVolume BreathCHN, Min((70.0-Stamina)/70.0,1.0)*SFXVolume			
-					EndIf
+					ChannelVolume BreathCHN, Min((70.0-Stamina)/70.0,1.0)*SFXVolume			
 				EndIf
 			EndIf
 		EndIf
@@ -10574,5 +10572,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C1#133C#1AF3
+;~B#10BF#133A#1AF1
 ;~C#Blitz3D
