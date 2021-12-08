@@ -84,7 +84,7 @@ Function ReloadAAFont() ;CALL ONLY AFTER CLEARWORLD
 		InitAAFont()
 		For font.AAFont = Each AAFont
 			If font\isAA Then
-				font\texture = CreateTexture(1024,1024,3)
+				font\texture = CreateTexture(ResSizeHalf,ResSizeHalf,3)
 				LockBuffer ImageBuffer(font\backup)
 				LockBuffer TextureBuffer(font\texture)
 				For ix%=0 To 1023
@@ -198,10 +198,10 @@ Function AAText(x%,y%,txt$,cx%=False,cy%=False,a#=1.0)
 		If char>=0 And char<=127 Then
 			AASpriteScale(i-1,font\w[char],font\h[char])
 			AASpritePosition(i-1,tX+(x-vx)+(font\w[char]/2),(y-vy)+(font\h[char]/2))
-			VertexTexCoords GetSurface(AATextSprite[i-1],1),0,Float(font\x[char])/1024.0,Float(font\y[char])/1024.0
-			VertexTexCoords GetSurface(AATextSprite[i-1],1),1,Float(font\x[char]+font\w[char])/1024.0,Float(font\y[char])/1024.0
-			VertexTexCoords GetSurface(AATextSprite[i-1],1),2,Float(font\x[char])/1024.0,Float(font\y[char]+font\h[char])/1024.0
-			VertexTexCoords GetSurface(AATextSprite[i-1],1),3,Float(font\x[char]+font\w[char])/1024.0,Float(font\y[char]+font\h[char])/1024.0
+			VertexTexCoords GetSurface(AATextSprite[i-1],1),0,Float(font\x[char])/ResSizeHalf,Float(font\y[char])/ResSizeHalf
+			VertexTexCoords GetSurface(AATextSprite[i-1],1),1,Float(font\x[char]+font\w[char])/ResSizeHalf,Float(font\y[char])/ResSizeHalf
+			VertexTexCoords GetSurface(AATextSprite[i-1],1),2,Float(font\x[char])/ResSizeHalf,Float(font\y[char]+font\h[char])/ResSizeHalf
+			VertexTexCoords GetSurface(AATextSprite[i-1],1),3,Float(font\x[char]+font\w[char])/ResSizeHalf,Float(font\y[char]+font\h[char])/ResSizeHalf
 			tX = tX+font\w[char]-2
 		EndIf
 	Next
@@ -227,7 +227,7 @@ Function AALoadFont%(file$="Tahoma", height=13, bold=0, italic=0, underline=0, A
 	
 	If AATextEnable And AATextScaleFactor>1 Then
 		Local hResFont% = LoadFont(file,height*AATextScaleFactor,bold,italic,underline)
-		Local tImage% = CreateTexture(1024,1024,3)
+		Local tImage% = CreateTexture(ResSizeHalf,ResSizeHalf,3)
 		Local tX% = 0 : Local tY% = 1
 		
 		SetFont hResFont
@@ -235,7 +235,7 @@ Function AALoadFont%(file$="Tahoma", height=13, bold=0, italic=0, underline=0, A
 		ClsColor 0,0,0
 		LockBuffer TextureBuffer(tImage)
 		
-		Local miy% = newFont\mH*((newFont\mW*95/1024)+2)
+		Local miy% = newFont\mH*((newFont\mW*95/ResSizeHalf)+2)
 		DebugLog miy
 		
 		newFont\mW = 0
@@ -299,7 +299,7 @@ Function AALoadFont%(file$="Tahoma", height=13, bold=0, italic=0, underline=0, A
 			
 			newFont\h[i]=dsh+2
 			tX=tX+newFont\w[i]+2
-			If (tX>1024-FontWidth()-4) Then
+			If (tX>ResSizeHalf-FontWidth()-4) Then
 				tX=0
 				tY=tY+FontHeight()+6
 			EndIf
@@ -307,7 +307,7 @@ Function AALoadFont%(file$="Tahoma", height=13, bold=0, italic=0, underline=0, A
 		
 		newFont\texH = miy
 		
-		Local backup% = CreateImage(1024,1024)
+		Local backup% = CreateImage(ResSizeHalf,ResSizeHalf)
 		LockBuffer ImageBuffer(backup)
 		For ix%=0 To 1023
 			For iy%=0 To newFont\texH
@@ -333,5 +333,4 @@ Function AALoadFont%(file$="Tahoma", height=13, bold=0, italic=0, underline=0, A
 End Function
 
 ;~IDEal Editor Parameters:
-;~F#9#19#3F#4B#50#63#6D#7E#88#CB
 ;~C#Blitz3D

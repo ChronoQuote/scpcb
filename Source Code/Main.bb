@@ -101,6 +101,8 @@ Global Bit16Mode = GetINIInt(OptionFile, "options", "16bit")
 
 Include "Source Code\AAText.bb"
 
+Global ResSize#, ResSizeHalf#
+
 If LauncherEnabled Then 
 	AspectRatioRatio = 1.0
 	UpdateLauncher()
@@ -2956,10 +2958,10 @@ Repeat
 		If (RealGraphicWidth<>GraphicWidth) Or (RealGraphicHeight<>GraphicHeight) Then
 			SetBuffer TextureBuffer(fresize_texture)
 			ClsColor 0,0,0 : Cls
-			CopyRect 0,0,GraphicWidth,GraphicHeight,1024-GraphicWidth/2,1024-GraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+			CopyRect 0,0,GraphicWidth,GraphicHeight,ResSizeHalf-GraphicWidth/2,ResSizeHalf-GraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
 			SetBuffer BackBuffer()
 			ClsColor 0,0,0 : Cls
-			ScaleRender(0,0,2048.0 / Float(GraphicWidth) * AspectRatioRatio, 2048.0 / Float(GraphicWidth) * AspectRatioRatio)
+			ScaleRender(0,0,ResSize / Float(GraphicWidth) * AspectRatioRatio, ResSize / Float(GraphicWidth) * AspectRatioRatio)
 			;might want to replace Float(GraphicWidth) with Max(GraphicWidth,GraphicHeight) if portrait sizes cause issues
 			;everyone uses landscape so it's probably a non-issue
 		EndIf
@@ -2968,19 +2970,19 @@ Repeat
 	;not by any means a perfect solution
 	;Not even proper gamma correction but it's a nice looking alternative that works in windowed mode
 	If ScreenGamma>1.0 Then
-		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,1024-RealGraphicWidth/2,1024-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
 		EntityBlend fresize_image,1
 		ClsColor 0,0,0 : Cls
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 		EntityFX fresize_image,1+32
 		EntityBlend fresize_image,3
 		EntityAlpha fresize_image,ScreenGamma-1.0
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 	ElseIf ScreenGamma<1.0 Then ;todo: maybe optimize this if it's too slow, alternatively give players the option to disable gamma
-		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,1024-RealGraphicWidth/2,1024-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
 		EntityBlend fresize_image,1
 		ClsColor 0,0,0 : Cls
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 		EntityFX fresize_image,1+32
 		EntityBlend fresize_image,2
 		EntityAlpha fresize_image,1.0
@@ -2988,7 +2990,7 @@ Repeat
 		ClsColor 255*ScreenGamma,255*ScreenGamma,255*ScreenGamma
 		Cls
 		SetBuffer BackBuffer()
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 		SetBuffer(TextureBuffer(fresize_texture2))
 		ClsColor 0,0,0
 		Cls
@@ -7714,7 +7716,7 @@ Function LoadEntities()
 	
 	DrawLoading(5)
 	
-	DarkTexture = CreateTexture(1024, 1024, 1 + 2)
+	DarkTexture = CreateTexture(ResSizeHalf, ResSizeHalf, 1 + 2)
 	SetBuffer TextureBuffer(DarkTexture)
 	Cls
 	SetBuffer BackBuffer()
@@ -7728,7 +7730,7 @@ Function LoadEntities()
 	EntityAlpha Dark, 0.0
 	HideEntity Dark
 	
-	LightTexture = CreateTexture(1024, 1024, 1 + 2+256)
+	LightTexture = CreateTexture(ResSizeHalf, ResSizeHalf, 1 + 2+256)
 	SetBuffer TextureBuffer(LightTexture)
 	ClsColor 255, 255, 255
 	Cls
@@ -9920,6 +9922,11 @@ Include "Source Code\INI.bb"
 Function Graphics3DExt%(width%,height%,depth%=32,mode%=2)
 	;If FE_InitExtFlag = 1 Then DeInitExt() ;prevent FastExt from breaking itself
 	Graphics3D width,height,depth,mode
+	ResSize = 512.0
+	While ResSize < width Or ResSize < height
+		ResSize = ResSize * 2.0
+	Wend
+	ResSizeHalf = ResSize / 2.0
 	InitFastResize()
 	;InitExt()
 	AntiAlias GetINIInt(OptionFile,"options","antialias")
@@ -9931,9 +9938,9 @@ Function ResizeImage2(image%,width%,height%)
 	
 	oldWidth% = ImageWidth(image)
 	oldHeight% = ImageHeight(image)
-	CopyRect 0,0,oldWidth,oldHeight,1024-oldWidth/2,1024-oldHeight/2,ImageBuffer(image),TextureBuffer(fresize_texture)
+	CopyRect 0,0,oldWidth,oldHeight,ResSizeHalf-oldWidth/2,ResSizeHalf-oldHeight/2,ImageBuffer(image),TextureBuffer(fresize_texture)
 	SetBuffer BackBuffer()
-	ScaleRender(0,0,2048.0 / Float(RealGraphicWidth) * Float(width) / Float(oldWidth), 2048.0 / Float(RealGraphicWidth) * Float(height) / Float(oldHeight))
+	ScaleRender(0,0,ResSize / Float(RealGraphicWidth) * Float(width) / Float(oldWidth), ResSize / Float(RealGraphicWidth) * Float(height) / Float(oldHeight))
 	;might want to replace Float(GraphicWidth) with Max(GraphicWidth,GraphicHeight) if portrait sizes cause issues
 	;everyone uses landscape so it's probably a non-issue
 	CopyRect RealGraphicWidth/2-width/2,RealGraphicHeight/2-height/2,width,height,0,0,BackBuffer(),ImageBuffer(img)
@@ -10146,15 +10153,15 @@ Function InitFastResize()
 	AddTriangle sf, 0, 1, 2
 	AddTriangle sf, 3, 2, 1
 	EntityFX spr, 17
-	ScaleEntity spr, 2048.0 / Float(RealGraphicWidth), 2048.0 / Float(RealGraphicHeight), 1
+	ScaleEntity spr, ResSize / Float(RealGraphicWidth), ResSize / Float(RealGraphicHeight), 1
 	PositionEntity spr, 0, 0, 1.0001
 	EntityOrder spr, -100001
 	EntityBlend spr, 1
 	fresize_image = spr
 	
     ;Create texture
-	fresize_texture = CreateTexture(2048, 2048, 1+256)
-	fresize_texture2 = CreateTexture(2048, 2048, 1+256)
+	fresize_texture = CreateTexture(ResSize, ResSize, 1+256)
+	fresize_texture2 = CreateTexture(ResSize, ResSize, 1+256)
 	TextureBlend fresize_texture2,3
 	SetBuffer(TextureBuffer(fresize_texture2))
 	ClsColor 0,0,0
@@ -10398,11 +10405,11 @@ Function PlayStartupVideos()
 	Local Cam = CreateCamera() 
 	CameraClsMode Cam, 0, 1
 	Local Quad = CreateQuad()
-	Local Texture = CreateTexture(2048, 2048, 256 Or 16 Or 32)
+	Local Texture = CreateTexture(ResSize, ResSize, 256 Or 16 Or 32)
 	EntityTexture Quad, Texture
 	EntityFX Quad, 1
 	CameraRange Cam, 0.01, 100
-	TranslateEntity Cam, 1.0 / 2048 ,-1.0 / 2048 ,-1.0
+	TranslateEntity Cam, 1.0 / ResSize ,-1.0 / ResSize ,-1.0
 	EntityParent Quad, Cam, 1
 	
 	Local ScaledGraphicHeight%
@@ -10456,21 +10463,21 @@ Function ProjectImage(img, w#, h#, Quad%, Texture%)
 	
 	Local img_w# = ImageWidth(img)
 	Local img_h# = ImageHeight(img)
-	If img_w > 2048 Then img_w = 2048
-	If img_h > 2048 Then img_h = 2048
+	If img_w > ResSize Then img_w = ResSize
+	If img_h > ResSize Then img_h = ResSize
 	If img_w < 1 Then img_w = 1
 	If img_h < 1 Then img_h = 1
 	
-	If w > 2048 Then w = 2048
-	If h > 2048 Then h = 2048
+	If w > ResSize Then w = ResSize
+	If h > ResSize Then h = ResSize
 	If w < 1 Then w = 1
 	If h < 1 Then h = 1
 	
 	Local w_rel# = w# / img_w#
 	Local h_rel# = h# / img_h#
-	Local g_rel# = 2048.0 / Float(RealGraphicWidth)
-	Local dst_x = 1024 - (img_w / 2.0)
-	Local dst_y = 1024 - (img_h / 2.0)
+	Local g_rel# = ResSize / Float(RealGraphicWidth)
+	Local dst_x = ResSizeHalf - (img_w / 2.0)
+	Local dst_y = ResSizeHalf - (img_h / 2.0)
 	CopyRect 0, 0, img_w, img_h, dst_x, dst_y, ImageBuffer(img), TextureBuffer(Texture)
 	ScaleEntity Quad, w_rel * g_rel, h_rel * g_rel, 0.0001
 	RenderWorld()
@@ -10524,5 +10531,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C3#133E#1AF5
+;~B#10C5#1340#1AF7
 ;~C#Blitz3D

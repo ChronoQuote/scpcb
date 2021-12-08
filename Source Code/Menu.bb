@@ -1593,10 +1593,10 @@ Function DrawLoading(percent%, shortloading=False)
 			If (RealGraphicWidth<>GraphicWidth) Or (RealGraphicHeight<>GraphicHeight) Then
 				SetBuffer TextureBuffer(fresize_texture)
 				ClsColor 0,0,0 : Cls
-				CopyRect 0,0,GraphicWidth,GraphicHeight,1024-GraphicWidth/2,1024-GraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+				CopyRect 0,0,GraphicWidth,GraphicHeight,ResSizeHalf-GraphicWidth/2,ResSizeHalf-GraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
 				SetBuffer BackBuffer()
 				ClsColor 0,0,0 : Cls
-				ScaleRender(0,0,2048.0 / Float(GraphicWidth) * AspectRatioRatio, 2048.0 / Float(GraphicWidth) * AspectRatioRatio)
+				ScaleRender(0,0,ResSize / Float(GraphicWidth) * AspectRatioRatio, ResSize / Float(GraphicWidth) * AspectRatioRatio)
 				;might want to replace Float(GraphicWidth) with Max(GraphicWidth,GraphicHeight) if portrait sizes cause issues
 				;everyone uses landscape so it's probably a non-issue
 			EndIf
@@ -1605,19 +1605,19 @@ Function DrawLoading(percent%, shortloading=False)
 		;not by any means a perfect solution
 		;Not even proper gamma correction but it's a nice looking alternative that works in windowed mode
 		If ScreenGamma>1.0 Then
-			CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,1024-RealGraphicWidth/2,1024-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+			CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
 			EntityBlend fresize_image,1
 			ClsColor 0,0,0 : Cls
-			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 			EntityFX fresize_image,1+32
 			EntityBlend fresize_image,3
 			EntityAlpha fresize_image,ScreenGamma-1.0
-			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 		ElseIf ScreenGamma<1.0 Then ;todo: maybe optimize this if it's too slow, alternatively give players the option to disable gamma
-			CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,1024-RealGraphicWidth/2,1024-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+			CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
 			EntityBlend fresize_image,1
 			ClsColor 0,0,0 : Cls
-			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 			EntityFX fresize_image,1+32
 			EntityBlend fresize_image,2
 			EntityAlpha fresize_image,1.0
@@ -1625,7 +1625,7 @@ Function DrawLoading(percent%, shortloading=False)
 			ClsColor 255*ScreenGamma,255*ScreenGamma,255*ScreenGamma
 			Cls
 			SetBuffer BackBuffer()
-			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth),2048.0 / Float(RealGraphicWidth))
+			ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
 			SetBuffer(TextureBuffer(fresize_texture2))
 			ClsColor 0,0,0
 			Cls
@@ -1840,7 +1840,7 @@ Function RowText(A$, X, Y, W, H, align% = 0, Leading#=1)
 	;Display A$ starting at X,Y - no wider than W And no taller than H (all in pixels).
 	;Leading is optional extra vertical spacing in pixels
 	
-	If H<1 Then H=2048
+	If H<1 Then H=ResSize
 	
 	Local LinesShown = 0
 	Local Height = AAStringHeight(A$) + Leading
@@ -1889,7 +1889,7 @@ Function RowText2(A$, X, Y, W, H, align% = 0, Leading#=1)
 	;Display A$ starting at X,Y - no wider than W And no taller than H (all in pixels).
 	;Leading is optional extra vertical spacing in pixels
 	
-	If H<1 Then H=2048
+	If H<1 Then H=ResSize
 	
 	Local LinesShown = 0
 	Local Height = StringHeight(A$) + Leading
@@ -1938,7 +1938,7 @@ Function GetLineAmount(A$, W, H, Leading#=1)
 	;Display A$ starting at X,Y - no wider than W And no taller than H (all in pixels).
 	;Leading is optional extra vertical spacing in pixels
 	
-	If H<1 Then H=2048
+	If H<1 Then H=ResSize
 	
 	Local LinesShown = 0
 	Local Height = AAStringHeight(A$) + Leading
@@ -1976,7 +1976,7 @@ Function GetLineAmount2(A$, W, H, Leading#=1)
 	;Display A$ starting at X,Y - no wider than W And no taller than H (all in pixels).
 	;Leading is optional extra vertical spacing in pixels
 	
-	If H<1 Then H=2048
+	If H<1 Then H=ResSize
 	
 	Local LinesShown = 0
 	Local Height = StringHeight(A$) + Leading
