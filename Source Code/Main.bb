@@ -10544,6 +10544,7 @@ Function CanUseItem(canUseWithHazmat%, canUseWithGasMask%, canUseWithEyewear%)
 		Return False
 	Else If (canUseWithEyewear = False And (WearingNightVision))
 		Msg = "You can't use that item while wearing headgear."
+		MsgTimer = 70*5
 	EndIf
 	
 	Return True
