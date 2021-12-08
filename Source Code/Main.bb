@@ -2954,59 +2954,11 @@ Repeat
 		;UpdateSaveMSG()
 	End If
 	
-	If BorderlessWindowed Then
-		If (RealGraphicWidth<>GraphicWidth) Or (RealGraphicHeight<>GraphicHeight) Then
-			SetBuffer TextureBuffer(fresize_texture)
-			ClsColor 0,0,0 : Cls
-			CopyRect 0,0,GraphicWidth,GraphicHeight,ResSizeHalf-GraphicWidth/2,ResSizeHalf-GraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
-			SetBuffer BackBuffer()
-			ClsColor 0,0,0 : Cls
-			ScaleRender(0,0,ResSize / Float(GraphicWidth) * AspectRatioRatio, ResSize / Float(GraphicWidth) * AspectRatioRatio)
-			;might want to replace Float(GraphicWidth) with Max(GraphicWidth,GraphicHeight) if portrait sizes cause issues
-			;everyone uses landscape so it's probably a non-issue
-		EndIf
-	EndIf
-	
-	;not by any means a perfect solution
-	;Not even proper gamma correction but it's a nice looking alternative that works in windowed mode
-	If ScreenGamma>1.0 Then
-		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
-		EntityBlend fresize_image,1
-		ClsColor 0,0,0 : Cls
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
-		EntityFX fresize_image,1+32
-		EntityBlend fresize_image,3
-		EntityAlpha fresize_image,ScreenGamma-1.0
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
-	ElseIf ScreenGamma<1.0 Then ;todo: maybe optimize this if it's too slow, alternatively give players the option to disable gamma
-		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
-		EntityBlend fresize_image,1
-		ClsColor 0,0,0 : Cls
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
-		EntityFX fresize_image,1+32
-		EntityBlend fresize_image,2
-		EntityAlpha fresize_image,1.0
-		SetBuffer TextureBuffer(fresize_texture2)
-		ClsColor 255*ScreenGamma,255*ScreenGamma,255*ScreenGamma
-		Cls
-		SetBuffer BackBuffer()
-		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
-		SetBuffer(TextureBuffer(fresize_texture2))
-		ClsColor 0,0,0
-		Cls
-		SetBuffer(BackBuffer())
-	EndIf
-	EntityFX fresize_image,1
-	EntityBlend fresize_image,1
-	EntityAlpha fresize_image,1.0
+	UpdateGamma2()
 	
 	CatchErrors("Main loop / uncaught")
 	
-	If Vsync = 0 Then
-		Flip 0
-	Else 
-		Flip 1
-	EndIf
+	Flip(Vsync)
 Forever
 
 ;----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -9617,6 +9569,43 @@ Function UpdateMTF%()
 	
 End Function
 
+Function UpdateExplosion%()
+	If ExplosionTimer > 0 Then
+		ExplosionTimer = ExplosionTimer+FPSfactor
+		
+		If ExplosionTimer < 140.0 Then
+			If ExplosionTimer-FPSfactor < 5.0 Then
+				ExplosionSFX = LoadSound_Strict("SFX\Ending\GateB\Nuke1.ogg")
+				PlaySound_Strict ExplosionSFX
+				CameraShake = 10.0
+				ExplosionTimer = 5.0
+			EndIf
+			
+			CameraShake = CurveValue(ExplosionTimer/60.0,CameraShake, 50.0)
+		Else
+			CameraShake = Min((ExplosionTimer/20.0),20.0)
+			If ExplosionTimer-FPSfactor < 140.0 Then
+				BlinkTimer = 1.0
+				ExplosionSFX = LoadSound_Strict("SFX\Ending\GateB\Nuke2.ogg")
+				PlaySound_Strict ExplosionSFX				
+				For i = 0 To (10+(10*(ParticleAmount+1)))
+					p.Particles = CreateParticle(EntityX(Collider)+Rnd(-0.5,0.5),EntityY(Collider)-Rnd(0.2,1.5),EntityZ(Collider)+Rnd(-0.5,0.5),0, Rnd(0.2,0.6), 0.0, 350)	
+					RotateEntity p\pvt,-90,0,0,True
+					p\speed = Rnd(0.05,0.07)
+				Next
+			EndIf
+			LightFlash = Min((ExplosionTimer-140.0)/10.0,5.0)
+			
+			If ExplosionTimer > 160 Then KillTimer = Min(KillTimer,-0.1)
+			If ExplosionTimer > 500 Then ExplosionTimer = 0
+			
+			;a dirty workaround to prevent the collider from falling down into the facility once the nuke goes off,
+			;causing the UpdateEvent function to be called again and crashing the game
+			PositionEntity Collider, EntityX(Collider), 200, EntityZ(Collider)
+		EndIf
+		
+	EndIf
+End Function
 
 Function UpdateInfect()
 	Local temp#, i%, r.Rooms
@@ -10016,9 +10005,7 @@ Function RenderWorld2()
 				Next
 				IsNVGBlinking% = True
 				ShowEntity NVBlink%
-				If NVTimer<=-10
-				NVTimer = 600.0
-			EndIf
+				If NVTimer<=-10 Then NVTimer = 600.0
 			EndIf
 			
 			Color 255,255,255
@@ -10064,10 +10051,10 @@ Function RenderWorld2()
 						EndIf
 						
 						If (Not IsNVGBlinking%)
-						AAText GraphicWidth / 2 + xvalue * (GraphicWidth / 2),GraphicHeight / 2 - yvalue * (GraphicHeight / 2),np\NVName,True,True
-						AAText GraphicWidth / 2 + xvalue * (GraphicWidth / 2),GraphicHeight / 2 - yvalue * (GraphicHeight / 2) + 30.0 * MenuScale,f2s(dist,1)+" m",True,True
+							AAText GraphicWidth / 2 + xvalue * (GraphicWidth / 2),GraphicHeight / 2 - yvalue * (GraphicHeight / 2),np\NVName,True,True
+							AAText GraphicWidth / 2 + xvalue * (GraphicWidth / 2),GraphicHeight / 2 - yvalue * (GraphicHeight / 2) + 30.0 * MenuScale,f2s(dist,1)+" m",True,True
+						EndIf
 					EndIf
-				EndIf
 				EndIf
 			Next
 			
@@ -10114,6 +10101,53 @@ Function RenderWorld2()
 	EndIf
 End Function
 
+Function UpdateGamma2%()
+	If BorderlessWindowed Then
+		If (RealGraphicWidth<>GraphicWidth) Or (RealGraphicHeight<>GraphicHeight) Then
+			SetBuffer TextureBuffer(fresize_texture)
+			ClsColor 0,0,0 : Cls
+			CopyRect 0,0,GraphicWidth,GraphicHeight,ResSizeHalf-GraphicWidth/2,ResSizeHalf-GraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+			SetBuffer BackBuffer()
+			ClsColor 0,0,0 : Cls
+			ScaleRender(0,0,ResSize / Float(GraphicWidth) * AspectRatioRatio, ResSize / Float(GraphicWidth) * AspectRatioRatio)
+				;might want to replace Float(GraphicWidth) with Max(GraphicWidth,GraphicHeight) if portrait sizes cause issues
+				;everyone uses landscape so it's probably a non-issue
+		EndIf
+	EndIf
+	
+		;not by any means a perfect solution
+		;Not even proper gamma correction but it's a nice looking alternative that works in windowed mode
+	If ScreenGamma>1.0 Then
+		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+		EntityBlend fresize_image,1
+		ClsColor 0,0,0 : Cls
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
+		EntityFX fresize_image,1+32
+		EntityBlend fresize_image,3
+		EntityAlpha fresize_image,ScreenGamma-1.0
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
+	ElseIf ScreenGamma<1.0 Then ;todo: maybe optimize this if it's too slow, alternatively give players the option to disable gamma
+		CopyRect 0,0,RealGraphicWidth,RealGraphicHeight,ResSizeHalf-RealGraphicWidth/2,ResSizeHalf-RealGraphicHeight/2,BackBuffer(),TextureBuffer(fresize_texture)
+		EntityBlend fresize_image,1
+		ClsColor 0,0,0 : Cls
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
+		EntityFX fresize_image,1+32
+		EntityBlend fresize_image,2
+		EntityAlpha fresize_image,1.0
+		SetBuffer TextureBuffer(fresize_texture2)
+		ClsColor 255*ScreenGamma,255*ScreenGamma,255*ScreenGamma
+		Cls
+		SetBuffer BackBuffer()
+		ScaleRender(-1.0/Float(RealGraphicWidth),1.0/Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth),ResSize / Float(RealGraphicWidth))
+		SetBuffer(TextureBuffer(fresize_texture2))
+		ClsColor 0,0,0
+		Cls
+		SetBuffer(BackBuffer())
+	EndIf
+	EntityFX fresize_image,1
+	EntityBlend fresize_image,1
+	EntityAlpha fresize_image,1.0
+End Function
 
 Function ScaleRender(x#,y#,hscale#=1.0,vscale#=1.0)
 	If Camera<>0 Then HideEntity Camera
@@ -10531,5 +10565,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10C5#1340#1AF7
+;~B#1095#1310#1AC7
 ;~C#Blitz3D
