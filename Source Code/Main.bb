@@ -10393,6 +10393,8 @@ Function PlayStartupVideos()
 	
 	If GetINIInt(OptionFile,"options","play startup video")=0 Then Return
 	
+	HidePointer()
+	
 	Local Cam = CreateCamera() 
 	CameraClsMode Cam, 0, 1
 	Local Quad = CreateQuad()
@@ -10447,6 +10449,7 @@ Function PlayStartupVideos()
 	FreeEntity Quad
 	FreeEntity Cam
 	FreeImage image
+	ShowPointer()
 End Function
 
 Function ProjectImage(img, w#, h#, Quad%, Texture%)
