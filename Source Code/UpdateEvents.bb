@@ -6463,10 +6463,9 @@ Function UpdateEvents()
 						EndIf
 						
 						If e\room\Objects[3]<>0
-							HideEntity(e\room\Objects[3])
-							HideEntity(e\room\Objects[4])
-							HideEntity(e\room\Objects[5])
-							HideEntity(e\room\Objects[6])
+							For i = 3 To 6
+								HideEntity(e\room\Objects[i])
+							Next
 						EndIf
 						
 						If e\room\RoomDoors[1]\open = True
@@ -6481,9 +6480,9 @@ Function UpdateEvents()
 								
 								e\EventState = Max(e\EventState, 65)
 								
-								ShowEntity(e\room\Objects[3])
-								ShowEntity(e\room\Objects[4])
-								ShowEntity(e\room\Objects[5])
+								For i = 3 To 5
+									ShowEntity(e\room\Objects[i])
+								Next
 								HideEntity(e\room\Objects[6])
 								
 								SetAnimTime(e\room\Objects[3], 492)
@@ -6506,27 +6505,27 @@ Function UpdateEvents()
 						Select e\EventState
 							Case 1
 								ShowEntity e\room\Objects[1]
-								HideEntity(e\room\Objects[5])
-								HideEntity(e\room\Objects[4])
-								HideEntity(e\room\Objects[3])
+								For i = 3 To 5
+									HideEntity(e\room\Objects[i])
+								Next
 								;sitting
 								ShowEntity(e\room\Objects[6])
 								Animate2(e\room\Objects[6], AnimTime(e\room\Objects[6]), 526, 530, 0.2)
 								If e\EventState2 > 20*70 Then e\EventState = e\EventState+1
 							Case 3
 								ShowEntity e\room\Objects[1]
-								HideEntity(e\room\Objects[5])
-								HideEntity(e\room\Objects[4])
-								HideEntity(e\room\Objects[3])
+								For i = 3 To 5
+									HideEntity(e\room\Objects[i])
+								Next
 								;laying down
 								ShowEntity(e\room\Objects[6])
 								Animate2(e\room\Objects[6], AnimTime(e\room\Objects[6]), 377, 525, 0.2)
 								If e\EventState2 > 30*70 Then e\EventState = e\EventState+1
 							Case 5
 								ShowEntity e\room\Objects[1]
-								HideEntity(e\room\Objects[5])
-								HideEntity(e\room\Objects[4])
-								HideEntity(e\room\Objects[3])
+								For i = 3 To 5
+									HideEntity(e\room\Objects[i])
+								Next
 								;standing
 								ShowEntity(e\room\Objects[6])
 								Animate2(e\room\Objects[6], AnimTime(e\room\Objects[6]), 228, 376, 0.2)
@@ -6534,13 +6533,15 @@ Function UpdateEvents()
 									e\EventState = e\EventState+1
 									PlaySound2(LoadTempSound("SFX\SCP\205\Horror.ogg"), Camera, e\room\Objects[6], 10, 0.3)
 								EndIf	
-							Case 7
+							Case 7 ;first demon appears
 								ShowEntity e\room\Objects[1]
-								ShowEntity(e\room\Objects[6])
-								HideEntity(e\room\Objects[4])
-								HideEntity(e\room\Objects[3])
-								;first demon appears
-								ShowEntity(e\room\Objects[5])
+								For i = 3 To 6
+									If i < 5 Then
+										HideEntity(e\room\Objects[i])
+									Else
+										ShowEntity(e\room\Objects[i])
+									EndIf
+								Next
 								;le sexy demon pose
 								Animate2(e\room\Objects[5], AnimTime(e\room\Objects[5]), 500, 648, 0.2)
 								;TurnEntity(e\room\Objects[6], 0.0, DeltaYaw(e\room\Objects[6], e\room\Objects[5])*0.01, 0.0, True)
@@ -6548,13 +6549,12 @@ Function UpdateEvents()
 									e\EventState = e\EventState+1
 									PlaySound2(LoadTempSound("SFX\SCP\205\Horror.ogg"), Camera, e\room\Objects[6], 10, 0.5)
 								EndIf
-							Case 9
+							Case 9 ;second demon appears
 								ShowEntity e\room\Objects[1]
-								ShowEntity(e\room\Objects[6])
-								ShowEntity(e\room\Objects[5])
+								For i = 4 To 6
+									ShowEntity(e\room\Objects[i])
+								Next
 								HideEntity(e\room\Objects[3])
-								;second demon appears
-								ShowEntity(e\room\Objects[4])
 								;idle
 								Animate2(e\room\Objects[4], AnimTime(e\room\Objects[4]), 2, 200, 0.2)
 								Animate2(e\room\Objects[5], AnimTime(e\room\Objects[5]), 4, 125, 0.2)
@@ -6565,13 +6565,11 @@ Function UpdateEvents()
 									e\EventState = e\EventState+1
 									PlaySound_Strict(LoadTempSound("SFX\SCP\205\Horror.ogg"))
 								EndIf
-							Case 11
+							Case 11 ;third demon
 								ShowEntity e\room\Objects[1]
-								ShowEntity(e\room\Objects[6])
-								ShowEntity(e\room\Objects[5])
-								ShowEntity(e\room\Objects[4])
-								;third demon
-								ShowEntity(e\room\Objects[3])
+								For i = 3 To 6
+									ShowEntity(e\room\Objects[i])
+								Next
 								;idle
 								Animate2(e\room\Objects[3], AnimTime(e\room\Objects[3]), 2, 226, 0.2)
 								Animate2(e\room\Objects[4], AnimTime(e\room\Objects[4]), 2, 200, 0.2)
@@ -6582,10 +6580,9 @@ Function UpdateEvents()
 								If e\EventState2 > 85*70 Then e\EventState = e\EventState+1
 							Case 13
 								ShowEntity e\room\Objects[1]
-								ShowEntity(e\room\Objects[6])
-								ShowEntity(e\room\Objects[5])
-								ShowEntity(e\room\Objects[4])
-								ShowEntity(e\room\Objects[3])
+								For i = 3 To 6
+									ShowEntity(e\room\Objects[i])
+								Next
 								If (AnimTime(e\room\Objects[6])<>227) Then SetAnimTime(e\room\Objects[6], 227)
 								
 								Animate2(e\room\Objects[3], AnimTime(e\room\Objects[3]), 2, 491, 0.05)
@@ -6644,10 +6641,9 @@ Function UpdateEvents()
 						End Select
 					EndIf
 				Else If (e\room\Objects[3]<>0)
-					HideEntity(e\room\Objects[3])
-					HideEntity(e\room\Objects[4])
-					HideEntity(e\room\Objects[5])
-					HideEntity(e\room\Objects[6])
+					For i = 3 To 6
+						HideEntity(e\room\Objects[i])
+					Next
 				Else
 					e\EventState = 0
 					e\EventStr = ""
@@ -10442,5 +10438,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#123C#1EB7
+;~B#123C#1EB3
 ;~C#Blitz3D

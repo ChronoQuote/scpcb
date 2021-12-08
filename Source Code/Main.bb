@@ -135,18 +135,18 @@ Else
 	For i% = 1 To TotalGFXModes
 		Local samefound% = False
 		For  n% = 0 To TotalGFXModes - 1
-			If GfxModeWidths(n) = GfxModeWidth(i) And GfxModeHeights(n) = GfxModeHeight(i) Then samefound = True : Exit
+			If GFXModeWidths(n) = GfxModeWidth(i) And GFXModeHeights(n) = GfxModeHeight(i) Then samefound = True : Exit
 		Next
 		If samefound = False Then
 			If GraphicWidth = GfxModeWidth(i) And GraphicHeight = GfxModeHeight(i) Then SelectedGFXMode = GFXModes
-			GfxModeWidths(GFXModes) = GfxModeWidth(i)
-			GfxModeHeights(GFXModes) = GfxModeHeight(i)
+			GFXModeWidths(GFXModes) = GfxModeWidth(i)
+			GFXModeHeights(GFXModes) = GfxModeHeight(i)
 			GFXModes=GFXModes+1
 		End If
 	Next
 	
-	GraphicWidth = GfxModeWidths(SelectedGFXMode)
-	GraphicHeight = GfxModeHeights(SelectedGFXMode)
+	GraphicWidth = GFXModeWidths(SelectedGFXMode)
+	GraphicHeight = GFXModeHeights(SelectedGFXMode)
 	
 	;New "fake fullscreen" - ENDSHN Psst, it's called borderless windowed mode --Love Mark,
 	If BorderlessWindowed
@@ -2001,14 +2001,16 @@ Function UpdateDoors()
 				If d\obj <> 0 Then HideEntity d\obj
 				If d\frameobj <> 0 Then HideEntity d\frameobj
 				If d\obj2 <> 0 Then HideEntity d\obj2
-				If d\buttons[0] <> 0 Then HideEntity d\buttons[0]
-				If d\buttons[1] <> 0 Then HideEntity d\buttons[1]				
+				For i = 0 To 1
+					If d\buttons[i] <> 0 Then HideEntity d\buttons[i]
+				Next				
 			Else
 				If d\obj <> 0 Then ShowEntity d\obj
 				If d\frameobj <> 0 Then ShowEntity d\frameobj
 				If d\obj2 <> 0 Then ShowEntity d\obj2
-				If d\buttons[0] <> 0 Then ShowEntity d\buttons[0]
-				If d\buttons[1] <> 0 Then ShowEntity d\buttons[1]
+				For i = 0 To 1
+					If d\buttons[i] <> 0 Then ShowEntity d\buttons[i]
+				Next
 			EndIf
 		Next
 	EndIf
@@ -2345,14 +2347,16 @@ Function UseDoor(d.Doors, showmsg%=True, playsfx%=True)
 End Function
 
 Function RemoveDoor(d.Doors)
-	If d\buttons[0] <> 0 Then EntityParent d\buttons[0], 0
-	If d\buttons[1] <> 0 Then EntityParent d\buttons[1], 0	
+	For i = 0 To 1
+		If d\buttons[i] <> 0 Then EntityParent d\buttons[i], 0
+	Next
 	
 	If d\obj <> 0 Then FreeEntity d\obj
 	If d\obj2 <> 0 Then FreeEntity d\obj2
 	If d\frameobj <> 0 Then FreeEntity d\frameobj
-	If d\buttons[0] <> 0 Then FreeEntity d\buttons[0]
-	If d\buttons[1] <> 0 Then FreeEntity d\buttons[1]
+	For i = 0 To 1
+		If d\buttons[i] <> 0 Then FreeEntity d\buttons[i]
+	Next
 	
 	Delete d
 End Function
@@ -6884,7 +6888,7 @@ End Function
 Function DrawMenu()
 	CatchErrors("Uncaught (DrawMenu)")
 	
-	Local x%, y%, width%, height%
+	Local x%, y%, width%, height%, tempstr$
 	If api_GetFocus() = 0 Then ;Game is out of focus -> pause the game
 		If (Not Using294) Then
 			MenuOpen = True
@@ -6935,26 +6939,19 @@ Function DrawMenu()
 		EndIf
 		
 		If AchievementsMenu > 0 Then
-			AASetFont Font2
-			AAText(x, y-(122-45)*MenuScale, "ACHIEVEMENTS",False,True)
-			AASetFont Font1
+			tempstr = "ACHIEVEMENTS"
 		ElseIf OptionsMenu > 0 Then
-			AASetFont Font2
-			AAText(x, y-(122-45)*MenuScale, "OPTIONS",False,True)
-			AASetFont Font1
+			tempstr = "OPTIONS"
 		ElseIf QuitMSG > 0 Then
-			AASetFont Font2
-			AAText(x, y-(122-45)*MenuScale, "QUIT?",False,True)
-			AASetFont Font1
+			tempstr = "QUIT?"
 		ElseIf KillTimer >= 0 Or SelectedEnding <> "" Then
-			AASetFont Font2
-			AAText(x, y-(122-45)*MenuScale, "PAUSED",False,True)
-			AASetFont Font1
+			tempstr = "PAUSED"
 		Else
-			AASetFont Font2
-			AAText(x, y-(122-45)*MenuScale, "YOU DIED",False,True)
-			AASetFont Font1
+			tempstr = "YOU DIED"
 		End If		
+		AASetFont Font2
+		AAText(x, y-(122-45)*MenuScale, tempstr,False,True)
+		AASetFont Font1
 		
 		Local AchvXIMG% = (x + (22*MenuScale))
 		Local scale# = GraphicHeight/768.0
@@ -7132,10 +7129,11 @@ Function DrawMenu()
 						AAText x, y, "User track mode:"
 						UserTrackMode = DrawTick(x + 270 * MenuScale, y + MenuScale, UserTrackMode)
 						If UserTrackMode
-							AAText x, y + 20 * MenuScale, "Repeat"
+							tempstr = "Repeat"
 						Else
-							AAText x, y + 20 * MenuScale, "Random"
+							tempstr = "Random"
 						EndIf
+						AAText x, y + 20 * MenuScale, tempstr
 						If MouseOn(x+270*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrackMode)
 						EndIf
@@ -7430,14 +7428,16 @@ Function DrawMenu()
 			AAText x, y, "Difficulty: "+SelectedDifficulty\name
 			AAText x, y+20*MenuScale, "Save: "+CurrSave
 			If SelectedMap = "" Then
+				tempstr = "Map seed: "+RandomSeed
 				AAText x, y+40*MenuScale, "Map seed: "+RandomSeed
 			Else
 				If Len(SelectedMap)>15 Then
-					AAText x, y+40*MenuScale, "Selected map: "+Left(SelectedMap,14)+"..."
+					tempstr = "Selected map: "+Left(SelectedMap,14)+"..."
 				Else
-					AAText x, y+40*MenuScale, "Selected map: "+SelectedMap
+					tempstr = "Selected map: "+SelectedMap
 				EndIf
 			EndIf
+			AAText x, y+40*MenuScale, tempstr
 			
 			y = y+10*MenuScale
 			
@@ -8170,8 +8170,9 @@ Function InitNewGame()
 		EntityParent(d\obj, 0)
 		If d\obj2 <> 0 Then EntityParent(d\obj2, 0)
 		If d\frameobj <> 0 Then EntityParent(d\frameobj, 0)
-		If d\buttons[0] <> 0 Then EntityParent(d\buttons[0], 0)
-		If d\buttons[1] <> 0 Then EntityParent(d\buttons[1], 0)
+		For i = 0 To 1
+			If d\buttons[i] <> 0 Then EntityParent(d\buttons[i], 0)
+		Next
 		
 		If d\obj2 <> 0 And d\dir = 0 Then
 			MoveEntity(d\obj, 0, 0, 8.0 * RoomScale)
@@ -8314,9 +8315,9 @@ Function InitLoadGame()
 		EntityParent(d\obj, 0)
 		If d\obj2 <> 0 Then EntityParent(d\obj2, 0)
 		If d\frameobj <> 0 Then EntityParent(d\frameobj, 0)
-		If d\buttons[0] <> 0 Then EntityParent(d\buttons[0], 0)
-		If d\buttons[1] <> 0 Then EntityParent(d\buttons[1], 0)
-		
+		For i = 0 To 1
+			If d\buttons[i] <> 0 Then EntityParent(d\buttons[i], 0)
+		Next
 	Next
 	
 	For sc.SecurityCams = Each SecurityCams
@@ -8696,55 +8697,46 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 	RefinedItems = RefinedItems+1
 	
 	Local it2.Items
+	Local Remove% = True
+	
 	Select item\itemtemplate\name
 		Case "Gas Mask", "Heavy Gas Mask"
 			Select setting
 				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
-					RemoveItem(item)
 				Case ONE_TO_ONE
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)
+					Remove = False
 				Case FINE, VERY_FINE
 					it2 = CreateItem("Gas Mask", "supergasmask", x, y, z)
-					RemoveItem(item)
 			End Select
 		Case "SCP-1499"
 			Select setting
 				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
-					RemoveItem(item)
 				Case ONE_TO_ONE
 					it2 = CreateItem("Gas Mask", "gasmask", x, y, z)
-					RemoveItem(item)
 				Case FINE
 					it2 = CreateItem("SCP-1499", "super1499", x, y, z)
-					RemoveItem(item)
 				Case VERY_FINE
 					n.NPCs = CreateNPC(NPCtype1499,x,y,z)
 					n\State = 1
 					n\Sound = LoadSound_Strict("SFX\SCP\1499\Triggered.ogg")
 					n\SoundChn = PlaySound2(n\Sound, Camera, n\Collider,20.0)
 					n\State3 = 1
-					RemoveItem(item)
 			End Select
 		Case "Ballistic Vest"
 			Select setting
 				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
-					RemoveItem(item)
 				Case ONE_TO_ONE
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)
+					Remove = False
 				Case FINE
 					it2 = CreateItem("Heavy Ballistic Vest", "finevest", x, y, z)
-					RemoveItem(item)
 				Case VERY_FINE
 					it2 = CreateItem("Bulky Ballistic Vest", "veryfinevest", x, y, z)
-					RemoveItem(item)
 			End Select
 		Case "Clipboard"
 			Select setting
@@ -8755,51 +8747,41 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						If item\SecondInv[i]<>Null Then RemoveItem(item\SecondInv[i])
 						item\SecondInv[i]=Null
 					Next
-					RemoveItem(item)
 				Case ONE_TO_ONE
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)
+					Remove = False
 				Case FINE
 					item\invSlots = Max(item\invSlots,15)
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)
+					Remove = False
 				Case VERY_FINE
 					item\invSlots = Max(item\invSlots,20)
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)
+					Remove = False
 			End Select
 		Case "Cowbell"
 			Select setting
 				Case ROUGH,COARSE
 					d.Decals = CreateDecal(0, x, 8*RoomScale+0.005, z, 90, Rand(360), 0, 0.2, 0.8)
 					EntityParent(d\obj, PlayerRoom\obj)
-					RemoveItem(item)
 				Case ONE_TO_ONE,FINE,VERY_FINE
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)
+					Remove = False
 			End Select
 		Case "Night Vision Goggles"
 			Select setting
 				Case ROUGH, COARSE
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
 					EntityParent(d\obj, PlayerRoom\obj)
-					RemoveItem(item)
 				Case ONE_TO_ONE
 					PositionEntity(item\collider, x, y, z)
 					ResetEntity(item\collider)
 				Case FINE
 					it2 = CreateItem("Night Vision Goggles", "finenvgoggles", x, y, z)
-					RemoveItem(item)
 				Case VERY_FINE
 					it2 = CreateItem("Night Vision Goggles", "supernv", x, y, z)
 					it2\state = 1000
-					RemoveItem(item)
 			End Select
 		Case "Metal Panel", "SCP-148 Ingot"
 			Select setting
 				Case ROUGH, COARSE
 					it2 = CreateItem("SCP-148 Ingot", "scp148ingot", x, y, z)
-					RemoveItem(item)
 				Case ONE_TO_ONE, FINE, VERY_FINE
 					it2 = Null
 					For it.Items = Each Items
@@ -8818,25 +8800,20 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						Select it2\itemtemplate\tempname
 							Case "gasmask", "supergasmask"
 								RemoveItem (it2)
-								RemoveItem (item)
 								
 								it2 = CreateItem("Heavy Gas Mask", "gasmask3", x, y, z)
 							Case "vest"
 								RemoveItem (it2)
-								RemoveItem(item)
 								it2 = CreateItem("Heavy Ballistic Vest", "finevest", x, y, z)
 							Case "hazmatsuit","hazmatsuit2"
 								RemoveItem (it2)
-								RemoveItem(item)
 								it2 = CreateItem("Heavy Hazmat Suit", "hazmatsuit3", x, y, z)
 						End Select
 					Else 
 						If item\itemtemplate\name="SCP-148 Ingot" Then
 							it2 = CreateItem("Metal Panel", "scp148", x, y, z)
-							RemoveItem(item)
 						Else
-							PositionEntity(item\collider, x, y, z)
-							ResetEntity(item\collider)							
+							Remove = False						
 						EndIf
 					EndIf					
 			End Select
@@ -8852,7 +8829,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						it2 = CreateItem("Severed Hand", "hand", x, y, z)
 					EndIf
 			End Select
-			RemoveItem(item)
 		Case "First Aid Kit", "Blue First Aid Kit"
 			Select setting
 				Case ROUGH, COARSE
@@ -8869,17 +8845,24 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case VERY_FINE
 					it2 = CreateItem("Strange Bottle", "veryfinefirstaid", x, y, z)
 			End Select
-			RemoveItem(item)
-		Case "Level 1 Key Card", "Level 2 Key Card", "Level 3 Key Card", "Level 4 Key Card", "Level 5 Key Card", "Key Card"
+		Case "Level 1 Key Card", "Level 2 Key Card", "Level 3 Key Card", "Level 4 Key Card", "Level 5 Key Card"
+			Local Level% = Right(item\itemtemplate\tempname, 1)
 			Select setting
-				Case ROUGH, COARSE
+				Case ROUGH
 					d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
 					EntityParent(d\obj, PlayerRoom\obj)
+				Case COARSE
+					If Level = 1 Then
+						d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.07)
+						EntityParent(d\obj, PlayerRoom\obj)
+					Else
+						it2 = CreateItem("Level " + (Level - 1) + " Key Card", "key" + (Level - 1), x, y, z)
+					EndIf
 				Case ONE_TO_ONE
 					it2 = CreateItem("Playing Card", "misc", x, y, z)
 				Case FINE
-					Select item\itemtemplate\name
-						Case "Level 1 Key Card"
+					Select Level
+						Case 1
 							Select SelectedDifficulty\otherFactors
 								Case EASY
 									it2 = CreateItem("Level 2 Key Card", "key2", x, y, z)
@@ -8896,7 +8879,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 										it2 = CreateItem("Level 2 Key Card", "key2", x, y, z)
 									EndIf
 							End Select
-						Case "Level 2 Key Card"
+						Case 2
 							Select SelectedDifficulty\otherFactors
 								Case EASY
 									it2 = CreateItem("Level 3 Key Card", "key3", x, y, z)
@@ -8913,7 +8896,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 										it2 = CreateItem("Level 3 Key Card", "key3", x, y, z)
 									EndIf
 							End Select
-						Case "Level 3 Key Card"
+						Case 3
 							Select SelectedDifficulty\otherFactors
 								Case EASY
 									If Rand(10)=1 Then
@@ -8934,7 +8917,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 										it2 = CreateItem("Playing Card", "misc", x, y, z)	
 									EndIf
 							End Select
-						Case "Level 4 Key Card"
+						Case 4
 							Select SelectedDifficulty\otherFactors
 								Case EASY
 									it2 = CreateItem("Level 5 Key Card", "key5", x, y, z)
@@ -8951,7 +8934,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 										it2 = CreateItem("Level 5 Key Card", "key5", x, y, z)
 									EndIf
 							End Select
-						Case "Level 5 Key Card"	
+						Case 5
 							Local CurrAchvAmount%=0
 							For i = 0 To MAXACHIEVEMENTS-1
 								If Achievements[i]=True
@@ -9013,8 +8996,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 							EndIf
 					End Select
 			End Select
-			
-			RemoveItem(item)
 		Case "Key Card Omni"
 			Select setting
 				Case ROUGH, COARSE
@@ -9029,8 +9010,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case FINE, VERY_FINE
 					it2 = CreateItem("Key Card Omni", "key6", x, y, z)
 			End Select			
-			
-			RemoveItem(item)
 		Case "Playing Card", "Coin", "Quarter"
 			Select setting
 				Case ROUGH, COARSE
@@ -9041,7 +9020,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			    Case FINE, VERY_FINE
 					it2 = CreateItem("Level 2 Key Card", "key2", x, y, z)
 			End Select
-			RemoveItem(item)
 		Case "Mastercard"
 			Select setting
 				Case ROUGH
@@ -9061,7 +9039,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 			    Case FINE, VERY_FINE
 					it2 = CreateItem("Level 2 Key Card", "key2", x, y, z)
 			End Select
-			RemoveItem(item)
 		Case "S-NAV 300 Navigator", "S-NAV 310 Navigator", "S-NAV Navigator", "S-NAV Navigator Ultimate"
 			Select setting
 				Case ROUGH, COARSE
@@ -9076,8 +9053,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					it2 = CreateItem("S-NAV Navigator Ultimate", "nav", x, y, z)
 					it2\state = 101
 			End Select
-			
-			RemoveItem(item)
 		Case "Radio Transceiver"
 			Select setting
 				Case ROUGH, COARSE
@@ -9092,8 +9067,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					it2 = CreateItem("Radio Transceiver", "veryfineradio", x, y, z)
 					it2\state = 101
 			End Select
-			
-			RemoveItem(item)
 		Case "SCP-513"
 			Select setting
 				Case ROUGH, COARSE
@@ -9105,10 +9078,7 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					EntityParent(d\obj, PlayerRoom\obj)
 				Case ONE_TO_ONE, FINE, VERY_FINE
 					it2 = CreateItem("SCP-513", "scp513", x, y, z)
-					
 			End Select
-			
-			RemoveItem(item)
 		Case "Some SCP-420-J", "Cigarette"
 			Select setting
 				Case ROUGH, COARSE			
@@ -9121,8 +9091,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case VERY_FINE
 					it2 = CreateItem("Smelly Joint", "420s", x + 1.5, y + 0.5, z + 1.0)
 			End Select
-			
-			RemoveItem(item)
 		Case "9V Battery", "18V Battery", "Strange Battery"
 			Select setting
 				Case ROUGH, COARSE
@@ -9135,8 +9103,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case VERY_FINE
 					it2 = CreateItem("Strange Battery", "killbat", x, y, z)
 			End Select
-			
-			RemoveItem(item)
 		Case "ReVision Eyedrops", "RedVision Eyedrops", "Eyedrops"
 			Select setting
 				Case ROUGH, COARSE
@@ -9149,8 +9115,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case VERY_FINE
 					it2 = CreateItem("Eyedrops", "supereyedrops", x,y,z)
 			End Select
-			
-			RemoveItem(item)		
 		Case "Hazmat Suit"
 			Select setting
 				Case ROUGH, COARSE
@@ -9163,9 +9127,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 				Case VERY_FINE
 					it2 = CreateItem("Hazmat Suit", "hazmatsuit2", x,y,z)
 			End Select
-			
-			RemoveItem(item)
-			
 		Case "Syringe"
 			Select item\itemtemplate\tempname
 				Case "syringe"
@@ -9203,9 +9164,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 							n\State = 2
 					End Select
 			End Select
-			
-			RemoveItem(item)
-			
 		Case "SCP-500-01", "Upgraded Pill", "Pill"
 			Select setting
 				Case ROUGH, COARSE
@@ -9213,7 +9171,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					EntityParent(d\obj, PlayerRoom\obj)
 				Case ONE_TO_ONE
 					it2 = CreateItem("Pill", "pill", x, y, z)
-					RemoveItem(item)
 				Case FINE
 					Local no427Spawn% = False
 					For it3.Items = Each Items
@@ -9227,10 +9184,8 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 					Else
 						it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
 					EndIf
-					RemoveItem(item)
 				Case VERY_FINE
 					it2 = CreateItem("Upgraded Pill", "scp500death", x, y, z)
-					RemoveItem(item)
 			End Select
 			
 		Default
@@ -9257,8 +9212,6 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 								ExplosionTimer = 135
 							EndIf
 					End Select	
-					
-					RemoveItem(item)
 				Case "paper"
 					Select setting
 						Case ROUGH, COARSE
@@ -9269,14 +9222,23 @@ Function Use914(item.Items, setting$, x#, y#, z#)
 						Case FINE, VERY_FINE
 							it2 = CreateItem("Origami", "misc", x, y, z)
 					End Select
-					
-					RemoveItem(item)
 				Default
-					PositionEntity(item\collider, x, y, z)
-					ResetEntity(item\collider)	
+					Select setting
+						Case ROUGH, COARSE
+							d.Decals = CreateDecal(0, x, 8 * RoomScale + 0.005, z, 90, Rand(360), 0, 0.12)
+							EntityParent(d\obj, PlayerRoom\obj)
+						Case ONE_TO_ONE, FINE, veryfine
+							Remove = False
+					End Select
 			End Select
-			
 	End Select
+	
+	If Remove Then
+		RemoveItem(item)
+	Else
+		PositionEntity(item\Collider, x, y, z)
+		ResetEntity(item\Collider)
+	EndIf
 	
 	If it2 <> Null Then EntityType (it2\collider, HIT_ITEM)
 End Function
@@ -10451,53 +10413,40 @@ Function PlayStartupVideos()
 		DebugLog "Scaled: "+ScaledGraphicHeight
 	EndIf
 	
-	Local moviefile$ = "GFX\menu\startup_Undertow"
-	BlitzMovie_Open(moviefile$+".avi") ;Get movie size
-	Local moview = BlitzMovie_GetWidth()
-	Local movieh = BlitzMovie_GetHeight()
-	BlitzMovie_Close()
-	Local image = CreateImage(moview, movieh)
-	Local SplashScreenVideo = BlitzMovie_OpenDecodeToImage(moviefile$+".avi", image, False)
-	SplashScreenVideo = BlitzMovie_Play()
-	Local SplashScreenAudio = StreamSound_Strict(moviefile$+".ogg",SFXVolume,0)
-	Repeat
+	Local moviefile$
+	
+	For i = 0 To 1
+		Select i
+			Case 0
+				moviefile = "GFX\menu\startup_Undertow"
+			Case 1
+				moviefile = "GFX\menu\startup_TSS"
+		End Select
+		BlitzMovie_Open(moviefile$+".avi") ;Get movie size
+		Local moview = BlitzMovie_GetWidth()
+		Local movieh = BlitzMovie_GetHeight()
+		BlitzMovie_Close()
+		Local image = CreateImage(moview, movieh)
+		Local SplashScreenVideo = BlitzMovie_OpenDecodeToImage(moviefile$+".avi", image, False)
+		SplashScreenVideo = BlitzMovie_Play()
+		Local SplashScreenAudio = StreamSound_Strict(moviefile$+".ogg",SFXVolume,0)
+		Repeat
+			Cls
+			ProjectImage(image, RealGraphicWidth, ScaledGraphicHeight, Quad, Texture)
+			Flip
+		Until (GetKey() Or (Not IsStreamPlaying_Strict(SplashScreenAudio)))
+		StopStream_Strict(SplashScreenAudio)
+		BlitzMovie_Stop()
+		BlitzMovie_Close()
+		FreeImage image
+		
 		Cls
-		ProjectImage(image, RealGraphicWidth, ScaledGraphicHeight, Quad, Texture)
 		Flip
-	Until (GetKey() Or (Not IsStreamPlaying_Strict(SplashScreenAudio)))
-	StopStream_Strict(SplashScreenAudio)
-	BlitzMovie_Stop()
-	BlitzMovie_Close()
-	FreeImage image
-	
-	Cls
-	Flip
-	
-	moviefile$ = "GFX\menu\startup_TSS"
-	BlitzMovie_Open(moviefile$+".avi") ;Get movie size
-	moview = BlitzMovie_GetWidth()
-	movieh = BlitzMovie_GetHeight()
-	BlitzMovie_Close()
-	image = CreateImage(moview, movieh)
-	SplashScreenVideo = BlitzMovie_OpenDecodeToImage(moviefile$+".avi", image, False)
-	SplashScreenVideo = BlitzMovie_Play()
-	SplashScreenAudio = StreamSound_Strict(moviefile$+".ogg",SFXVolume,0)
-	Repeat
-		Cls
-		ProjectImage(image, RealGraphicWidth, ScaledGraphicHeight, Quad, Texture)
-		Flip
-	Until (GetKey() Or (Not IsStreamPlaying_Strict(SplashScreenAudio)))
-	StopStream_Strict(SplashScreenAudio)
-	BlitzMovie_Stop()
-	BlitzMovie_Close()
-	
+	Next
 	FreeTexture Texture
 	FreeEntity Quad
 	FreeEntity Cam
 	FreeImage image
-	Cls
-	Flip
-	
 End Function
 
 Function ProjectImage(img, w#, h#, Quad%, Texture%)
@@ -10572,5 +10521,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#10BF#133A#1AF1
+;~B#10C3#133E#1AF5
 ;~C#Blitz3D

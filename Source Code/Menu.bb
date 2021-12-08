@@ -56,7 +56,7 @@ LoadSaveGames()
 Global CurrLoadGamePage% = 0
 
 Function UpdateMainMenu()
-	Local x%, y%, width%, height%, temp%
+	Local x%, y%, width%, height%, temp%, tempstr$
 	
 	Color 0,0,0
 	Rect 0,0,GraphicWidth,GraphicHeight,True
@@ -362,12 +362,13 @@ Function UpdateMainMenu()
 					Color 255,255,255
 					Select SelectedDifficulty\otherFactors
 						Case EASY
-							AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: Easy")
+							tempstr = "Easy"
 						Case NORMAL
-							AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: Normal")
+							tempstr = "Normal"
 						Case HARD
-							AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: Hard")
+							tempstr = "Hard"
 					End Select
+					AAText(x + 200 * MenuScale, y + 255 * MenuScale, "Other difficulty factors: " + tempstr)
 				Else
 					RowText(SelectedDifficulty\description, x+160*MenuScale, y+160*MenuScale, (410-20)*MenuScale, 200)					
 				EndIf
@@ -770,10 +771,11 @@ Function UpdateMainMenu()
 						AAText x + 20 * MenuScale, y, "User track mode:"
 						UserTrackMode = DrawTick(x + 310 * MenuScale, y + MenuScale, UserTrackMode)
 						If UserTrackMode
-							AAText x + 350 * MenuScale, y + MenuScale, "Repeat"
+							tempstr = "Repeat"
 						Else
-							AAText x + 350 * MenuScale, y + MenuScale, "Random"
+							tempstr = "Random"
 						EndIf
+						AAText x + 350 * MenuScale, y + MenuScale, tempstr
 						If MouseOn(x+310*MenuScale,y+MenuScale,20*MenuScale,20*MenuScale)
 							DrawOptionsTooltip(tx,ty,tw,th,Tooltip_UserTrackMode)
 						EndIf
