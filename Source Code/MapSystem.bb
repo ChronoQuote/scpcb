@@ -6659,7 +6659,7 @@ Function CreateMap()
 	EndIf
 	CurrMapGrid = New MapGrid
 	
-	x = Floor(MapGridSize / 2)
+	x = MapGridSize / 2
 	y = MapGridSize - 2;Rand(3, 5)
 	
 	For i = y To MapGridSize - 1
