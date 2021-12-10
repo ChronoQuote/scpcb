@@ -2908,7 +2908,7 @@ Repeat
 		
 		If MsgTimer > 0 Then
 			Local temp% = False
-			If (Not InvOpen%)
+			If (Not (InvOpen% Or OtherOpen <> Null))
 				If SelectedItem <> Null
 					If SelectedItem\itemtemplate\tempname = "paper" Or SelectedItem\itemtemplate\tempname = "oldpaper"
 						temp% = True
