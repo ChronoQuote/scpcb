@@ -1044,6 +1044,7 @@ Function UpdateConsole()
 					GodMode = 0
 					NoClip = 0
 					
+					HideEntity Head
 					ShowEntity Collider
 					
 					KillTimer = 0

@@ -6032,6 +6032,7 @@ Function UpdateEvents()
 						Infect = 0
 						If FallTimer => 0 Then 
 							FallTimer = Min(-1, FallTimer)
+							ShowEntity Head
 							PositionEntity(Head, EntityX(Camera, True), EntityY(Camera, True), EntityZ(Camera, True), True)
 							ResetEntity (Head)
 							RotateEntity(Head, 0, EntityYaw(Camera) + Rand(-45, 45), 0)
@@ -6044,6 +6045,7 @@ Function UpdateEvents()
 								UpdateTimer = 0
 								UpdateDoors()
 								UpdateRooms()
+								HideEntity Head
 								ShowEntity Collider
 								DropSpeed = 0
 								BlinkTimer = -10

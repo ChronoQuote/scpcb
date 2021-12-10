@@ -1111,6 +1111,7 @@ Function UpdateNPCs()
 											Else
 												PlaySound_Strict(OldManSFX[3])
 												FallTimer = Min(-1, FallTimer)
+												ShowEntity Head
 												PositionEntity(Head, EntityX(Camera, True), EntityY(Camera, True), EntityZ(Camera, True), True)
 												ResetEntity (Head)
 												RotateEntity(Head, 0, EntityYaw(Camera) + Rand(-45, 45), 0)
@@ -6982,6 +6983,7 @@ Function MoveToPocketDimension()
 			FallTimer = 0
 			UpdateDoors()
 			UpdateRooms()
+			HideEntity Head
 			ShowEntity Collider
 			PlaySound_Strict(Use914SFX)
 			PlaySound_Strict(OldManSFX[5])
