@@ -6777,8 +6777,8 @@ Function DrawGUI()
 								If IN2$ = "paper" Or IN2$ = "badge" Or IN2$ = "oldpaper" Or IN2$ = "ticket" Then
 									If a_it\itemtemplate\img<>0
 										If a_it\itemtemplate\img <> SelectedItem\itemtemplate\img
-											FreeImage(a_it\itemtemplate\img)
-											a_it\itemtemplate\img = 0
+											FreeImage(a_it\itemtemplate\img) : a_it\itemtemplate\img = 0
+											Exit
 										EndIf
 									EndIf
 								EndIf

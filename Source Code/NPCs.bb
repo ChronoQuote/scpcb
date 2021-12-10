@@ -6997,7 +6997,7 @@ Function MoveToPocketDimension()
 			
 			PlayerRoom = r
 			
-			Return
+			Exit
 		EndIf
 	Next		
 End Function

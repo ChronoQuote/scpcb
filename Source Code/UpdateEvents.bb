@@ -2639,7 +2639,6 @@ Function UpdateEvents()
 														EndIf
 													Next
 													Exit
-													Return
 												EndIf
 											Next
 										EndIf
@@ -2683,7 +2682,6 @@ Function UpdateEvents()
 											EndIf
 										Next
 										Exit
-										Return
 									EndIf
 								Next
 								ResetEntity Collider
@@ -2772,7 +2770,6 @@ Function UpdateEvents()
 												EndIf
 											Next
 											Exit
-											Return
 										EndIf
 									Next
 								Case 20,21,22 ;the tower room
@@ -10371,5 +10368,5 @@ Function Update096ElevatorEvent#(e.Events,EventState#,d.Doors,elevatorobj%)
 End Function
 
 ;~IDEal Editor Parameters:
-;~B#123C#1EB3
+;~B#1239#1EB0
 ;~C#Blitz3D
