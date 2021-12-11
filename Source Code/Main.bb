@@ -2573,9 +2573,11 @@ Repeat
 				
 				If PlayerRoom\RoomTemplate\Name = "173" Then 
 					PlayerZone = 4
-				ElseIf forest_event <> Null And forest_event\EventState = 1.0
-					PlayerZone = 5
-					PositionEntity (SoundEmitter, EntityX(SoundEmitter), 30.0, EntityZ(SoundEmitter))
+				ElseIf forest_event <> Null
+					If forest_event\EventState = 1.0 Then
+						PlayerZone = 5
+						PositionEntity (SoundEmitter, EntityX(SoundEmitter), 30.0, EntityZ(SoundEmitter))
+					EndIf
 				EndIf
 				
 				CurrAmbientSFX = Rand(0,AmbientSFXAmount[PlayerZone]-1)
@@ -6362,8 +6364,10 @@ Function DrawGUI()
 					Local NavWorks% = True
 					If PlayerRoom\RoomTemplate\Name$ = "pocketdimension" Or PlayerRoom\RoomTemplate\Name$ = "dimension1499" Then
 						NavWorks% = False
-					ElseIf forest_event <> Null And forest_event\EventState = 1.0 Then
-						NavWorks% = False
+					ElseIf forest_event <> Null
+						If forest_event\EventState = 1.0 Then
+							NavWorks% = False
+						EndIf
 					EndIf
 					
 					If (Not NavWorks) Then
@@ -9602,8 +9606,10 @@ Function UpdateInfect()
 		teleportForInfect = False
 	ElseIf PlayerRoom\RoomTemplate\Name = "exit1" And EntityY(Collider)>1040.0*RoomScale
 		teleportForInfect = False
-	ElseIf forest_event <> Null And forest_event\EventState = 1.0
-		teleportForInfect = False
+	ElseIf forest_event <> Null
+		If forest_event\EventState = 1.0 Then
+			teleportForInfect = False
+		EndIf
 	EndIf
 	
 	If Infect>0 Then
@@ -10545,5 +10551,5 @@ Function ResetInput()
 	
 End Function
 ;~IDEal Editor Parameters:
-;~B#108D#1308#1AB8
+;~B#108F#130A#1ABC
 ;~C#Blitz3D

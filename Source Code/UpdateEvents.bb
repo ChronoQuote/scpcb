@@ -6584,12 +6584,14 @@ Function UpdateEvents()
 						If (e\SoundCHN<>0) Then
 							If ChannelPlaying(e\SoundCHN) Then StopChannel e\SoundCHN
 						EndIf
-					ElseIf forest_event <> Null And forest_event\EventState = 1.0 Then
-						If (e\SoundCHN2<>0) Then
-							If ChannelPlaying(e\SoundCHN2) Then StopChannel e\SoundCHN2
-						EndIf
-						If (e\SoundCHN<>0) Then
-							If ChannelPlaying(e\SoundCHN) Then StopChannel e\SoundCHN
+					ElseIf forest_event <> Null
+						If forest_event\EventState = 1.0 Then
+							If (e\SoundCHN2<>0) Then
+								If ChannelPlaying(e\SoundCHN2) Then StopChannel e\SoundCHN2
+							EndIf
+							If (e\SoundCHN<>0) Then
+								If ChannelPlaying(e\SoundCHN) Then StopChannel e\SoundCHN
+							EndIf
 						EndIf
 					EndIf
 				EndIf
