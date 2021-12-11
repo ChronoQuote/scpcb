@@ -851,26 +851,26 @@ Function UpdateMainMenu()
 					y = y + 10*MenuScale
 					
 					AAText(x + 20 * MenuScale, y + 20 * MenuScale, "Move Forward")
-					InputBox(x + 160 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_UP,210)),5)		
+					InputBox(x + 160 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_UP,210)],5)		
 					AAText(x + 20 * MenuScale, y + 40 * MenuScale, "Strafe Left")
-					InputBox(x + 160 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_LEFT,210)),3)	
+					InputBox(x + 160 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_LEFT,210)],3)	
 					AAText(x + 20 * MenuScale, y + 60 * MenuScale, "Move Backward")
-					InputBox(x + 160 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_DOWN,210)),6)				
+					InputBox(x + 160 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_DOWN,210)],6)				
 					AAText(x + 20 * MenuScale, y + 80 * MenuScale, "Strafe Right")
-					InputBox(x + 160 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_RIGHT,210)),4)	
+					InputBox(x + 160 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_RIGHT,210)],4)	
 					AAText(x + 20 * MenuScale, y + 100 * MenuScale, "Quick Save")
-					InputBox(x + 160 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SAVE,210)),11)
+					InputBox(x + 160 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_SAVE,210)],11)
 					
 					AAText(x + 280 * MenuScale, y + 20 * MenuScale, "Manual Blink")
-					InputBox(x + 470 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_BLINK,210)),7)				
+					InputBox(x + 470 * MenuScale, y + 20 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_BLINK,210)],7)				
 					AAText(x + 280 * MenuScale, y + 40 * MenuScale, "Sprint")
-					InputBox(x + 470 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_SPRINT,210)),8)
+					InputBox(x + 470 * MenuScale, y + 40 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_SPRINT,210)],8)
 					AAText(x + 280 * MenuScale, y + 60 * MenuScale, "Open/Close Inventory")
-					InputBox(x + 470 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_INV,210)),9)
+					InputBox(x + 470 * MenuScale, y + 60 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_INV,210)],9)
 					AAText(x + 280 * MenuScale, y + 80 * MenuScale, "Crouch")
-					InputBox(x + 470 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CROUCH,210)),10)	
+					InputBox(x + 470 * MenuScale, y + 80 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_CROUCH,210)],10)	
 					AAText(x + 280 * MenuScale, y + 100 * MenuScale, "Open/Close Console")
-					InputBox(x + 470 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName(Min(KEY_CONSOLE,210)),12)
+					InputBox(x + 470 * MenuScale, y + 100 * MenuScale,100*MenuScale,20*MenuScale,KeyName[Min(KEY_CONSOLE,210)],12)
 					
 					If MouseOn(x+20*MenuScale,y,width-40*MenuScale,120*MenuScale)
 						DrawOptionsTooltip(tx,ty,tw,th,Tooltip_Controls)
@@ -2174,7 +2174,7 @@ Function DrawOptionsTooltip(x%,y%,width%,height%,option%,value#=0,ingame%=False)
 		Case Tooltip_HUD
 			txt = "Display the blink and stamina meters."
 		Case Tooltip_ConsoleEnable
-			txt = "Toggles the use of the developer console. Can be used in-game by pressing " + KeyName(KEY_CONSOLE) + "."
+			txt = "Toggles the use of the developer console. Can be used in-game by pressing " + KeyName[KEY_CONSOLE] + "."
 		Case Tooltip_ConsoleError
 			txt = Chr(34)+"Open console on error"+Chr(34)+" is self-explanatory."
 		Case Tooltip_AchPopup
