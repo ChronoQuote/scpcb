@@ -628,12 +628,12 @@ Function PickItem(item.Items)
 								Kill()
 							EndIf
 							For e.Events = Each Events
-								If e\eventname = "room1123" Then 
-									If e\eventstate = 0 Then
+								If e\EventID = e_room1123 Then 
+									If e\EventState = 0 Then
 										LightFlash = 3
 										PlaySound_Strict(LoadTempSound("SFX\SCP\1123\Touch.ogg"))
 									EndIf
-									e\eventstate = Max(1, e\eventstate)
+									e\EventState = Max(1, e\EventState)
 									
 									Exit
 								EndIf

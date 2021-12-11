@@ -912,21 +912,16 @@ Function UpdateNPCs()
 					Local spawn106% = True
 					;checking if 106 is allowed to spawn
 					If PlayerRoom\RoomTemplate\Name$ = "dimension1499" Then spawn106% = False
-					For e.Events = Each Events
-						If e\EventName = "room860"
-							If e\EventState = 1
-								spawn106% = False
-							EndIf
-							Exit
-						EndIf
-					Next
+					If forest_event <> Null And forest_event\EventState = 1 Then
+						spawn106% = False
+					EndIf
 					If PlayerRoom\RoomTemplate\Name$ = "room049" And EntityY(Collider) <= -2848*RoomScale Then
 						spawn106% = False
 					EndIf
 					;GateA event has been triggered - don't make 106 disapper!
 					;The reason why this is a seperate For loop is because we need to make sure that room860 would not be able to overwrite the "spawn106%" variable
 					For e.events = Each Events
-						If e\EventName = "gatea"
+						If e\EventID = e_gatea
 							If e\EventState <> 0
 								spawn106% = True
 								If PlayerRoom\RoomTemplate\Name$ = "dimension1499" Then
@@ -1747,7 +1742,7 @@ Function UpdateNPCs()
 												If PlayerRoom\RoomTemplate\Name$ = "room049"
 													DeathMSG = "Three (3) active instances of SCP-049-2 discovered in the tunnel outside SCP-049's containment chamber. Terminated by Nine-Tailed Fox."
 													For e.events = Each Events
-														If e\EventName = "room049" Then e\EventState=-1 : Exit
+														If e\EventID = e_room049 Then e\EventState=-1 : Exit
 													Next
 												Else
 													DeathMSG = "An active instance of SCP-049-2 was discovered in [REDACTED]. Terminated by Nine-Tailed Fox."
@@ -3296,7 +3291,7 @@ Function UpdateNPCs()
 				;[End Block]
 			Case NPCtype860
 				;[Block]
-				If PlayerRoom\RoomTemplate\Name = "room860" Then
+				If forest_event <> Null And forest_event\EventState = 1 Then
 					Local fr.Forest=PlayerRoom\fr;Object.Forest(e\room\Objects[1])
 					
 					dist = EntityDistance(Collider,n\Collider)
@@ -5007,14 +5002,9 @@ Function UpdateNPCs()
 						Local MaxX#,MinX#,MaxZ#,MinZ#
 						If n\InFacility=1
 							If PlayerRoom\RoomTemplate\Name$ <> "173"
-								For e.Events = Each Events
-									If e\EventName = "room860"
-										If e\EventState = 1.0
-											UpdateGravity = True
-											Exit
-										EndIf
-									EndIf
-								Next
+								If forest_event <> Null And forest_event\EventState = 1.0 Then
+									UpdateGravity = True
+								EndIf
 							Else
 								UpdateGravity = True
 							EndIf
@@ -7240,7 +7230,6 @@ End Function
 
 Function PlayerInReachableRoom(canSpawnIn049Chamber%=False)
 	Local RN$ = PlayerRoom\RoomTemplate\Name$
-	Local e.Events, temp
 	
 	;Player is in these rooms, returning false
 	If RN = "pocketdimension" Or RN = "gatea" Or RN = "dimension1499" Or RN = "173" Then
@@ -7251,14 +7240,7 @@ Function PlayerInReachableRoom(canSpawnIn049Chamber%=False)
 		Return False
 	EndIf
 	;Player is in 860's test room and inside the forest, returning false
-	temp = False
-	For e = Each Events
-		If e\EventName$ = "room860" And e\EventState = 1.0 Then
-			temp = True
-			Exit
-		EndIf
-	Next
-	If RN = "room860" And temp Then
+	If forest_event <> Null And forest_event\EventState = 1 Then
 		Return False
 	EndIf
 	If (Not canSpawnIn049Chamber) Then
@@ -7327,5 +7309,5 @@ End Function
 
 
 ;~IDEal Editor Parameters:
-;~B#179#128A#1324#13BD#1549#1653#1814#1870
+;~B#179#1285#131F#13B3#153F#1649#180A#1866
 ;~C#Blitz3D
