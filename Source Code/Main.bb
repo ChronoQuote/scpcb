@@ -8323,7 +8323,8 @@ Function InitLoadGame()
 				z# = EntityZ(e\room\obj)
 				Local ch.Chunk
 				For i = -2 To 2 Step 2
-					ch = CreateChunk(-1,x#*(i*2.5),EntityY(e\room\obj),z#)
+					ch = CreateChunk(-1,x#*(i*2.5),EntityY(e\room\obj),z#,True)
+					ch = CreateChunk(-1,x#*(i*2.5),EntityY(e\room\obj),z#-40,True)
 				Next
 				DrawLoading(98)
 				UpdateChunks(e\room,15,False)
